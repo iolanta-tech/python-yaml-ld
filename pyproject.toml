@@ -5,6 +5,9 @@ description = "YAML-LD for Python"
 authors = ["Anatoly Scherbakov <altaisoft@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+packages = [
+ { include = "yaml_ld" }
+]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
