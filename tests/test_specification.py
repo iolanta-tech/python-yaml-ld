@@ -8,6 +8,7 @@ from iolanta.iolanta import Iolanta
 from iolanta.namespaces import LOCAL
 from rdflib import Graph, ConjunctiveGraph, Namespace
 
+import yaml_ld
 from ldtest.models import TestCase
 
 tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
@@ -59,15 +60,9 @@ def test_spec(test_case: TestCase):
         and issubclass(error_class, Exception)
     ):
         with pytest.raises(error_class):
-            Graph().parse(
-                test_case.input,
-                format='yaml-ld',
-            )
+            yaml_ld.expand(test_case.input.read_text())
 
     else:
-        Graph().parse(
-            test_case.input,
-            format='yaml-ld',
-        )
+        yaml_ld.expand(test_case.input.read_text())
 
         raise ValueError(f'What to do with this test? {test_case}')
