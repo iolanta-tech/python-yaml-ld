@@ -6,7 +6,7 @@ from rdflib import Namespace, URIRef, Literal
 from urlpath import URL
 
 from ldtest.models import TestCase
-from rdflib_yaml_ld.errors import MappingKeyError
+
 
 mf = Namespace('http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#')
 tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
@@ -28,7 +28,7 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
             return Path(URL(result).path)
 
         return {
-            'mapping-key-error': MappingKeyError,
+            'mapping-key-error': ...,
             'loading document failed': ...,
             'invalid encoding': ...,
         }[result.value]
