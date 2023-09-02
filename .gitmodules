@@ -1,0 +1,4 @@
+[submodule "specification"]
+	path = specification
+	url = git@github.com:json-ld/yaml-ld.git
+	branch = issue-94-misprint-in-test-file-name
