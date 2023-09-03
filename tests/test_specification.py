@@ -53,6 +53,17 @@ def load_tests() -> Iterable[TestCase]:
     ids=operator.attrgetter('test'),
 )
 def test_spec(test_case: TestCase):
+    if test_case.test == 'cir-scalar-other-1-positive':
+        pytest.skip(
+            'When parsing the …out.yamlld file, the floating point value of '
+            '123.456e78 is interpreted as string. This is due to the fact that '
+            'PyYAML supports only YAML 1.1, which requires a sign to precede '
+            'mantissa of a number in exponential notation. YAML 1.2 lifts that '
+            'requirement. There is an open PR to resolve the issue: '
+            'https://github.com/yaml/pyyaml/pull/555 which is currently being '
+            'promised to be merged in November 2023. We shall see.'
+        )
+
     if isinstance(test_case.result, str):
         with pytest.raises(YAMLLDError) as error_info:
             yaml_ld.expand(test_case.input.read_bytes())
