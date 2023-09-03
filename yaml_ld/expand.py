@@ -3,6 +3,7 @@ from typing import Annotated, Any
 from pyld import jsonld
 
 from yaml_ld.annotations import Help
+from yaml_ld.errors import MappingKeyError
 from yaml_ld.models import Document, ProcessingMode, ExpandOptions
 from yaml_ld.parse import parse
 
@@ -27,16 +28,21 @@ def expand(
     if isinstance(document, str):
         document = parse(document)
 
-    return jsonld.expand(
-        input_=document,
-        options=ExpandOptions(
-            base=base,
-            context=context,
-            extract_all_scripts=extract_all_scripts,
-            mode=mode,
-            document_loader=document_loader,
-        ).model_dump(
-            exclude_defaults=True,
-            by_alias=True,
-        ),
+    options = ExpandOptions(
+        base=base,
+        context=context,
+        extract_all_scripts=extract_all_scripts,
+        mode=mode,
+        document_loader=document_loader,
+    ).model_dump(
+        exclude_defaults=True,
+        by_alias=True,
     )
+
+    try:
+        return jsonld.expand(
+            input_=document,
+            options=options,
+        )
+    except TypeError as err:
+        raise MappingKeyError() from err
