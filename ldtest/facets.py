@@ -6,7 +6,7 @@ from rdflib import Namespace, URIRef, Literal
 from urlpath import URL
 
 from ldtest.models import TestCase
-
+from yaml_ld.errors import YAMLLDError
 
 mf = Namespace('http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#')
 tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
@@ -27,8 +27,14 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
         if isinstance(result, URIRef):
             return Path(URL(result).path)
 
-        return {
-            'mapping-key-error': ...,
-            'loading document failed': ...,
-            'invalid encoding': ...,
-        }[result.value]
+        return yaml_ld_error_class_by_code(result.value)
+
+
+def yaml_ld_error_class_by_code(code: str) -> type[YAMLLDError]:
+    classes = YAMLLDError.__subclasses__()
+
+    for cls in classes:
+        if cls.code == code:
+            return cls
+
+    raise ValueError(f'Unknown error message: {code}')

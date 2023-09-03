@@ -4,6 +4,7 @@ from pyld import jsonld
 
 from yaml_ld.annotations import Help
 from yaml_ld.models import Document, ProcessingMode, ExpandOptions
+from yaml_ld.parse import parse
 
 
 def expand(
@@ -23,6 +24,9 @@ def expand(
     mode: ProcessingMode = ProcessingMode.JSON_LD_1_1,
     document_loader: Any = None,
 ):
+    if isinstance(document, str):
+        document = parse(document)
+
     return jsonld.expand(
         input_=document,
         options=ExpandOptions(
