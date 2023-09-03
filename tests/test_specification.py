@@ -61,8 +61,7 @@ def test_spec(test_case: TestCase):
 
     elif isinstance(test_case.result, Path):
         expected = yaml_ld.parse(test_case.result.read_text())
-        assert yaml_ld.expand(
-            test_case.input.read_text(),
-        ) == expected
+        actual = yaml_ld.expand(test_case.input.read_text())
+        assert actual == expected
     else:
         raise ValueError(f'What to do with this test? {test_case}')
