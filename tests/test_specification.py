@@ -60,9 +60,9 @@ def test_spec(test_case: TestCase):
         and issubclass(error_class, Exception)
     ):
         with pytest.raises(error_class):
-            yaml_ld.expand(test_case.input.read_text())
+            yaml_ld.expand(test_case.input.read_bytes())
 
     else:
-        yaml_ld.expand(test_case.input.read_text())
+        yaml_ld.expand(test_case.input.read_bytes())
 
         raise ValueError(f'What to do with this test? {test_case}')

@@ -3,13 +3,13 @@ from typing import Annotated, Any
 from pyld import jsonld
 
 from yaml_ld.annotations import Help
-from yaml_ld.errors import MappingKeyError
+from yaml_ld.errors import MappingKeyError, InvalidEncoding
 from yaml_ld.models import Document, ProcessingMode, ExpandOptions
 from yaml_ld.parse import parse
 
 
 def expand(
-    document: str | Document,
+    document: str | bytes | Document,
     base: Annotated[str | None, Help('The base IRI to use.')] = None,
     context: Annotated[
         Document | None,
@@ -25,6 +25,12 @@ def expand(
     mode: ProcessingMode = ProcessingMode.JSON_LD_1_1,
     document_loader: Any = None,
 ):
+    if isinstance(document, bytes):
+        try:
+            document = document.decode('utf-8')
+        except UnicodeDecodeError as err:
+            raise InvalidEncoding() from err
+
     if isinstance(document, str):
         document = parse(document)
 
