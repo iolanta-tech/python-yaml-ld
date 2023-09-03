@@ -27,14 +27,4 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
         if isinstance(result, URIRef):
             return Path(URL(result).path)
 
-        return yaml_ld_error_class_by_code(result.value)
-
-
-def yaml_ld_error_class_by_code(code: str) -> type[YAMLLDError]:
-    classes = YAMLLDError.__subclasses__()
-
-    for cls in classes:
-        if cls.code == code:
-            return cls
-
-    raise ValueError(f'Unknown error message: {code}')
+        return result.value

@@ -9,7 +9,7 @@ class YAMLLDError(DocumentedError):
 
 
 @dataclass
-class LoadingDocumentFailed(YAMLLDError):
+class DocumentIsScalar(YAMLLDError):
     """
     Document content MUST be sequence or mapping.
 
@@ -22,6 +22,13 @@ class LoadingDocumentFailed(YAMLLDError):
     @property
     def document_type_name(self):
         return type(self.document).__name__
+
+
+@dataclass
+class LoadingDocumentFailed(YAMLLDError):
+    """Document is not a valid YAML."""
+
+    code: str = 'loading document failed'
 
 
 @dataclass

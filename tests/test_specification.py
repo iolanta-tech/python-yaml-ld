@@ -10,6 +10,7 @@ from rdflib import Graph, ConjunctiveGraph, Namespace
 
 import yaml_ld
 from ldtest.models import TestCase
+from yaml_ld.errors import YAMLLDError
 
 tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
 
@@ -55,14 +56,11 @@ def test_spec(test_case: TestCase):
     if isinstance(test_case.result, Path) and test_case.result.suffix == '.yamlld':
         pytest.skip('Expansion test is not applicable.')
 
-    if (
-        isinstance(error_class := test_case.result, type)
-        and issubclass(error_class, Exception)
-    ):
-        with pytest.raises(error_class):
+    if isinstance(test_case.result, str):
+        with pytest.raises(YAMLLDError) as error_info:
             yaml_ld.expand(test_case.input.read_bytes())
 
-    else:
-        yaml_ld.expand(test_case.input.read_bytes())
+        assert error_info.value.code == test_case.result
 
+    else:
         raise ValueError(f'What to do with this test? {test_case}')

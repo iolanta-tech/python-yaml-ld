@@ -1,7 +1,7 @@
 import yaml
 from yaml.scanner import ScannerError
 
-from yaml_ld.errors import LoadingDocumentFailed
+from yaml_ld.errors import LoadingDocumentFailed, DocumentIsScalar
 from yaml_ld.models import Document
 
 
@@ -12,9 +12,9 @@ def parse(yaml_string: str) -> Document:
             Loader=yaml.SafeLoader,
         )
     except ScannerError as err:
-        raise LoadingDocumentFailed(document='') from err
+        raise LoadingDocumentFailed() from err
 
     if not isinstance(document, dict | list):
-        raise LoadingDocumentFailed(document=document)
+        raise DocumentIsScalar(document=document)
 
     return document
