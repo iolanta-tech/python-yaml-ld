@@ -53,14 +53,16 @@ def load_tests() -> Iterable[TestCase]:
     ids=operator.attrgetter('test'),
 )
 def test_spec(test_case: TestCase):
-    if isinstance(test_case.result, Path) and test_case.result.suffix == '.yamlld':
-        pytest.skip('Expansion test is not applicable.')
-
     if isinstance(test_case.result, str):
         with pytest.raises(YAMLLDError) as error_info:
             yaml_ld.expand(test_case.input.read_bytes())
 
         assert error_info.value.code == test_case.result
 
+    elif isinstance(test_case.result, Path):
+        expected = yaml_ld.parse(test_case.result.read_text())
+        assert yaml_ld.expand(
+            test_case.input.read_text(),
+        ) == expected
     else:
         raise ValueError(f'What to do with this test? {test_case}')
