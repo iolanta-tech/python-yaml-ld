@@ -6,7 +6,7 @@ import funcy
 import pytest
 from iolanta.iolanta import Iolanta
 from iolanta.namespaces import LOCAL
-from rdflib import Graph, ConjunctiveGraph, Namespace
+from rdflib import ConjunctiveGraph, Graph, Namespace
 
 import yaml_ld
 from ldtest.models import TestCase
@@ -61,7 +61,7 @@ def test_spec(test_case: TestCase):
             'mantissa of a number in exponential notation. YAML 1.2 lifts that '
             'requirement. There is an open PR to resolve the issue: '
             'https://github.com/yaml/pyyaml/pull/555 which is currently being '
-            'promised to be merged in November 2023. We shall see.'
+            'promised to be merged in November 2023. We shall see.',
         )
 
     if isinstance(test_case.result, str):

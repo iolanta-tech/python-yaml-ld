@@ -3,8 +3,8 @@ from typing import Annotated, Any
 from pyld import jsonld
 
 from yaml_ld.annotations import Help
-from yaml_ld.errors import MappingKeyError, InvalidEncoding
-from yaml_ld.models import Document, ProcessingMode, ExpandOptions
+from yaml_ld.errors import InvalidEncoding, MappingKeyError
+from yaml_ld.models import Document, ExpandOptions, ProcessingMode
 from yaml_ld.parse import parse
 
 
@@ -19,7 +19,7 @@ def expand(
         bool,
         Help(
             'True to extract all JSON-LD script elements from HTML, '
-            'False to extract just the first.'
+            'False to extract just the first.',
         ),
     ] = False,
     mode: ProcessingMode = ProcessingMode.JSON_LD_1_1,

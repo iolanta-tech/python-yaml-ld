@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Iterable
 
 from iolanta.facets.facet import Facet
-from rdflib import Namespace, URIRef, Literal
+from rdflib import Literal, Namespace, URIRef
 from urlpath import URL
 
 from ldtest.models import TestCase

@@ -1,7 +1,7 @@
 import yaml
 from yaml.scanner import ScannerError
 
-from yaml_ld.errors import LoadingDocumentFailed, DocumentIsScalar
+from yaml_ld.errors import DocumentIsScalar, LoadingDocumentFailed
 from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import Document
 
