@@ -3,9 +3,12 @@ from typing import Annotated, Any
 from pyld import jsonld
 
 from yaml_ld.annotations import Help
-from yaml_ld.errors import InvalidEncoding, MappingKeyError
+from yaml_ld.errors import CycleDetected, InvalidEncoding, MappingKeyError
 from yaml_ld.models import Document, ExpandOptions, ProcessingMode
 from yaml_ld.parse import parse
+
+
+DocumentLoader = Any  # type: ignore
 
 
 def expand(
@@ -23,7 +26,7 @@ def expand(
         ),
     ] = False,
     mode: ProcessingMode = ProcessingMode.JSON_LD_1_1,
-    document_loader: Any = None,
+    document_loader: DocumentLoader | None = None,
 ):
     if isinstance(document, bytes):
         try:
@@ -52,3 +55,5 @@ def expand(
         )
     except TypeError as err:
         raise MappingKeyError() from err
+    except RecursionError as err:
+        raise CycleDetected() from err
