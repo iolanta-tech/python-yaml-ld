@@ -12,7 +12,7 @@ from yaml_ld.models import Document
 
 def parse(yaml_string: str) -> Document:
     try:
-        document = yaml.load(
+        document: Document = yaml.load(
             stream=yaml_string,
             Loader=YAMLLDLoader,
         )
@@ -22,7 +22,7 @@ def parse(yaml_string: str) -> Document:
     except ComposerError as err:
         raise UndefinedAliasFound() from err
 
-    if not isinstance(document, dict | list):
+    if not isinstance(document, (dict, list)):
         raise DocumentIsScalar(document=document)
 
     return document
