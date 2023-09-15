@@ -56,3 +56,10 @@ class CycleDetected(YAMLLDError):
     """A YAML-LD document MUST NOT contain cycles."""
 
     code: str = 'loading document failed'
+
+
+@dataclass
+class UndefinedAliasFound(YAMLLDError):
+    """An undefined alias found."""
+
+    code: str = 'loading document failed'
