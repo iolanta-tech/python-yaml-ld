@@ -6,5 +6,5 @@ from pathlib import Path
 class TestCase:
     test: str
     input: Path
-    result: Path | Exception
+    result: Path | str | Exception
     req: str
