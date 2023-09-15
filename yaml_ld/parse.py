@@ -11,8 +11,9 @@ from yaml_ld.models import Document
 
 
 def parse(yaml_string: str) -> Document:
+    """Parse YAML-LD document."""
     try:
-        document: Document = yaml.load(
+        document: Document = yaml.load(  # noqa: S506
             stream=yaml_string,
             Loader=YAMLLDLoader,
         )

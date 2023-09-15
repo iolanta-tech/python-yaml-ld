@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Any
 
 from documented import DocumentedError
 
@@ -7,7 +6,7 @@ from yaml_ld.models import Document
 
 
 class YAMLLDError(DocumentedError):
-    ...
+    """An error happened while processing YAML-LD data."""
 
 
 @dataclass

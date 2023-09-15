@@ -2,14 +2,14 @@ import json
 import operator
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Iterable
 
 import funcy
 import pytest
 from documented import Documented
 from iolanta.iolanta import Iolanta
 from iolanta.namespaces import LOCAL
-from rdflib import ConjunctiveGraph, Graph, Namespace
+from rdflib import ConjunctiveGraph, Namespace
 
 import yaml_ld
 from ldtest.models import TestCase
@@ -35,10 +35,12 @@ class FailureToFail(Documented):
 
     @property
     def formatted_raw_document(self) -> str:
+        """Present the raw document."""
         return self.raw_document.decode()
 
     @property
     def formatted_expanded_document(self) -> str:
+        """JSON prettify expanded document for display."""
         return json.dumps(self.expanded_document, indent=2)
 
 
@@ -46,8 +48,9 @@ def load_tests() -> Iterable[TestCase]:
     # Load the JSON-LD tests from the test suite
     # Return a list of test cases
     project_root = Path(__file__).parent.parent
-    manifest_path = project_root / 'specification/tests/basic-manifest.jsonld'
-    manifest_path = project_root / 'specification/tests/extended-manifest.jsonld'
+    tests_root = project_root / 'specification/tests'
+    manifest_path = tests_root / 'basic-manifest.jsonld'
+    manifest_path = tests_root / 'extended-manifest.jsonld'
 
     # FIXME: Use `iolanta.add()`.
     #   At this point, we can't do that: `iolanta` does not resolve the
