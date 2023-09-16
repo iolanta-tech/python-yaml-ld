@@ -1,3 +1,4 @@
+import functools
 import json
 import operator
 from dataclasses import dataclass
@@ -9,10 +10,11 @@ import pytest
 from documented import Documented
 from iolanta.iolanta import Iolanta
 from iolanta.namespaces import LOCAL
-from rdflib import ConjunctiveGraph, Namespace
+from rdflib import ConjunctiveGraph, Namespace, URIRef
 
 import yaml_ld
 from ldtest.models import TestCase
+from ldtest.plugin import LDTest
 from yaml_ld.errors import YAMLLDError
 from yaml_ld.models import Document
 
@@ -44,7 +46,8 @@ class FailureToFail(Documented):
         return json.dumps(self.expanded_document, indent=2)
 
 
-def load_tests() -> Iterable[TestCase]:
+@functools.lru_cache
+def iolanta() -> Iolanta:
     # Load the JSON-LD tests from the test suite
     # Return a list of test cases
     project_root = Path(__file__).parent.parent
@@ -57,34 +60,62 @@ def load_tests() -> Iterable[TestCase]:
     #   `context.jsonld` file.
     graph = ConjunctiveGraph()
     graph.parse(manifest_path)
-    iolanta = Iolanta(graph=graph)
+    return Iolanta(graph=graph, force_plugins=[LDTest])
 
-    iolanta.add({
-        '$id': tests.ExpandTest,
-        'iolanta:facet': {
-            '$id': 'python://ldtest.JSONLDTests',
-            'iolanta:supports': LOCAL.test,
-        },
-        'iolanta:hasInstanceFacet': {
-            '$id': 'python://ldtest.JSONLDTest',
-            'iolanta:supports': LOCAL.test,
-        },
-    })
 
+def load_tests(test_class: URIRef) -> Iterable[TestCase]:
     return funcy.first(
-        iolanta.render(
-            node=tests.ExpandTest,
-            environments=[LOCAL.test],
+        iolanta().render(
+            node=test_class,
+            environments=[LOCAL.pytest],
         ),
     )
 
 
 @pytest.mark.parametrize(
     "test_case",
-    load_tests(),
+    load_tests(tests.PositiveEvaluationTest),
     ids=operator.attrgetter('test'),
 )
-def test_spec(test_case: TestCase):
+def test_positive(test_case: TestCase):
+    if test_case.test == 'cir-scalar-other-1-positive':
+        pytest.skip(
+            'When parsing the …out.yamlld file, the floating point value of '
+            '123.456e78 is interpreted as string. This is due to the fact that '
+            'PyYAML supports only YAML 1.1, which requires a sign to precede '
+            'mantissa of a number in exponential notation. YAML 1.2 lifts that '
+            'requirement. There is an open PR to resolve the issue: '
+            'https://github.com/yaml/pyyaml/pull/555 which is currently being '
+            'promised to be merged in November 2023. We shall see.',
+        )
+
+    if isinstance(test_case.result, str):
+        raw_document = test_case.input.read_bytes()
+        try:
+            expanded_document = yaml_ld.expand(raw_document)
+        except YAMLLDError as error:
+            assert error.code == test_case.result
+        else:
+            pytest.fail(str(FailureToFail(
+                expected_error_code=test_case.result,
+                raw_document=raw_document,
+                expanded_document=expanded_document,
+            )))
+
+    elif isinstance(test_case.result, Path):
+        expected = yaml_ld.parse(test_case.result.read_text())
+        actual = yaml_ld.expand(test_case.input.read_text())
+        assert actual == expected
+    else:
+        raise ValueError(f'What to do with this test? {test_case}')
+
+
+@pytest.mark.parametrize(
+    "test_case",
+    load_tests(tests.NegativeEvaluationTest),
+    ids=operator.attrgetter('test'),
+)
+def test_negative(test_case: TestCase):
     if test_case.test == 'cir-scalar-other-1-positive':
         pytest.skip(
             'When parsing the …out.yamlld file, the floating point value of '
