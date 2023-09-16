@@ -1,0 +1,6 @@
+$id: python://ldtest.JSONLDTests
+iolanta:supports:
+  $id: pytest
+iolanta:isFacetOf:
+  - $id: tests:PositiveEvaluationTest
+  - $id: tests:NegativeEvaluationTest

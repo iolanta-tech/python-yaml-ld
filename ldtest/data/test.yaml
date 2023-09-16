@@ -1,0 +1,10 @@
+$id: tests:Test
+
+rdfs:subClassOf:
+  - $id: tests:PositiveEvaluationTest
+  - $id: tests:NegativeEvaluationTest
+
+iolanta:hasInstanceFacet:
+  $id: python://ldtest.JSONLDTest
+  iolanta:supports:
+    $id: pytest
