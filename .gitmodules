@@ -1,4 +1,4 @@
 [submodule "specification"]
 	path = specification
 	url = git@github.com:json-ld/yaml-ld.git
-	branch = issue-94-basic-tests-failing
+	branch = 121-merge-tests
