@@ -10,3 +10,15 @@ class TestCase:
     input: Path
     result: Path | str | Exception   # noqa: WPS110
     req: str
+
+    @property
+    def raw_document(self) -> bytes:
+        """Read the raw input document contents."""
+        return self.input.read_bytes()
+
+    @property
+    def raw_expected_document(self):
+        if isinstance(path := self.result, Path):
+            return self.result.read_text()
+
+        raise ValueError(f'{self.result} is not a Path.')
