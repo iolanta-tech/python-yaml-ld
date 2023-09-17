@@ -2,7 +2,8 @@ import operator
 from pathlib import Path
 
 import pytest
-from rdflib import Namespace
+from rdflib import Namespace, Graph
+from rdflib_pyld_compat.convert import _rdflib_graph_from_pyld_dataset
 
 import yaml_ld
 from ldtest.models import TestCase
@@ -15,12 +16,33 @@ tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
 
 @pytest.mark.parametrize(
     "test_case",
+    load_tests(tests.ToRDFTest),
+    ids=operator.attrgetter('test'),
+)
+def test_to_rdf(test_case: TestCase):
+    if test_case.test == 'cir-scalar-i18n-2-positive':
+        pytest.skip('i18n tags are currently not supported in YAML-LD spec.')
+
+    raw_document = test_case.raw_document
+
+    actual_dataset = yaml_ld.to_rdf(raw_document)
+    raw_expected_quads = test_case.raw_expected_document
+
+    actual_triples = actual_dataset['@default']
+    actual_graph: Graph = _rdflib_graph_from_pyld_dataset(actual_triples)
+    expected_graph = Graph().parse(data=raw_expected_quads)
+
+    assert actual_graph.isomorphic(expected_graph)
+
+
+@pytest.mark.parametrize(
+    "test_case",
     load_tests(tests.ExpandTest),
     ids=operator.attrgetter('test'),
 )
 def test_expand(test_case: TestCase):
     if isinstance(test_case.result, str):
-        raw_document = test_case.input.read_bytes()
+        raw_document = test_case.raw_document
         try:
             expanded_document = yaml_ld.expand(raw_document)
         except YAMLLDError as error:
