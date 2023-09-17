@@ -1,20 +1,15 @@
-import functools
 import json
 import operator
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
 
-import funcy
 import pytest
 from documented import Documented
-from iolanta.iolanta import Iolanta
-from iolanta.namespaces import LOCAL
-from rdflib import ConjunctiveGraph, Namespace, URIRef
+from rdflib import Namespace
 
 import yaml_ld
 from ldtest.models import TestCase
-from ldtest.plugin import LDTest
+from tests.common import load_tests
 from yaml_ld.errors import YAMLLDError
 from yaml_ld.models import Document
 
@@ -44,32 +39,6 @@ class FailureToFail(Documented):
     def formatted_expanded_document(self) -> str:
         """JSON prettify expanded document for display."""
         return json.dumps(self.expanded_document, indent=2)
-
-
-@functools.lru_cache
-def iolanta() -> Iolanta:
-    # Load the JSON-LD tests from the test suite
-    # Return a list of test cases
-    project_root = Path(__file__).parent.parent
-    tests_root = project_root / 'specification/tests'
-    manifest_path = tests_root / 'basic-manifest.jsonld'
-    manifest_path = tests_root / 'extended-manifest.jsonld'
-
-    # FIXME: Use `iolanta.add()`.
-    #   At this point, we can't do that: `iolanta` does not resolve the
-    #   `context.jsonld` file.
-    graph = ConjunctiveGraph()
-    graph.parse(manifest_path)
-    return Iolanta(graph=graph, force_plugins=[LDTest])
-
-
-def load_tests(test_class: URIRef) -> Iterable[TestCase]:
-    return funcy.first(
-        iolanta().render(
-            node=test_class,
-            environments=[LOCAL.pytest],
-        ),
-    )
 
 
 @pytest.mark.parametrize(
@@ -116,17 +85,6 @@ def test_positive(test_case: TestCase):
     ids=operator.attrgetter('test'),
 )
 def test_negative(test_case: TestCase):
-    if test_case.test == 'cir-scalar-other-1-positive':
-        pytest.skip(
-            'When parsing the …out.yamlld file, the floating point value of '
-            '123.456e78 is interpreted as string. This is due to the fact that '
-            'PyYAML supports only YAML 1.1, which requires a sign to precede '
-            'mantissa of a number in exponential notation. YAML 1.2 lifts that '
-            'requirement. There is an open PR to resolve the issue: '
-            'https://github.com/yaml/pyyaml/pull/555 which is currently being '
-            'promised to be merged in November 2023. We shall see.',
-        )
-
     if isinstance(test_case.result, str):
         raw_document = test_case.input.read_bytes()
         try:
