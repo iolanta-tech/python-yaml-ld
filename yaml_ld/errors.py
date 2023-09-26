@@ -1,11 +1,12 @@
 from dataclasses import dataclass
-from typing import Any
 
 from documented import DocumentedError
 
+from yaml_ld.models import Document
+
 
 class YAMLLDError(DocumentedError):
-    ...
+    """An error happened while processing YAML-LD data."""
 
 
 @dataclass
@@ -16,7 +17,7 @@ class DocumentIsScalar(YAMLLDError):
     Instead, `{self.document_type_name}` found.
     """
 
-    document: Any
+    document: Document
     code: str = 'loading document failed'
 
     @property
@@ -40,6 +41,24 @@ class MappingKeyError(YAMLLDError):
 
 @dataclass
 class InvalidEncoding(YAMLLDError):
-    """A YAML-LD document MUST be encoded in UTF-8, to ensure interoperability with [[JSON]]."""
+    """
+    A YAML-LD document MUST be encoded in UTF-8.
+
+    To ensure interoperability with [[JSON]].
+    """
 
     code: str = 'invalid encoding'
+
+
+@dataclass
+class CycleDetected(YAMLLDError):
+    """A YAML-LD document MUST NOT contain cycles."""
+
+    code: str = 'loading document failed'
+
+
+@dataclass
+class UndefinedAliasFound(YAMLLDError):
+    """An undefined alias found."""
+
+    code: str = 'loading document failed'

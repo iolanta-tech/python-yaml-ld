@@ -3,12 +3,15 @@ from typing import Annotated, Any
 from pyld import jsonld
 
 from yaml_ld.annotations import Help
-from yaml_ld.errors import InvalidEncoding, MappingKeyError
+from yaml_ld.errors import CycleDetected, InvalidEncoding, MappingKeyError
 from yaml_ld.models import Document, ExpandOptions, ProcessingMode
-from yaml_ld.parse import parse
+from yaml_ld.parse import parse    # noqa: WPS347
 
 
-def expand(
+DocumentLoader = Any  # type: ignore
+
+
+def expand(   # noqa: C901, WPS211
     document: str | bytes | Document,
     base: Annotated[str | None, Help('The base IRI to use.')] = None,
     context: Annotated[
@@ -23,8 +26,9 @@ def expand(
         ),
     ] = False,
     mode: ProcessingMode = ProcessingMode.JSON_LD_1_1,
-    document_loader: Any = None,
+    document_loader: DocumentLoader | None = None,
 ):
+    """Expand a YAML-LD document."""
     if isinstance(document, bytes):
         try:
             document = document.decode('utf-8')
@@ -52,3 +56,5 @@ def expand(
         )
     except TypeError as err:
         raise MappingKeyError() from err
+    except RecursionError as err:
+        raise CycleDetected() from err
