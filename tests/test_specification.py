@@ -42,7 +42,6 @@ def test_to_rdf(test_case: TestCase):
 )
 def test_expand(test_case: TestCase):
     if isinstance(test_case.result, str):
-        raw_document = test_case.raw_document
         try:
             expanded_document = yaml_ld.expand(raw_document)
         except YAMLLDError as error:
