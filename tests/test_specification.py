@@ -20,9 +20,6 @@ tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
     ids=operator.attrgetter('test'),
 )
 def test_to_rdf(test_case: TestCase):
-    if test_case.test == 'cir-scalar-i18n-2-positive':
-        pytest.skip('i18n tags are currently not supported in YAML-LD spec.')
-
     raw_document = test_case.raw_document
 
     actual_dataset = yaml_ld.to_rdf(raw_document)
@@ -41,6 +38,8 @@ def test_to_rdf(test_case: TestCase):
     ids=operator.attrgetter('test'),
 )
 def test_expand(test_case: TestCase):
+    raw_document = test_case.input.read_bytes()
+
     if isinstance(test_case.result, str):
         try:
             expanded_document = yaml_ld.expand(raw_document)
@@ -55,7 +54,7 @@ def test_expand(test_case: TestCase):
 
     elif isinstance(test_case.result, Path):
         expected = yaml_ld.parse(test_case.result.read_text())
-        actual = yaml_ld.expand(test_case.input.read_text())
+        actual = yaml_ld.expand(raw_document)
         assert actual == expected
     else:
         raise ValueError(f'What to do with this test? {test_case}')
