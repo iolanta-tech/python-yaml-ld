@@ -1848,6 +1848,22 @@ lxml = ["lxml (>=4.3.0,<5.0.0)"]
 networkx = ["networkx (>=2.0.0,<3.0.0)"]
 
 [[package]]
+name = "rdflib-pyld-compat"
+version = "0.1.0"
+description = "Conversion between rdflib and PyLD data formats for compatibility"
+optional = false
+python-versions = "*"
+files = [
+    {file = "rdflib-pyld-compat-0.1.0.tar.gz", hash = "sha256:f230d565d221efd9b28497034571c9c15e03a6fa9409b77277ca9295b94d072d"},
+    {file = "rdflib_pyld_compat-0.1.0-py3-none-any.whl", hash = "sha256:d0270d64c71f19f00961108c1c175f593be47f056182af0897523c9e4e212525"},
+]
+
+[package.dependencies]
+pyld = "*"
+rdflib = ">=4.2.0"
+testfixtures = "*"
+
+[[package]]
 name = "regex"
 version = "2023.8.8"
 description = "Alternative regular expression module, to replace re."
@@ -2103,6 +2119,22 @@ files = [
 tests = ["pytest", "pytest-cov"]
 
 [[package]]
+name = "testfixtures"
+version = "7.2.0"
+description = "A collection of helpers and mock objects for unit tests and doc tests."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "testfixtures-7.2.0-py3-none-any.whl", hash = "sha256:4efe4fd0366d3f67919550c7718b5147159a238a0266420417260f685564a1ec"},
+    {file = "testfixtures-7.2.0.tar.gz", hash = "sha256:8c8c20dd30ea113548507584a1daae779248dbaa5712672c7abb9709f0fbf8b2"},
+]
+
+[package.extras]
+build = ["setuptools-git", "twine", "wheel"]
+docs = ["django", "furo", "sphinx", "sybil (>=3)", "twisted", "zope.component"]
+test = ["django", "mypy", "pytest (>=3.6)", "pytest-cov", "pytest-django", "sybil (>=3)", "twisted", "zope.component"]
+
+[[package]]
 name = "tokenize-rt"
 version = "5.2.0"
 description = "A wrapper around the stdlib `tokenize` which roundtrips."
@@ -2297,4 +2329,4 @@ typing_extensions = ">=4.0,<5.0"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4.0"
-content-hash = "9d0116c305484b944ee0ba50c013a92e3cc7c1a8ae24df82b2c8b8ce92ddc955"
+content-hash = "9f81a18fa3eb71a509e39ec9598df0b2e96d292eb9c32a20fca364f4eb70c30a"

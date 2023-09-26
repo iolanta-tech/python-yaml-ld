@@ -3,7 +3,8 @@ from yaml.composer import ComposerError
 from yaml.scanner import ScannerError
 
 from yaml_ld.errors import (
-    DocumentIsScalar, LoadingDocumentFailed,
+    DocumentIsScalar,
+    LoadingDocumentFailed,
     UndefinedAliasFound,
 )
 from yaml_ld.loader import YAMLLDLoader

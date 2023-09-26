@@ -23,7 +23,9 @@ YAMLLDLoader.add_constructor(tag('timestamp'), YAMLLDLoader.construct_yaml_str)
 
 YAMLLDLoader.add_constructor(xsd('integer'), YAMLLDLoader.construct_yaml_int)
 YAMLLDLoader.add_constructor(xsd('decimal'), YAMLLDLoader.construct_yaml_float)
-YAMLLDLoader.add_constructor(xsd('double'), YAMLLDLoader.construct_yaml_float)
+
+YAMLLDLoader.add_constructor(xsd('double'), YAMLLDLoader.construct_scalar)
+
 YAMLLDLoader.add_constructor(xsd('boolean'), YAMLLDLoader.construct_yaml_bool)
 YAMLLDLoader.add_constructor(xsd('date'), YAMLLDLoader.construct_scalar)
 YAMLLDLoader.add_constructor(xsd('time'), YAMLLDLoader.construct_scalar)
