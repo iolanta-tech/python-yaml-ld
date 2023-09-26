@@ -5,8 +5,7 @@ from pyld import jsonld
 from yaml_ld.annotations import Help
 from yaml_ld.errors import CycleDetected, InvalidEncoding, MappingKeyError
 from yaml_ld.models import Document, ExpandOptions, ProcessingMode
-from yaml_ld.parse import parse    # noqa: WPS347
-
+from yaml_ld.parse import parse  # noqa: WPS347
 
 DocumentLoader = Any  # type: ignore
 

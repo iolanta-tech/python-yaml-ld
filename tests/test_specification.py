@@ -2,8 +2,10 @@ import operator
 from pathlib import Path
 
 import pytest
-from rdflib import Namespace, Graph
-from rdflib_pyld_compat.convert import _rdflib_graph_from_pyld_dataset
+from rdflib import Graph, Namespace
+from rdflib_pyld_compat.convert import (  # noqa: WPS450
+    _rdflib_graph_from_pyld_dataset,
+)
 
 import yaml_ld
 from ldtest.models import TestCase
@@ -15,7 +17,7 @@ tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
 
 
 @pytest.mark.parametrize(
-    "test_case",
+    'test_case',
     load_tests(tests.ToRDFTest),
     ids=operator.attrgetter('test'),
 )
@@ -33,7 +35,7 @@ def test_to_rdf(test_case: TestCase):
 
 
 @pytest.mark.parametrize(
-    "test_case",
+    'test_case',
     load_tests(tests.ExpandTest),
     ids=operator.attrgetter('test'),
 )

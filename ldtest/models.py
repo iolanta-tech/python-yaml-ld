@@ -18,7 +18,8 @@ class TestCase:
 
     @property
     def raw_expected_document(self):
+        """Text of the expected processed document."""
         if isinstance(path := self.result, Path):
-            return self.result.read_text()
+            return path.read_text()
 
         raise ValueError(f'{self.result} is not a Path.')
