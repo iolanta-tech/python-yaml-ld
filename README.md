@@ -7,7 +7,7 @@
 ![Downloads](https://img.shields.io/pypi/dm/python-yaml-ld.svg)
 -->
 
-![](docs/logos/python-yaml-ld.svg)
+![](docs/logos/python-yaml-ld.png)
 
 A Python implementation for handling YAML-LD documents.
 
