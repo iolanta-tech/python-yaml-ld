@@ -1,4 +1,4 @@
 [submodule "specification"]
 	path = specification
 	url = git@github.com:json-ld/yaml-ld.git
-	branch = 121-merge-tests
+	branch = 124-get-rid-of-yaml-12-version-declaration-in-spec-tests
