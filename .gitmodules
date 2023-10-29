@@ -1,4 +1,4 @@
 [submodule "specification"]
 	path = specification
 	url = git@github.com:json-ld/yaml-ld.git
-	branch = 124-get-rid-of-yaml-12-version-declaration-in-spec-tests
+	branch = 115-test-mapping-key-types-other-than-strings-must-fail
