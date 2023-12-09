@@ -4,8 +4,7 @@ from pyld import jsonld
 
 import yaml_ld
 from yaml_ld.annotations import Help
-from yaml_ld.expand import DocumentLoader
-from yaml_ld.models import Document
+from yaml_ld.models import Document, DocumentLoader
 from yaml_ld.rdf import Dataset
 
 

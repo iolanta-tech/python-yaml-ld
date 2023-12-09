@@ -6,14 +6,20 @@ from yaml.scanner import ScannerError
 from yaml_ld.errors import (
     DocumentIsScalar,
     LoadingDocumentFailed,
-    UndefinedAliasFound, MappingKeyError,
+    UndefinedAliasFound, MappingKeyError, InvalidEncoding,
 )
 from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import Document
 
 
-def parse(yaml_string: str) -> Document:
+def parse(yaml_string: str | bytes) -> Document:  # noqa: WPS238, WPS231, C901
     """Parse YAML-LD document."""
+    if isinstance(yaml_string, bytes):
+        try:
+            yaml_string = yaml_string.decode('utf-8')
+        except UnicodeDecodeError as err:
+            raise InvalidEncoding() from err
+
     try:
         document: Document = yaml.load(  # noqa: S506
             stream=yaml_string,

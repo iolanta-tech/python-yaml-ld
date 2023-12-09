@@ -1,13 +1,21 @@
-from typing import Annotated, Any
+from typing import Annotated
 
+from pydantic import Field
 from pyld import jsonld
 
 from yaml_ld.annotations import Help
-from yaml_ld.errors import CycleDetected, InvalidEncoding, MappingKeyError
-from yaml_ld.models import Document, ExpandOptions, ProcessingMode
+from yaml_ld.errors import CycleDetected, MappingKeyError
+from yaml_ld.models import (
+    Document, ProcessingMode,
+    DocumentLoader, BaseOptions, ExtractAllScripts,
+)
 from yaml_ld.parse import parse  # noqa: WPS347
 
-DocumentLoader = Any  # type: ignore
+
+class ExpandOptions(BaseOptions):
+    """Options for `jsonld.expand()`."""
+
+    context: Document | None = Field(default=None, alias='expandContext')
 
 
 def expand(   # noqa: C901, WPS211
@@ -17,24 +25,12 @@ def expand(   # noqa: C901, WPS211
         Document | None,
         Help('A context to expand with.'),
     ] = None,
-    extract_all_scripts: Annotated[
-        bool,
-        Help(
-            'True to extract all JSON-LD script elements from HTML, '
-            'False to extract just the first.',
-        ),
-    ] = False,
+    extract_all_scripts: ExtractAllScripts = False,
     mode: ProcessingMode = ProcessingMode.JSON_LD_1_1,
     document_loader: DocumentLoader | None = None,
 ):
     """Expand a YAML-LD document."""
-    if isinstance(document, bytes):
-        try:
-            document = document.decode('utf-8')
-        except UnicodeDecodeError as err:
-            raise InvalidEncoding() from err
-
-    if isinstance(document, str):
+    if isinstance(document, (str, bytes)):
         document = parse(document)
 
     options = ExpandOptions(
