@@ -16,7 +16,7 @@ def iolanta() -> Iolanta:
     # Load the JSON-LD tests from the test suite
     # Return a list of test cases
     project_root = Path(__file__).parent.parent
-    tests_root = project_root / 'specification/tests'
+    tests_root = project_root / 'specifications/yaml-ld/tests'
     manifest_path = tests_root / 'manifest.jsonld'
 
     # FIXME: Use `iolanta.add()`.
