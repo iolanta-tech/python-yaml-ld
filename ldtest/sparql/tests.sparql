@@ -7,4 +7,9 @@ SELECT ?test ?result ?input ?req WHERE {
     OPTIONAL {
         ?test jld:req ?req .
     }
+
+    # We mimic `pyld` tests here. Skipping 1.0 tests.
+    FILTER NOT EXISTS {
+        ?test jld:option / jld:specVersion "json-ld-1.0"^^xsd:string .
+    }
 }

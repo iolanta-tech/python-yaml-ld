@@ -11,13 +11,14 @@ from ldtest.models import TestCase
 from ldtest.plugin import LDTest
 
 
+project_root = Path(__file__).parent.parent
+specifications_root = project_root / 'specifications'
+
+
 @functools.lru_cache
 def iolanta() -> Iolanta:
     # Load the JSON-LD tests from the test suite
     # Return a list of test cases
-    project_root = Path(__file__).parent.parent
-    specifications_root = project_root / 'specifications'
-
     graph = ConjunctiveGraph()
     for manifest_path in specifications_root.glob('*/tests/*manifest.jsonld'):
         # FIXME: Use `iolanta.add()`.

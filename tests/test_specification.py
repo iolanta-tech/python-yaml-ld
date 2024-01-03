@@ -44,7 +44,7 @@ def test_expand(test_case: TestCase):
 
     if isinstance(test_case.result, str):
         try:
-            expanded_document = yaml_ld.expand(raw_document)
+            expanded_document = yaml_ld.expand(test_case.input)
         except YAMLLDError as error:
             assert error.code == test_case.result
         else:

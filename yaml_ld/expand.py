@@ -32,6 +32,9 @@ def expand(   # noqa: C901, WPS211
 ):
     """Expand a YAML-LD document."""
     if isinstance(document, (str, bytes, Path)):
+        if isinstance(document, Path) and base is None:
+            base = f'file://{document.parent}/'
+
         document = parse(document)
 
     options = ExpandOptions(
