@@ -16,14 +16,15 @@ def iolanta() -> Iolanta:
     # Load the JSON-LD tests from the test suite
     # Return a list of test cases
     project_root = Path(__file__).parent.parent
-    tests_root = project_root / 'specifications/yaml-ld/tests'
-    manifest_path = tests_root / 'manifest.jsonld'
+    specifications_root = project_root / 'specifications'
 
-    # FIXME: Use `iolanta.add()`.
-    #   At this point, we can't do that: `iolanta` does not resolve the
-    #   `context.jsonld` file which this document is referring to.
     graph = ConjunctiveGraph()
-    graph.parse(manifest_path)
+    for manifest_path in specifications_root.glob('*/tests/*manifest.jsonld'):
+        # FIXME: Use `iolanta.add()`.
+        #   At this point, we can't do that: `iolanta` does not resolve the
+        #   `context.jsonld` file which this document is referring to.
+        graph.parse(manifest_path)
+
     return Iolanta(graph=graph, force_plugins=[LDTest])
 
 

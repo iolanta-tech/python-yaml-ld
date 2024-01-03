@@ -2,6 +2,9 @@ SELECT ?test ?result ?input ?req WHERE {
     ?test
         a $test_class ;
         mf:result ?result ;
-        mf:action ?input ;
-        jld:req ?req .
+        mf:action ?input .
+
+    OPTIONAL {
+        ?test jld:req ?req .
+    }
 }

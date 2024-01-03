@@ -20,10 +20,13 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
                 test=URL(row['test']).fragment,
                 input=Path(URL(row['input']).path),
                 result=self._process_result(row['result']),
-                req=row['req'].value,
+                req=(req := row.get('req')) and req.value,
             )
 
-    def _process_result(self, result: URIRef | Literal) -> Path | str:
+    def _process_result(
+        self,
+        result: URIRef | Literal,  # noqa: WPS110
+    ) -> Path | str:
         if isinstance(result, URIRef):
             return Path(URL(result).path)
 
