@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Annotated
 
 from pydantic import Field
@@ -19,7 +20,7 @@ class ExpandOptions(BaseOptions):
 
 
 def expand(   # noqa: C901, WPS211
-    document: str | bytes | Document,
+    document: str | bytes | Document | Path,
     base: Annotated[str | None, Help('The base IRI to use.')] = None,
     context: Annotated[
         Document | None,
@@ -30,7 +31,7 @@ def expand(   # noqa: C901, WPS211
     document_loader: DocumentLoader | None = None,
 ):
     """Expand a YAML-LD document."""
-    if isinstance(document, (str, bytes)):
+    if isinstance(document, (str, bytes, Path)):
         document = parse(document)
 
     options = ExpandOptions(

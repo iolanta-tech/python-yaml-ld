@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import yaml
 from yaml.composer import ComposerError
 from yaml.constructor import ConstructorError
@@ -12,8 +14,13 @@ from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import Document
 
 
-def parse(yaml_string: str | bytes) -> Document:  # noqa: WPS238, WPS231, C901
+def parse(  # noqa: WPS238, WPS231, C901
+    yaml_string: str | bytes | Path,
+) -> Document:
     """Parse YAML-LD document."""
+    if isinstance(yaml_string, Path):
+        yaml_string = yaml_string.read_bytes()
+
     if isinstance(yaml_string, bytes):
         try:
             yaml_string = yaml_string.decode('utf-8')
