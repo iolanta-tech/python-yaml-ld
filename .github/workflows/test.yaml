@@ -39,4 +39,3 @@ jobs:
         with:
           pytest-coverage-path: tests/coverage/pytest-coverage.txt
           junitxml-path: tests/coverage/pytest.xml
-          report-only-changed-files: true
