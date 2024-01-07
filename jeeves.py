@@ -18,6 +18,9 @@ def ci():
             cov='yaml_ld',
             _piped=True,
             _ok_code={0, 1},
-            _env=os.environ,
+            _env={
+                **os.environ,
+                'PYTEST_RUN_PATH': 'tests',
+            },
         ),
     )
