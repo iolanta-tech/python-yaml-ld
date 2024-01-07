@@ -22,8 +22,11 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
+      - name: Install base dependencies
+        run: pip install poetry
+
       - name: Install dependencies
-        run: pip install .
+        run: poetry install
 
       - name: Test
         shell: bash
