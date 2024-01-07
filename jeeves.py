@@ -13,7 +13,7 @@ def ci():
         _in=pytest(
             'tests',
             junitxml='tests/coverage/pytest.xml',
-            cov_report=['', 'html:tests/coverage/html'],
+            # cov_report=['', 'html:tests/coverage/html'],
             cov='yaml_ld',
             _piped=True,
             _ok_code={0, 1},
