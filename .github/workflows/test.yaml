@@ -13,9 +13,9 @@ jobs:
 
     steps:
       # Issue: https://github.com/actions/checkout/issues/211#issuecomment-1368283898
-      - name: Chown user
-        run: |
-          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+#      - name: Chown user
+#        run: |
+#          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
 
       - uses: actions/checkout@v3
         with:
