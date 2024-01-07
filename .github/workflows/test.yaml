@@ -30,7 +30,8 @@ jobs:
 
       - name: Test
         shell: bash
-        run: poetry run j test -- --junitxml=tests/coverage/pytest.xml --cov-report= --cov-report=html:tests/coverage/html --cov=yaml_ld | tee tests/coverage/pytest-coverage.txt
+        # FIXME: This is ugly; move this inside `j test`.
+        run: poetry run j test -- -- --junitxml=tests/coverage/pytest.xml --cov-report= --cov-report=html:tests/coverage/html --cov=yaml_ld | tee tests/coverage/pytest-coverage.txt
 
       # Report only changed files because the result is too large
       - name: Pytest Coverage Comment
