@@ -1,0 +1,39 @@
+name: Unit tests
+
+on: [pull_request, push, workflow_dispatch]
+
+jobs:
+  test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
+
+    steps:
+      # Issue: https://github.com/actions/checkout/issues/211#issuecomment-1368283898
+      - name: Chown user
+        run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Install dependencies
+        run: pip install .
+
+      - name: Test
+        shell: bash
+        run: j test -- --junitxml=tests/coverage/pytest.xml --cov-report= --cov-report=html:tests/coverage/html --cov=yaml_ld | tee tests/coverage/pytest-coverage.txt
+
+      # Report only changed files because the result is too large
+      - name: Pytest Coverage Comment
+        uses: MishaKav/pytest-coverage-comment@main
+        id: coverage_comment
+        with:
+          pytest-coverage-path: tests/coverage/pytest-coverage.txt
+          junitxml-path: tests/coverage/pytest.xml
+          report-only-changed-files: true
