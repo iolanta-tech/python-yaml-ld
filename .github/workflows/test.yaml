@@ -22,8 +22,8 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Install base dependencies
-        run: pip install poetry
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
 
       - name: Configure poetry
         run: poetry config virtualenvs.create false
