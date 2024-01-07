@@ -23,7 +23,6 @@ jeeves-yeti-pyproject = { version = "^0.2.20", markers = "python_version >= '3.1
 [tool.poetry.group.dev.dependencies]
 types-pyyaml = "^6.0.12.11"
 rdflib-pyld-compat = "^0.1.0"
-pytest-github-actions-annotate-failures = "^0.2.0"
 lambdas = "^0.2.0"
 
 [build-system]
