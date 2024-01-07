@@ -12,6 +12,7 @@ from ldtest.models import TestCase
 from tests.common import load_tests
 from tests.errors import FailureToFail
 from yaml_ld.errors import YAMLLDError
+from lambdas import _
 
 tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
 
@@ -34,11 +35,7 @@ def test_to_rdf(test_case: TestCase):
     assert actual_graph.isomorphic(expected_graph)
 
 
-@pytest.mark.parametrize(
-    'test_case',
-    load_tests(tests.ExpandTest),
-    ids=operator.attrgetter('test'),
-)
+@pytest.mark.parametrize('test_case', load_tests(tests.ExpandTest), ids=_.test)
 def test_expand(test_case: TestCase):
     raw_document = test_case.input.read_bytes()
 
