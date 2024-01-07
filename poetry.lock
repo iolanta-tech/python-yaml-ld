@@ -914,6 +914,20 @@ MarkupSafe = ">=2.0"
 i18n = ["Babel (>=2.7)"]
 
 [[package]]
+name = "lambdas"
+version = "0.2.0"
+description = "Typed lambdas that are short and readable"
+optional = false
+python-versions = ">=3.8.1,<4"
+files = [
+    {file = "lambdas-0.2.0-py3-none-any.whl", hash = "sha256:4cd3e6f10966951c5810b019d1693a0c0881d7646b2bbad28f87e4f43f8a053e"},
+    {file = "lambdas-0.2.0.tar.gz", hash = "sha256:b9ddeb7d10f6f6abe665fe4a21e7441890696a42b406b9c3ef3de8fac256ebe8"},
+]
+
+[package.dependencies]
+typing-extensions = ">=4.0,<5.0"
+
+[[package]]
 name = "lxml"
 version = "4.9.3"
 description = "Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API."
@@ -2343,4 +2357,4 @@ typing_extensions = ">=4.0,<5.0"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4.0"
-content-hash = "2addfa91ebb9adbfb6c908672f7cc86ecc34477272375b88a52edff34db63943"
+content-hash = "60dfa1dbc7ddf6ee51275166a05a6ed7ad27bfa5809c13164dd1ba58e46e8d19"
