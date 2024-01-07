@@ -10,6 +10,11 @@ def update_submodule():
 
 def ci():
     """Run CI."""
+    env = {
+        **os.environ,
+        'PYTEST_RUN_PATH': 'tests',
+    }
+
     tee(
         'tests/coverage/pytest-coverage.txt',
         _in=pytest(
@@ -18,9 +23,7 @@ def ci():
             cov='yaml_ld',
             _piped=True,
             _ok_code={0, 1},
-            _env={
-                **os.environ,
-                'PYTEST_RUN_PATH': 'tests',
-            },
+            _env=env,
         ),
+        _env=env,
     )
