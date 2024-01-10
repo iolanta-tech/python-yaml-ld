@@ -26,7 +26,7 @@ def update_submodule():
 def ci():
     """Run CI."""
     try:
-        pytest('tests/test_specification.py::test_expand', color='no')
+        pytest('tests', color='no')
     except ErrorReturnCode as err:
         *lines, summary_line = err.stdout.decode().splitlines()
 
