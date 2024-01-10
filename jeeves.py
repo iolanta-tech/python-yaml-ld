@@ -1,6 +1,17 @@
 import os
+from pathlib import Path
 
-from sh import git, pytest, tee
+from dominate.tags import summary, details, table, thead, tr, td, tbody, code
+from sh import git, pytest, tee, ErrorReturnCode
+
+
+COMMENT_TEMPLATE = '''
+## Test Report
+
+{summary}
+
+{failures}
+'''
 
 
 def update_submodule():
@@ -10,20 +21,40 @@ def update_submodule():
 
 def ci():
     """Run CI."""
-    env = {
-        **os.environ,
-        'PYTEST_RUN_PATH': 'tests',
-    }
+    try:
+        pytest('tests/test_specification.py::test_expand', color='no')
+    except ErrorReturnCode as err:
+        *lines, summary_line = err.stdout.decode().splitlines()
 
-    tee(
-        'tests/coverage/pytest-coverage.txt',
-        _in=pytest(
-            'tests',
-            junitxml='tests/coverage/pytest.xml',
-            cov='yaml_ld',
-            _piped=True,
-            _ok_code={0, 1},
-            _env=env,
-        ),
-        _env=env,
-    )
+        failures = [
+            line.replace('FAILED ', '').split(' - ')
+            for line in sorted(lines)
+            if line.startswith('FAILED')
+        ]
+
+        print(COMMENT_TEMPLATE.format(
+            summary=summary_line,
+            failures=details(
+                summary('Test Results'),
+                table(
+                    thead(
+                        tr(
+                            td('Test'),
+                            td('Error'),
+                        ),
+                    ),
+                    tbody(
+                        tr(
+                            td(
+                                '🔴',
+                                code(test_name),
+                            ),
+                            td(error_text),
+                        )
+                        for test_name, error_text in failures
+                    ),
+                )
+            )
+        ))
+
+        # raise ValueError(summary_line)
