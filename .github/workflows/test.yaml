@@ -31,6 +31,8 @@ jobs:
       - name: Test
         shell: bash
         run: poetry run j ci
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       # Report only changed files because the result is too large
       - name: Pytest Coverage Comment
