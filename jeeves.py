@@ -61,7 +61,13 @@ def ci():
             )
         )
 
-        post_new_comment = gh.pr.comment.bake(body_file='-', _in=new_comment)
+        post_new_comment = gh.pr.comment.bake(_in=new_comment)
+
+        if pr_number := os.environ.get('PR_NUMBER'):
+            post_new_comment = post_new_comment.bake(pr_number)
+
+        post_new_comment = post_new_comment.bake(body_file='-')
+
         try:
             post_new_comment('--edit-last')
         except ErrorReturnCode as err:
