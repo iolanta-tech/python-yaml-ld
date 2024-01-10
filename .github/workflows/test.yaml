@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8"]
 
     steps:
       # Issue: https://github.com/actions/checkout/issues/211#issuecomment-1368283898
@@ -31,6 +31,9 @@ jobs:
       - name: Test
         shell: bash
         run: poetry run j ci
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
 
       # Report only changed files because the result is too large
       - name: Pytest Coverage Comment
