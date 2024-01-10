@@ -1,8 +1,12 @@
+import json
 import os
 from pathlib import Path
 
 from dominate.tags import summary, details, table, thead, tr, td, tbody, code
+import sh
 from sh import git, pytest, tee, ErrorReturnCode
+
+gh = sh.gh.bake(_env={**os.environ, 'NO_COLOR': '1'})
 
 
 COMMENT_TEMPLATE = '''
@@ -27,12 +31,12 @@ def ci():
         *lines, summary_line = err.stdout.decode().splitlines()
 
         failures = [
-            line.replace('FAILED ', '').split(' - ')
+            line.replace('FAILED tests/', '').split(' - ')
             for line in sorted(lines)
             if line.startswith('FAILED')
         ]
 
-        print(COMMENT_TEMPLATE.format(
+        new_comment = COMMENT_TEMPLATE.format(
             summary=summary_line,
             failures=details(
                 summary('Test Results'),
@@ -49,12 +53,19 @@ def ci():
                                 '🔴',
                                 code(test_name),
                             ),
-                            td(error_text),
+                            td(code(error_text)),
                         )
                         for test_name, error_text in failures
                     ),
                 )
             )
-        ))
+        )
 
-        # raise ValueError(summary_line)
+        post_new_comment = gh.pr.comment.bake(body_file='-', _in=new_comment)
+        try:
+            post_new_comment('--edit-last')
+        except ErrorReturnCode as err:
+            if 'no comments found for current user' in err.stderr.decode():
+                post_new_comment()
+            else:
+                raise
