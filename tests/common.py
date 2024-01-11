@@ -21,11 +21,6 @@ def iolanta() -> Iolanta:
     # Return a list of test cases
     graph = ConjunctiveGraph()
     for manifest_path in specifications_root.glob('*/tests/*manifest.jsonld'):
-        if manifest_path.name == 'html-manifest.jsonld':
-            # FIXME: We do not execute HTML tests because YAML-LD spec does not
-            #  support embedding YAML-LD into HTML in <script> tags.
-            continue
-
         # FIXME: Use `iolanta.add()`.
         #   At this point, we can't do that: `iolanta` does not resolve the
         #   `context.jsonld` file which this document is referring to.
