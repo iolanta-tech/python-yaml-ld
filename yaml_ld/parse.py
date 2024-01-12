@@ -28,36 +28,41 @@ def try_extracting_yaml_from_html(yaml_string: str) -> str:
             yield script.text
 
 
-def parse(  # noqa: WPS238, WPS231, C901
-    yaml_string: str | bytes | Path,
-) -> Document:
-    """Parse YAML-LD document."""
-    if isinstance(yaml_string, Path):
-        yaml_string = yaml_string.read_bytes()
+def _parse_html(html_string: str) -> Document:
+    """Parse all YAML-LD scripts embedded into HTML."""
+    html_yaml_scripts = list(try_extracting_yaml_from_html(html_string))
 
-    if isinstance(yaml_string, bytes):
+    if not html_yaml_scripts:
+        return {}
+
+    try:
+        [singular_script] = html_yaml_scripts
+    except ValueError:
+        return [parse(script) for script in html_yaml_scripts]
+
+    return parse(singular_script)
+
+
+def parse(   # noqa: WPS238, WPS231, C901
+    raw_document: str | bytes | Path,
+) -> Document:
+    """Parse a YAML-LD document."""
+    if isinstance(raw_document, Path):
+        raw_document = raw_document.read_bytes()
+
+    if isinstance(raw_document, bytes):
         try:
-            yaml_string = yaml_string.decode('utf-8')
+            raw_document = raw_document.decode('utf-8')
         except UnicodeDecodeError as err:
             raise InvalidEncoding() from err
 
     try:
         document: Document = yaml.load(  # noqa: S506
-            stream=yaml_string,
+            stream=raw_document,
             Loader=YAMLLDLoader,
         )
     except ScannerError:
-        html_yaml_scripts = list(try_extracting_yaml_from_html(yaml_string))
-
-        if not html_yaml_scripts:
-            return {}
-
-        try:
-            [singular_script] = html_yaml_scripts
-        except ValueError:
-            return [parse(script) for script in html_yaml_scripts]
-
-        return parse(singular_script)
+        return _parse_html(raw_document)
 
     except ComposerError as err:
         raise UndefinedAliasFound() from err
