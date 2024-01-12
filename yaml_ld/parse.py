@@ -12,7 +12,7 @@ from yaml_ld.errors import (
     UndefinedAliasFound, MappingKeyError, InvalidEncoding,
 )
 from yaml_ld.loader import YAMLLDLoader
-from yaml_ld.models import Document
+from yaml_ld.models import Document, DocumentType
 
 
 def try_extracting_yaml_from_html(yaml_string: str) -> str:
@@ -47,7 +47,17 @@ def parse(   # noqa: WPS238, WPS231, C901
     raw_document: str | bytes | Path,
 ) -> Document:
     """Parse a YAML-LD document."""
+    document_type = None
+
     if isinstance(raw_document, Path):
+        document_type = {
+            '.json': DocumentType.YAML,
+            '.jsonld': DocumentType.YAML,
+            '.yaml': DocumentType.YAML,
+            '.yamlld': DocumentType.YAML,
+            '.html': DocumentType.HTML,
+        }.get(raw_document.suffix)
+
         raw_document = raw_document.read_bytes()
 
     if isinstance(raw_document, bytes):
@@ -61,8 +71,11 @@ def parse(   # noqa: WPS238, WPS231, C901
             stream=raw_document,
             Loader=YAMLLDLoader,
         )
-    except ScannerError:
-        return _parse_html(raw_document)
+    except ScannerError as err:
+        if document_type != DocumentType.YAML:
+            return _parse_html(raw_document)
+
+        raise LoadingDocumentFailed() from err
 
     except ComposerError as err:
         raise UndefinedAliasFound() from err
