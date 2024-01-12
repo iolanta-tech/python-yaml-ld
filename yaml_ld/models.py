@@ -13,6 +13,13 @@ ExtractAllScripts = Annotated[
 ]
 
 
+class DocumentType(str, Enum):
+    """Document type."""
+
+    YAML = 'yaml'
+    HTML = 'html'
+
+
 class ProcessingMode(str, Enum):  # noqa: WPS600
     """JSON-LD API version."""
 
