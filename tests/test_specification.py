@@ -37,8 +37,6 @@ def test_to_rdf(test_case: TestCase):
 
 @pytest.mark.parametrize('test_case', load_tests(tests.ExpandTest), ids=_.test)
 def test_expand(test_case: TestCase):
-    raw_document = test_case.input.read_bytes()
-
     if isinstance(test_case.result, str):
         try:
             expanded_document = yaml_ld.expand(test_case.input)
@@ -47,13 +45,13 @@ def test_expand(test_case: TestCase):
         else:
             pytest.fail(str(FailureToFail(
                 expected_error_code=test_case.result,
-                raw_document=raw_document,
+                raw_document=test_case.input,
                 expanded_document=expanded_document,
             )))
 
     elif isinstance(test_case.result, Path):
         expected = yaml_ld.parse(test_case.result.read_text())
-        actual = yaml_ld.expand(raw_document)
+        actual = yaml_ld.expand(test_case.input)
         assert actual == expected
     else:
         raise ValueError(f'What to do with this test? {test_case}')

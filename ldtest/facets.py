@@ -19,7 +19,7 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
             test_url = URL(row['test'])
             yield TestCase(
                 test=f'{test_url.name}#{test_url.fragment}',
-                input=Path(URL(row['input']).path),
+                input=URL(row['input']),
                 result=self._process_result(row['result']),
                 req=(req := row.get('req')) and req.value,
             )
