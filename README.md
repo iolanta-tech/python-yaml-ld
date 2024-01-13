@@ -44,3 +44,24 @@ Converts the YAML-LD document to RDF (quads) form, enabling interoperability wit
   - `base` (str | None): The base IRI to use.
   - `document_loader` (DocumentLoader | None): The document loader to use.
 
+## Development
+
+* Clone the repository
+* Set up a Python virtual environment
+* Install Poetry:
+
+```shell
+pip install -U pip poetry
+```
+
+* Install the project:
+
+```shell
+poetry install
+```
+
+* Retrieve submodules:
+
+```shell
+j update-submodule
+```

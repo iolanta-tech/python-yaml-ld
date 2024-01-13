@@ -16,8 +16,9 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
     def show(self) -> Iterable[TestCase]:
         rows = self.stored_query('tests.sparql', test_class=self.iri)
         for row in rows:
+            test_url = URL(row['test'])
             yield TestCase(
-                test=URL(row['test']).fragment,
+                test=f'{test_url.name}#{test_url.fragment}',
                 input=Path(URL(row['input']).path),
                 result=self._process_result(row['result']),
                 req=(req := row.get('req')) and req.value,
