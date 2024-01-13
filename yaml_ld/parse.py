@@ -28,7 +28,7 @@ def try_extracting_yaml_from_html(
         if script['type'] not in {'application/ld+json', 'application/ld+yaml'}:
             continue
 
-        if fragment is not None and script['id'] != fragment:
+        if fragment is not None and script.get('id') != fragment:
             continue
 
         yield script.text
@@ -56,7 +56,7 @@ def parse(   # noqa: WPS238, WPS231, C901
     fragment = None
 
     if isinstance(raw_document, URL):
-        fragment = raw_document.fragment
+        fragment = raw_document.fragment or None
         raw_document = Path(raw_document.path)
 
     if isinstance(raw_document, Path):
