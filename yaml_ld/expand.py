@@ -3,6 +3,7 @@ from typing import Annotated
 
 from pydantic import Field
 from pyld import jsonld
+from urlpath import URL
 
 from yaml_ld.annotations import Help
 from yaml_ld.errors import CycleDetected, MappingKeyError
@@ -20,7 +21,7 @@ class ExpandOptions(BaseOptions):
 
 
 def expand(   # noqa: C901, WPS211
-    document: str | bytes | Document | Path,
+    document: str | bytes | Document | Path | URL,
     base: Annotated[str | None, Help('The base IRI to use.')] = None,
     context: Annotated[
         Document | None,
@@ -31,7 +32,7 @@ def expand(   # noqa: C901, WPS211
     document_loader: DocumentLoader | None = None,
 ):
     """Expand a YAML-LD document."""
-    if isinstance(document, (str, bytes, Path)):
+    if isinstance(document, (str, bytes, Path, URL)):
         if isinstance(document, Path) and base is None:
             base = f'file://{document.parent}/'
 
