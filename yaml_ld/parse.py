@@ -35,12 +35,8 @@ def _parse_html(html_string: str) -> Document:
     if not html_yaml_scripts:
         return {}
 
-    try:
-        [singular_script] = html_yaml_scripts
-    except ValueError:
-        return [parse(script) for script in html_yaml_scripts]
-
-    return parse(singular_script)
+    first_script, *_other_scripts = html_yaml_scripts
+    return parse(first_script)
 
 
 def parse(   # noqa: WPS238, WPS231, C901
