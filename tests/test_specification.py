@@ -39,7 +39,10 @@ def test_to_rdf(test_case: TestCase):
 def test_expand(test_case: TestCase):
     if isinstance(test_case.result, str):
         try:
-            expanded_document = yaml_ld.expand(test_case.input)
+            expanded_document = yaml_ld.expand(
+                test_case.input,
+                extract_all_scripts=test_case.extract_all_scripts,
+            )
         except YAMLLDError as error:
             assert error.code == test_case.result
         else:
@@ -51,7 +54,10 @@ def test_expand(test_case: TestCase):
 
     elif isinstance(test_case.result, Path):
         expected = yaml_ld.parse(test_case.result.read_text())
-        actual = yaml_ld.expand(test_case.input)
+        actual = yaml_ld.expand(
+            test_case.input,
+            extract_all_scripts=test_case.extract_all_scripts,
+        )
         assert actual == expected
     else:
         raise ValueError(f'What to do with this test? {test_case}')
