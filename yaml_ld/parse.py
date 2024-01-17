@@ -46,7 +46,7 @@ def _parse_html(
     ))
 
     if not html_yaml_scripts:
-        return {}
+        return []
 
     if extract_all_scripts:
         return [parse(script) for script in html_yaml_scripts]
@@ -83,6 +83,13 @@ def parse(   # noqa: WPS238, WPS231, C901
             raw_document = raw_document.decode('utf-8')
         except UnicodeDecodeError as err:
             raise InvalidEncoding() from err
+
+    if document_type == DocumentType.HTML:
+        return _parse_html(
+            raw_document,
+            fragment=fragment,
+            extract_all_scripts=extract_all_scripts,
+        )
 
     try:
         document: Document = yaml.load(  # noqa: S506
