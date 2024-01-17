@@ -18,7 +18,11 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
         for row in rows:
             test_url = URL(row['test'])
 
-            extract_all_scripts = row.get('extract_all_scripts', False)
+            try:
+                extract_all_scripts = row['extract_all_scripts'].value
+            except KeyError:
+                extract_all_scripts = False
+
             yield TestCase(
                 test=f'{test_url.name}#{test_url.fragment}',
                 input=URL(row['input']),
