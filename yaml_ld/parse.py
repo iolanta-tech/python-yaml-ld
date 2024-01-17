@@ -11,7 +11,7 @@ from yaml.scanner import ScannerError
 from yaml_ld.errors import (
     DocumentIsScalar,
     LoadingDocumentFailed,
-    UndefinedAliasFound, MappingKeyError, InvalidEncoding,
+    UndefinedAliasFound, MappingKeyError, InvalidEncoding, NoYAMLWithinHTML,
 )
 from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import Document, DocumentType, ExtractAllScripts
@@ -46,7 +46,7 @@ def _parse_html(
     ))
 
     if not html_yaml_scripts:
-        return []
+        raise NoYAMLWithinHTML()
 
     if extract_all_scripts:
         return [parse(script) for script in html_yaml_scripts]

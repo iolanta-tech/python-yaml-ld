@@ -23,7 +23,7 @@ class FailureToFail(Documented):
     @property
     def formatted_raw_document(self) -> str:
         """Present the raw document."""
-        return self.raw_document.decode()
+        return str(self.raw_document)
 
     @property
     def formatted_expanded_document(self) -> str:
