@@ -36,7 +36,7 @@ def expand(   # noqa: C901, WPS211
         if isinstance(document, Path) and base is None:
             base = f'file://{document.parent}/'
 
-        document = parse(document)
+        document = parse(document, extract_all_scripts=extract_all_scripts)
 
     options = ExpandOptions(
         base=base,

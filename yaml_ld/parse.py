@@ -14,7 +14,7 @@ from yaml_ld.errors import (
     UndefinedAliasFound, MappingKeyError, InvalidEncoding,
 )
 from yaml_ld.loader import YAMLLDLoader
-from yaml_ld.models import Document, DocumentType
+from yaml_ld.models import Document, DocumentType, ExtractAllScripts
 
 
 def try_extracting_yaml_from_html(
@@ -34,7 +34,11 @@ def try_extracting_yaml_from_html(
         yield script.text
 
 
-def _parse_html(html_string: str, fragment: str | None) -> Document:
+def _parse_html(
+    html_string: str,
+    fragment: str | None,
+    extract_all_scripts: ExtractAllScripts = False,
+) -> Document:
     """Parse all YAML-LD scripts embedded into HTML."""
     html_yaml_scripts = list(try_extracting_yaml_from_html(
         html_string,
@@ -44,12 +48,16 @@ def _parse_html(html_string: str, fragment: str | None) -> Document:
     if not html_yaml_scripts:
         return {}
 
+    if extract_all_scripts:
+        return [parse(script) for script in html_yaml_scripts]
+
     first_script, *_other_scripts = html_yaml_scripts
     return parse(first_script)
 
 
 def parse(   # noqa: WPS238, WPS231, C901
     raw_document: str | bytes | Path | URL,
+    extract_all_scripts: ExtractAllScripts = False,
 ) -> Document:
     """Parse a YAML-LD document."""
     document_type = None
@@ -83,7 +91,11 @@ def parse(   # noqa: WPS238, WPS231, C901
         )
     except ScannerError as err:
         if document_type != DocumentType.YAML:
-            return _parse_html(raw_document, fragment=fragment)
+            return _parse_html(
+                raw_document,
+                fragment=fragment,
+                extract_all_scripts=extract_all_scripts,
+            )
 
         raise LoadingDocumentFailed() from err
 

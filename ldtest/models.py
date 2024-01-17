@@ -10,6 +10,7 @@ class TestCase:
     input: Path
     result: Path | str | Exception   # noqa: WPS110
     req: str
+    extract_all_scripts: bool = False
 
     @property
     def raw_document(self) -> bytes:

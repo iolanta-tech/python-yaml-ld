@@ -17,11 +17,14 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
         rows = self.stored_query('tests.sparql', test_class=self.iri)
         for row in rows:
             test_url = URL(row['test'])
+
+            extract_all_scripts = row.get('extract_all_scripts', False)
             yield TestCase(
                 test=f'{test_url.name}#{test_url.fragment}',
                 input=URL(row['input']),
                 result=self._process_result(row['result']),
                 req=(req := row.get('req')) and req.value,
+                extract_all_scripts=extract_all_scripts,
             )
 
     def _process_result(
