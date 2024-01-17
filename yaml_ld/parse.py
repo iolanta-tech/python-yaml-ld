@@ -46,6 +46,9 @@ def _parse_html(
     ))
 
     if not html_yaml_scripts:
+        if extract_all_scripts:
+            return []
+
         raise NoYAMLWithinHTML()
 
     if extract_all_scripts:
