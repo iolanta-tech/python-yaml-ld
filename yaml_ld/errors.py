@@ -33,6 +33,13 @@ class LoadingDocumentFailed(YAMLLDError):
 
 
 @dataclass
+class NoYAMLWithinHTML(YAMLLDError):
+    """No YAML-LD fragments found in an HTML document."""
+
+    code: str = 'loading document failed'
+
+
+@dataclass
 class MappingKeyError(YAMLLDError):
     """A mapping key MUST be a string."""
 
