@@ -12,6 +12,7 @@ from yaml_ld.errors import (
     DocumentIsScalar,
     LoadingDocumentFailed,
     UndefinedAliasFound, MappingKeyError, InvalidEncoding, NoYAMLWithinHTML,
+    InvalidScriptElement,
 )
 from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import Document, DocumentType, ExtractAllScripts
@@ -55,15 +56,21 @@ def _parse_html(
         return [parse(script) for script in html_yaml_scripts]
 
     first_script, *_other_scripts = html_yaml_scripts
-    return parse(first_script)
+    try:
+        return parse(
+            first_script,
+            document_type=DocumentType.YAML,
+        )
+    except LoadingDocumentFailed as err:
+        raise InvalidScriptElement from err
 
 
 def parse(   # noqa: WPS238, WPS231, C901
     raw_document: str | bytes | Path | URL,
     extract_all_scripts: ExtractAllScripts = False,
+    document_type: DocumentType | None = None,
 ) -> Document:
     """Parse a YAML-LD document."""
-    document_type = None
     fragment = None
 
     if isinstance(raw_document, URL):
