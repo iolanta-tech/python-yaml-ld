@@ -33,6 +33,13 @@ class LoadingDocumentFailed(YAMLLDError):
 
 
 @dataclass
+class InvalidScriptElement(YAMLLDError):
+    """HTML <script> element content is not valid YAML."""
+
+    code: str = 'invalid script element'
+
+
+@dataclass
 class NoYAMLWithinHTML(YAMLLDError):
     """No YAML-LD fragments found in an HTML document."""
 
