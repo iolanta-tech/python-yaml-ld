@@ -12,11 +12,6 @@ jobs:
         python-version: ["3.8"]
 
     steps:
-      # Issue: https://github.com/actions/checkout/issues/211#issuecomment-1368283898
-#      - name: Chown user
-#        run: |
-#          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
-
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -35,10 +30,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
 
-      # Report only changed files because the result is too large
-      - name: Pytest Coverage Comment
+      - name: Pytest coverage comment
         uses: MishaKav/pytest-coverage-comment@main
-        id: coverage_comment
         with:
-          pytest-coverage-path: tests/coverage/pytest-coverage.txt
-          junitxml-path: tests/coverage/pytest.xml
+          pytest-coverage-path: tests/artifacts/coverage.txt
+          junitxml-path: tests/artifacts/pytest.xml
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: tests/artifacts

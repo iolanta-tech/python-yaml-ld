@@ -2,6 +2,7 @@ import json
 import os
 from pathlib import Path
 
+import typer
 from dominate.tags import summary, details, table, thead, tr, td, tbody, code
 import sh
 from sh import git, pytest, tee, ErrorReturnCode
@@ -25,9 +26,20 @@ def update_submodule():
 
 def ci():
     """Run CI."""
+    coverage = Path(__file__).parent / 'tests/coverage'
+
     try:
-        pytest('tests', color='no')
+        pytest.bake(
+            color='no',
+            junitxml=coverage / 'pytest.xml',
+            cov_report='term-missing:skip-covered',
+            cov='yaml_ld',
+        ).tests(
+            _out=coverage / 'coverage.txt',
+        )
     except ErrorReturnCode as err:
+        raise typer.Exit(1)
+
         *lines, summary_line = err.stdout.decode().splitlines()
 
         failures = [
