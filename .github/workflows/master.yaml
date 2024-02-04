@@ -1,0 +1,39 @@
+name: Baseline Tests
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.8"]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Test
+        shell: bash
+        run: poetry run j ci
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Upload pytest.xml
+        uses: actions/upload-artifact@v2
+        with:
+          name: pytest-xml
+          path: tests/artifacts/pytest.xml
