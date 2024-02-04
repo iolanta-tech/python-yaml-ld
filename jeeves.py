@@ -91,7 +91,9 @@ def ci():
         ).tests(
             _out=artifacts / 'coverage.txt',
         )
-    except ErrorReturnCode:
+    except ErrorReturnCode as err:
+        print(err.stdout)
+        print(err.stderr)
         tests_success = False
 
     with pytest_xml.open() as current_xml_data:
@@ -117,19 +119,19 @@ def ci():
 
     comment_body_parts = []
     if newly_passed:
-        comment_body_parts.append('## Newly passed!')
+        comment_body_parts.append('## 🎉 Newly passed!')
 
         for test_name in newly_passed:
-            comment_body_parts.append(f'* {test_name}')
+            comment_body_parts.append(f'* 🟢 `{test_name}`')
 
     if newly_failed:
-        comment_body_parts.append('## Newly failed :(((')
+        comment_body_parts.append('## 💥 Newly failed')
 
         for test_name in newly_failed:
-            comment_body_parts.append(f'* {test_name}')
+            comment_body_parts.append(f'* 🔴 `{test_name}`')
 
     if not comment_body_parts:
-        comment_body_parts.append('Nothing had changed.')
+        comment_body_parts.append('Nothing had changed in tests.')
 
     comment = COMMENT_TEMPLATE.format(
         body='\n\n'.join(comment_body_parts),
