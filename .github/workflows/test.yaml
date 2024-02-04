@@ -43,7 +43,7 @@ jobs:
         with:
           name: pytest
           path: tests/artifacts/pytest.xml
-          reporter: jest-junit
+          reporter: java-junit
 
       - name: Upload pytest.xml
         if: github.ref == 'refs/heads/master'

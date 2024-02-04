@@ -81,7 +81,6 @@ def ci():
     artifacts = Path(__file__).parent / 'tests/artifacts'
     pytest_xml = artifacts / 'pytest.xml'
 
-    tests_success = True
     try:
         pytest.bake(
             color='no',
@@ -94,7 +93,6 @@ def ci():
     except ErrorReturnCode as err:
         print(err.stdout)
         print(err.stderr)
-        tests_success = False
 
     with pytest_xml.open() as current_xml_data:
         current_test_report = dict(_parse_pytest_xml(current_xml_data))
@@ -152,40 +150,5 @@ def ci():
         else:
             raise
 
-    if not tests_success:
+    if newly_failed:
         raise typer.Exit(1)
-
-    """
-        *lines, summary_line = err.stdout.decode().splitlines()
-
-        failures = [
-            line.replace('FAILED tests/', '').split(' - ')
-            for line in sorted(lines)
-            if line.startswith('FAILED')
-        ]
-
-        new_comment = COMMENT_TEMPLATE.format(
-            summary=summary_line,
-            failures=details(
-                summary('Test Results'),
-                table(
-                    thead(
-                        tr(
-                            td('Test'),
-                            td('Error'),
-                        ),
-                    ),
-                    tbody(
-                        tr(
-                            td(
-                                '🔴',
-                                code(test_name),
-                            ),
-                            td(code(error_text)),
-                        )
-                        for test_name, error_text in failures
-                    ),
-                )
-            )
-        )
-    """
