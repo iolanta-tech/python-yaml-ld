@@ -26,16 +26,16 @@ def update_submodule():
 
 def ci():
     """Run CI."""
-    coverage = Path(__file__).parent / 'tests/coverage'
+    artifacts = Path(__file__).parent / 'tests/artifacts'
 
     try:
         pytest.bake(
             color='no',
-            junitxml=coverage / 'pytest.xml',
+            junitxml=artifacts / 'pytest.xml',
             cov_report='term-missing:skip-covered',
             cov='yaml_ld',
         ).tests(
-            _out=coverage / 'coverage.txt',
+            _out=artifacts / 'coverage.txt',
         )
     except ErrorReturnCode as err:
         raise typer.Exit(1)
