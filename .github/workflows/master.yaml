@@ -35,3 +35,11 @@ jobs:
         with:
           name: pytest-xml
           path: tests/artifacts/pytest.xml
+
+      - name: Post Test Report
+        uses: dorny/test-reporter@v1
+        with:
+          name: pytest
+          path: tests/artifacts/pytest.xml
+          reporter: java-junit
+          fail-on-error: false

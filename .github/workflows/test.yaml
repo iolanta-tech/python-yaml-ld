@@ -43,10 +43,3 @@ jobs:
           path: tests/artifacts/pytest.xml
           reporter: java-junit
           fail-on-error: false
-
-      - name: Upload pytest.xml
-        if: github.ref == 'refs/heads/master'
-        uses: actions/upload-artifact@v2
-        with:
-          name: pytest-xml
-          path: tests/artifacts/pytest.xml
