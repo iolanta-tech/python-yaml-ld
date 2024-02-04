@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from urlpath import URL
 from yaml.composer import ComposerError
 from yaml.constructor import ConstructorError
+from yaml.parser import ParserError
 from yaml.scanner import ScannerError
 
 from yaml_ld.errors import (
@@ -124,6 +125,9 @@ def parse(   # noqa: WPS238, WPS231, C901
             raise MappingKeyError() from err
 
         raise
+
+    except ParserError as err:
+        raise InvalidScriptElement() from err
 
     if not isinstance(document, (dict, list)):
         raise DocumentIsScalar(document=document)
