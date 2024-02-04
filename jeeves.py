@@ -16,6 +16,9 @@ from urlpath import URL
 
 gh = sh.gh.bake(_env={**os.environ, 'NO_COLOR': '1'})
 
+artifacts = Path(__file__).parent / 'tests/artifacts'
+pytest_xml = artifacts / 'pytest.xml'
+
 
 COMMENT_TEMPLATE = '''
 ## Test Diff Report
@@ -57,6 +60,22 @@ def _parse_pytest_xml(xml_data: TextIO):
             yield full_test_name, TestStatus.PASSED
 
 
+def test_with_artifacts():
+    """Run pytest and save the results to artifacts directory."""
+    try:
+        pytest.bake(
+            color='no',
+            junitxml=pytest_xml,
+            cov_report='term-missing:skip-covered',
+            cov='yaml_ld',
+        ).tests(
+            _out=artifacts / 'coverage.txt',
+        )
+    except ErrorReturnCode as err:
+        print(err.stdout)
+        print(err.stderr)
+
+
 def ci():
     """Run CI."""
     # Download artifact from a previous run
@@ -78,21 +97,7 @@ def ci():
         ),
     )
 
-    artifacts = Path(__file__).parent / 'tests/artifacts'
-    pytest_xml = artifacts / 'pytest.xml'
-
-    try:
-        pytest.bake(
-            color='no',
-            junitxml=pytest_xml,
-            cov_report='term-missing:skip-covered',
-            cov='yaml_ld',
-        ).tests(
-            _out=artifacts / 'coverage.txt',
-        )
-    except ErrorReturnCode as err:
-        print(err.stdout)
-        print(err.stderr)
+    test_with_artifacts()
 
     with pytest_xml.open() as current_xml_data:
         current_test_report = dict(_parse_pytest_xml(current_xml_data))

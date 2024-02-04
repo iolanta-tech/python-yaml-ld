@@ -28,9 +28,7 @@ jobs:
 
       - name: Test
         shell: bash
-        run: poetry run j ci
-        env:
-          GH_TOKEN: ${{ github.token }}
+        run: poetry run j test-with-artifacts
 
       - name: Upload pytest.xml
         uses: actions/upload-artifact@v2
