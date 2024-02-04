@@ -38,7 +38,7 @@ jobs:
           junitxml-path: tests/artifacts/pytest.xml
 
       - name: Upload pytest.xml
-        if: always()
+        if: github.ref == 'refs/heads/master'
         uses: actions/upload-artifact@v2
         with:
           name: pytest-xml
