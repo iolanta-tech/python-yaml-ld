@@ -37,6 +37,14 @@ jobs:
           pytest-coverage-path: tests/artifacts/coverage.txt
           junitxml-path: tests/artifacts/pytest.xml
 
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: github.ref != 'refs/heads/master'
+        with:
+          name: pytest
+          path: tests/artifacts/pytest.xml
+          reporter: jest-junit
+
       - name: Upload pytest.xml
         if: github.ref == 'refs/heads/master'
         uses: actions/upload-artifact@v2
