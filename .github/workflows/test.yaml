@@ -1,6 +1,6 @@
 name: Unit tests
 
-on: [push]
+on: [pull_request]
 
 jobs:
   test:
@@ -37,9 +37,9 @@ jobs:
           pytest-coverage-path: tests/artifacts/coverage.txt
           junitxml-path: tests/artifacts/pytest.xml
 
-      - name: Upload test results
+      - name: Upload pytest.xml
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: test-results
-          path: tests/artifacts
+          name: pytest-xml
+          path: tests/artifacts/pytest.xml
