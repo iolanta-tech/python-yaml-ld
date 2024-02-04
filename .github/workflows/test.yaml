@@ -37,9 +37,9 @@ jobs:
           pytest-coverage-path: tests/artifacts/coverage.txt
           junitxml-path: tests/artifacts/pytest.xml
 
-      - name: Test Report
+      - name: Post Test Report
         uses: dorny/test-reporter@v1
-        if: github.ref != 'refs/heads/master'
+        if: always()
         with:
           name: pytest
           path: tests/artifacts/pytest.xml
