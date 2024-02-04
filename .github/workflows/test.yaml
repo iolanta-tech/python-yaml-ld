@@ -31,7 +31,6 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
 
       - name: Pytest coverage comment
-        if: always()
         uses: MishaKav/pytest-coverage-comment@main
         with:
           pytest-coverage-path: tests/artifacts/coverage.txt
@@ -39,11 +38,11 @@ jobs:
 
       - name: Post Test Report
         uses: dorny/test-reporter@v1
-        if: always()
         with:
           name: pytest
           path: tests/artifacts/pytest.xml
           reporter: java-junit
+          fail-on-error: false
 
       - name: Upload pytest.xml
         if: github.ref == 'refs/heads/master'
