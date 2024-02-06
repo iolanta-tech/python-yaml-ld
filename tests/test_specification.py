@@ -20,10 +20,27 @@ tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
 @pytest.mark.parametrize(
     'test_case',
     load_tests(tests.ToRDFTest),
-    ids=operator.attrgetter('test'),
+    ids=_.test,
 )
 def test_to_rdf(test_case: TestCase):
     raw_document = test_case.raw_document
+
+    if isinstance(test_case.result, str):
+        try:
+            expanded_document = yaml_ld.to_rdf(
+                raw_document,
+                extract_all_scripts=test_case.extract_all_scripts,
+            )
+        except YAMLLDError as error:
+            assert error.code == test_case.result
+            return
+
+        else:
+            pytest.fail(str(FailureToFail(
+                expected_error_code=test_case.result,
+                raw_document=test_case.raw_document,
+                expanded_document=expanded_document,
+            )))
 
     actual_dataset = yaml_ld.to_rdf(raw_document)
     raw_expected_quads = test_case.raw_expected_document
@@ -48,7 +65,7 @@ def test_expand(test_case: TestCase):
         else:
             pytest.fail(str(FailureToFail(
                 expected_error_code=test_case.result,
-                raw_document=test_case.input,
+                raw_document=test_case.raw_document,
                 expanded_document=expanded_document,
             )))
 
