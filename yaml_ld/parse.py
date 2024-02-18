@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Iterable
 
+import funcy
 import yaml
 from bs4 import BeautifulSoup
 from urlpath import URL
@@ -66,6 +67,21 @@ def _parse_html(
         raise InvalidScriptElement from err
 
 
+def load_yaml_document(
+    raw_document,
+    extract_all_scripts: ExtractAllScripts = False,
+):
+    documents_stream = yaml.load_all(  # noqa: S506
+        stream=raw_document,
+        Loader=YAMLLDLoader,
+    )
+
+    if extract_all_scripts:
+        return list(documents_stream)
+
+    return funcy.first(documents_stream)
+
+
 def parse(   # noqa: WPS238, WPS231, C901
     raw_document: str | bytes | Path | URL,
     extract_all_scripts: ExtractAllScripts = False,
@@ -103,9 +119,9 @@ def parse(   # noqa: WPS238, WPS231, C901
         )
 
     try:
-        document: Document = yaml.load(  # noqa: S506
-            stream=raw_document,
-            Loader=YAMLLDLoader,
+        document: Document = load_yaml_document(
+            raw_document,
+            extract_all_scripts=extract_all_scripts,
         )
     except ScannerError as err:
         if document_type != DocumentType.YAML:
