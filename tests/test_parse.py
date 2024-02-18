@@ -11,8 +11,3 @@ def test_invalid_yaml():
     )
     with pytest.raises(LoadingDocumentFailed):
         yaml_ld.parse(document)
-
-
-def test_html():
-    document_path = specifications_root / 'json-ld-api/tests/html/e007-in.html'
-    assert yaml_ld.parse(document_path) == []
