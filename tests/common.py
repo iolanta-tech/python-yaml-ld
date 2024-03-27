@@ -10,8 +10,8 @@ from rdflib import ConjunctiveGraph, URIRef
 from ldtest.models import TestCase
 from ldtest.plugin import LDTest
 
-
-project_root = Path(__file__).parent.parent
+tests_root = Path(__file__).parent
+project_root = tests_root.parent
 specifications_root = project_root / 'specifications'
 
 

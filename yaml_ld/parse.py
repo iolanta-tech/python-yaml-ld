@@ -20,6 +20,9 @@ from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import Document, DocumentType, ExtractAllScripts
 
 
+HTML_HEADER = '<html'
+
+
 def try_extracting_yaml_from_html(
     yaml_string: str,
     fragment: str | None,
@@ -110,6 +113,13 @@ def parse(   # noqa: WPS238, WPS231, C901
             raw_document = raw_document.decode('utf-8')
         except UnicodeDecodeError as err:
             raise InvalidEncoding() from err
+
+    # Now, `raw_document` is a string, let's try guessing its format.
+    if (
+        document_type is None
+        and raw_document.lstrip()[:len(HTML_HEADER)].lower() == HTML_HEADER
+    ):
+        document_type = DocumentType.HTML
 
     if document_type == DocumentType.HTML:
         return _parse_html(
