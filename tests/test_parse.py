@@ -1,5 +1,8 @@
+import funcy
+import more_itertools
 import pytest
 import yaml
+from yaml.parser import ParserError
 
 import yaml_ld
 from tests.common import specifications_root, tests_root
@@ -16,5 +19,11 @@ def test_invalid_yaml():
 
 def test_closing_html_comment_in_yaml():
     """This document ends with `-->`, not a valid piece of YAML."""
-    with pytest.raises(Exception):
-        yaml.parse(tests_root / 'data/tr016.yaml', Loader=yaml.Loader)
+    source_path = tests_root / 'data/tr016.yaml'
+
+    with pytest.raises(ParserError):
+        more_itertools.consume(
+            yaml.load_all(
+                source_path.read_text(),
+                Loader=yaml.SafeLoader),
+        )

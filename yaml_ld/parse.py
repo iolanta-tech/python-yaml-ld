@@ -82,7 +82,12 @@ def load_yaml_document(
     if extract_all_scripts:
         return list(documents_stream)
 
-    return funcy.first(documents_stream)
+    # We have to parse the second document, at least, otherwise we will
+    # miss parsing errors in the beginning of that document,
+    # and `html-manifest#tr016` will crash.
+    first_document, *_other_documents = documents_stream
+
+    return first_document
 
 
 def parse(   # noqa: WPS238, WPS231, C901
