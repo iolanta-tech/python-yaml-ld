@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Iterable
 
+import funcy
 import yaml
 from bs4 import BeautifulSoup
 from urlpath import URL
@@ -17,6 +18,9 @@ from yaml_ld.errors import (
 )
 from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import Document, DocumentType, ExtractAllScripts
+
+
+HTML_HEADER = '<html'
 
 
 def try_extracting_yaml_from_html(
@@ -66,6 +70,28 @@ def _parse_html(
         raise InvalidScriptElement from err
 
 
+def load_yaml_document(
+    raw_document,
+    extract_all_scripts: ExtractAllScripts = False,
+):
+    documents_stream = yaml.load_all(  # noqa: S506
+        stream=raw_document,
+        Loader=YAMLLDLoader,
+    )
+
+    if extract_all_scripts:
+        return list(documents_stream)
+
+    first_document = funcy.first(documents_stream)
+
+    # We have to parse the second document, at least, otherwise we will
+    # miss parsing errors in the beginning of that document,
+    # and `html-manifest#tr016` will crash.
+    funcy.first(documents_stream)
+
+    return first_document
+
+
 def parse(   # noqa: WPS238, WPS231, C901
     raw_document: str | bytes | Path | URL,
     extract_all_scripts: ExtractAllScripts = False,
@@ -95,6 +121,13 @@ def parse(   # noqa: WPS238, WPS231, C901
         except UnicodeDecodeError as err:
             raise InvalidEncoding() from err
 
+    # Now, `raw_document` is a string, let's try guessing its format.
+    if (
+        document_type is None
+        and raw_document.lstrip()[:len(HTML_HEADER)].lower() == HTML_HEADER
+    ):
+        document_type = DocumentType.HTML
+
     if document_type == DocumentType.HTML:
         return _parse_html(
             raw_document,
@@ -103,9 +136,9 @@ def parse(   # noqa: WPS238, WPS231, C901
         )
 
     try:
-        document: Document = yaml.load(  # noqa: S506
-            stream=raw_document,
-            Loader=YAMLLDLoader,
+        document: Document = load_yaml_document(
+            raw_document,
+            extract_all_scripts=extract_all_scripts,
         )
     except ScannerError as err:
         if document_type != DocumentType.YAML:

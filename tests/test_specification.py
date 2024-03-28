@@ -17,10 +17,24 @@ from lambdas import _
 tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
 
 
+def _get_id(test_case: TestCase) -> str | None:
+    """
+    Calculate ID.
+
+    ## Why?
+
+    See https://github.com/pytest-dev/pytest/issues/7686
+    """
+    if not isinstance(test_case, TestCase):
+        return None
+
+    return test_case.test
+
+
 @pytest.mark.parametrize(
     'test_case',
     load_tests(tests.ToRDFTest),
-    ids=_.test,
+    ids=_get_id,
 )
 def test_to_rdf(test_case: TestCase):
     raw_document = test_case.raw_document
@@ -52,7 +66,7 @@ def test_to_rdf(test_case: TestCase):
     assert actual_graph.isomorphic(expected_graph)
 
 
-@pytest.mark.parametrize('test_case', load_tests(tests.ExpandTest), ids=_.test)
+@pytest.mark.parametrize('test_case', load_tests(tests.ExpandTest), ids=_get_id)
 def test_expand(test_case: TestCase):
     if isinstance(test_case.result, str):
         try:
