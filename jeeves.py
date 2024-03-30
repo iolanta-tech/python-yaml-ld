@@ -179,3 +179,8 @@ def install_mkdocs_insiders():
         sh.gh.repo.clone(f'iolanta-tech/{name}')
 
     sh.pip.install('-e', name)
+
+
+def deploy_to_github_pages():
+    """Build the docs & deploy → gh-pages branch."""
+    sh.mkdocs('gh-deploy', '--force', '--clean', '--verbose')
