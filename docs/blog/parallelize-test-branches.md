@@ -1,4 +1,5 @@
 ---
+tags: [decision]
 is-blocked-by: diff-test-results.md
 title: Parallelize tests per branch in GitHub actions
 ---

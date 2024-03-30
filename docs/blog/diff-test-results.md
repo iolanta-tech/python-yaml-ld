@@ -1,5 +1,6 @@
 ---
 title: Diff test results
+tags: [decision]
 ---
 
 ## Context
