@@ -163,3 +163,4 @@ cython_debug/
 .flakeheaven_cache
 tests/artifacts/
 -tests/artifacts/.gitkeep
+mkdocs-material-insiders/

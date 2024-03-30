@@ -157,3 +157,25 @@ def ci():
 
     if newly_failed:
         raise typer.Exit(1)
+
+
+def serve():
+    """
+    Serve the iolanta.tech site.
+
+    The site will be available at http://localhost:9841
+    """
+    sh.mkdocs.serve(
+        '-a', 'localhost:6453',
+        _fg=True,
+    )
+
+
+def install_mkdocs_insiders():
+    """Install Insiders version of `mkdocs-material` theme."""
+    name = 'mkdocs-material-insiders'
+
+    if not (Path.cwd() / name).is_dir():
+        sh.gh.repo.clone(f'iolanta-tech/{name}')
+
+    sh.pip.install('-e', name)
