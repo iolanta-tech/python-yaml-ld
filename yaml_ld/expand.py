@@ -8,7 +8,7 @@ from urlpath import URL
 from yaml_ld.annotations import Help
 from yaml_ld.errors import (
     CycleDetected, MappingKeyError,
-    LoadingRemoteContextFailed,
+    LoadingRemoteContextFailed, YAMLLDError, PyLDError,
 )
 from yaml_ld.models import (
     Document, ProcessingMode,
@@ -67,7 +67,10 @@ def expand(   # noqa: C901, WPS211
                 raise LoadingRemoteContextFailed(
                     context=err.details['url'],
                     reason=str(err.details['cause']),
-                )
+                ) from err
 
             case _:
-                raise
+                raise PyLDError(
+                    message=str(err),
+                    code=err.code,
+                ) from err

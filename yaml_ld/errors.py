@@ -10,6 +10,14 @@ class YAMLLDError(DocumentedError):
 
 
 @dataclass
+class PyLDError(YAMLLDError):
+    """{self.message}"""
+
+    message: str
+    code: str
+
+
+@dataclass
 class DocumentIsScalar(YAMLLDError):
     """
     Document content MUST be sequence or mapping.
