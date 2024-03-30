@@ -1,0 +1,52 @@
+site_name: python-yaml-ld
+site_url: https://python-yaml-ld.iolanta.tech
+repo_url: https://github.com/iolanta-tech/python-yaml-ld
+edit_uri: edit/master/docs/
+repo_name: iolanta-tech/python-yaml-ld
+copyright: Copyright © 2024 iolanta.tech
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - attr_list
+  - def_list
+  - md_in_html
+  - pymdownx.superfences
+  - pymdownx.details
+  - footnotes
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+
+plugins:
+  - search
+  - awesome-pages
+  - blogging:
+      dirs:
+        - blog
+      features:
+        tags: {}
+      time_format: '%d %b %Y'  # The format used to display the time
+  - mkdocstrings:
+      handlers:
+        python:
+          import:
+            - https://docs.python-requests.org/en/master/objects.inv
+  - macros:
+      on_error_fail: true
+
+theme:
+  name: material
+  palette:
+    primary: orange
+  # custom_dir: overrides
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - content.code.annotate
+    - content.action.edit

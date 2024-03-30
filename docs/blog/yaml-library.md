@@ -1,4 +1,5 @@
 ---
+tags: [decision]
 context:
   rdfs:comment: To parse YAML-LD, we need to choose a YAML library from ones available.
   table:columns:
