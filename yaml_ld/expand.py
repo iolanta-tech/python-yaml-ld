@@ -6,7 +6,10 @@ from pyld import jsonld
 from urlpath import URL
 
 from yaml_ld.annotations import Help
-from yaml_ld.errors import CycleDetected, MappingKeyError
+from yaml_ld.errors import (
+    CycleDetected, MappingKeyError,
+    LoadingRemoteContextFailed,
+)
 from yaml_ld.models import (
     Document, ProcessingMode,
     DocumentLoader, BaseOptions, ExtractAllScripts, SerializedDocument,
@@ -58,3 +61,13 @@ def expand(   # noqa: C901, WPS211
         raise MappingKeyError() from err
     except RecursionError as err:
         raise CycleDetected() from err
+    except jsonld.JsonLdError as err:
+        match err.code:
+            case LoadingRemoteContextFailed.code:
+                raise LoadingRemoteContextFailed(
+                    context=err.details['url'],
+                    reason=str(err.details['cause']),
+                )
+
+            case _:
+                raise
