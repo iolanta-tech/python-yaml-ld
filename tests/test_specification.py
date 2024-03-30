@@ -37,12 +37,10 @@ def _get_id(test_case: TestCase) -> str | None:
     ids=_get_id,
 )
 def test_to_rdf(test_case: TestCase):
-    raw_document = test_case.raw_document
-
     if isinstance(test_case.result, str):
         try:
             expanded_document = yaml_ld.to_rdf(
-                raw_document,
+                test_case.input,
                 extract_all_scripts=test_case.extract_all_scripts,
             )
         except YAMLLDError as error:
