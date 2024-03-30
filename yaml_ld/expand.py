@@ -9,7 +9,7 @@ from yaml_ld.annotations import Help
 from yaml_ld.errors import CycleDetected, MappingKeyError
 from yaml_ld.models import (
     Document, ProcessingMode,
-    DocumentLoader, BaseOptions, ExtractAllScripts,
+    DocumentLoader, BaseOptions, ExtractAllScripts, SerializedDocument,
 )
 from yaml_ld.parse import parse  # noqa: WPS347
 
@@ -21,7 +21,7 @@ class ExpandOptions(BaseOptions):
 
 
 def expand(   # noqa: C901, WPS211
-    document: str | bytes | Document | Path | URL,
+    document: SerializedDocument | Document,
     base: Annotated[str | None, Help('The base IRI to use.')] = None,
     context: Annotated[
         Document | None,
