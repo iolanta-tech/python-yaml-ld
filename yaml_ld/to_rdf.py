@@ -1,15 +1,20 @@
+from pathlib import Path
 from typing import Annotated
 
 from pyld import jsonld
+from urlpath import URL
 
 import yaml_ld
 from yaml_ld.annotations import Help
-from yaml_ld.models import Document, DocumentLoader, ExtractAllScripts
+from yaml_ld.models import (
+    Document, DocumentLoader, ExtractAllScripts,
+    SerializedDocument,
+)
 from yaml_ld.rdf import Dataset
 
 
 def to_rdf(
-    document: str | bytes | Document,
+    document: SerializedDocument | Document,
     base: Annotated[str | None, Help('The base IRI to use.')] = None,
     extract_all_scripts: ExtractAllScripts = False,
     document_loader: DocumentLoader | None = None,

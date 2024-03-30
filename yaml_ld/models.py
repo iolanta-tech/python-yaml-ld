@@ -1,10 +1,21 @@
 from enum import Enum
-from typing import Any, Annotated
+from pathlib import Path
+from typing import Any, Annotated, NewType
 
 from pydantic import BaseModel, Field
+from urlpath import URL
 
 Document = dict[str, Any]   # type: ignore
 DocumentLoader = Any  # type: ignore   # FIXME: This is actually a callable.
+
+
+SerializedDocument = Annotated[  # type: ignore
+    str | bytes | Path | URL,
+    (
+        'Either a document serialized to a sequence of characters (or bytes) '
+        'or a location where one can be found.'
+    ),
+]
 
 
 ExtractAllScripts = Annotated[

@@ -37,12 +37,10 @@ def _get_id(test_case: TestCase) -> str | None:
     ids=_get_id,
 )
 def test_to_rdf(test_case: TestCase):
-    raw_document = test_case.raw_document
-
     if isinstance(test_case.result, str):
         try:
-            expanded_document = yaml_ld.to_rdf(
-                raw_document,
+            rdf_document = yaml_ld.to_rdf(
+                test_case.input,
                 extract_all_scripts=test_case.extract_all_scripts,
             )
         except YAMLLDError as error:
@@ -53,10 +51,10 @@ def test_to_rdf(test_case: TestCase):
             pytest.fail(str(FailureToFail(
                 expected_error_code=test_case.result,
                 raw_document=test_case.raw_document,
-                expanded_document=expanded_document,
+                expanded_document=rdf_document,
             )))
 
-    actual_dataset = yaml_ld.to_rdf(raw_document)
+    actual_dataset = yaml_ld.to_rdf(test_case.raw_document)
     raw_expected_quads = test_case.raw_expected_document
 
     actual_triples = actual_dataset['@default']
