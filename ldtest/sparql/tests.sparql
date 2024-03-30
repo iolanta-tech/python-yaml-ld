@@ -16,4 +16,8 @@ SELECT ?test ?result ?input ?req ?extract_all_scripts WHERE {
     FILTER NOT EXISTS {
         ?test jld:option / jld:specVersion "json-ld-1.0"^^xsd:string .
     }
+
+    FILTER NOT EXISTS {
+        ?test jld:option / jld:processingMode "json-ld-1.0"^^xsd:string .
+    }
 }

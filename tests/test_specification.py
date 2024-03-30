@@ -49,6 +49,7 @@ def test_to_rdf(test_case: TestCase):
 
         else:
             pytest.fail(str(FailureToFail(
+                test_case=test_case,
                 expected_error_code=test_case.result,
                 raw_document=test_case.raw_document,
                 expanded_document=rdf_document,
@@ -76,6 +77,7 @@ def test_expand(test_case: TestCase):
             assert error.code == test_case.result
         else:
             pytest.fail(str(FailureToFail(
+                test_case=test_case,
                 expected_error_code=test_case.result,
                 raw_document=test_case.raw_document,
                 expanded_document=expanded_document,
