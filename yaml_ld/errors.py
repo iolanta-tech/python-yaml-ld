@@ -76,3 +76,18 @@ class UndefinedAliasFound(YAMLLDError):
     """An undefined alias found."""
 
     code: str = 'loading document failed'
+
+
+@dataclass
+class LoadingRemoteContextFailed(YAMLLDError):
+    """
+    Failed to load the context.
+
+    URL of the context: {self.context}
+    Reason: {self.reason}
+    """
+
+    context: str
+    reason: str
+
+    code: str = 'loading remote context failed'
