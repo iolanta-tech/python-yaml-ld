@@ -14,7 +14,7 @@ python = ">=3.10,<4.0"
 PyLD = "^2.0.3"
 pydantic = "^2.3.0"
 pyyaml = "^6.0.1"
-beautifulsoup4 = "^4.12.2"
+beautifulsoup4 = "^4.12.3"
 
 [tool.poetry.group.dev.dependencies]
 jeeves-yeti-pyproject = { version = "^0.2.20", markers = "python_version >= '3.10'" }
