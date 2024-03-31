@@ -31,10 +31,18 @@ plugins:
         tags: {}
       time_format: '%d %b %Y'  # The format used to display the time
   - mkdocstrings:
+      default_handler: python
       handlers:
         python:
           import:
             - https://docs.python-requests.org/en/master/objects.inv
+          options:
+            show_root_heading: false
+            show_source: false
+            show_symbol_type_heading: true
+            separate_signature: true
+            show_signature_annotations: true
+            allow_inspection: true
   - macros:
       on_error_fail: true
 
@@ -42,7 +50,7 @@ theme:
   name: material
   palette:
     primary: orange
-  # custom_dir: overrides
+  custom_dir: overrides
   features:
     - navigation.sections
     - navigation.indexes
