@@ -1,7 +1,6 @@
 ---
-title: python-yaml-ld
+title: Home
 hide:
-  - navigation
   - toc
 ---
 

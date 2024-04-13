@@ -5,7 +5,7 @@ from pydantic import Field
 from pyld import jsonld
 from urlpath import URL
 
-from yaml_ld.annotations import Help
+from yaml_ld.annotations import Help, specified_by, API
 from yaml_ld.errors import (
     CycleDetected, MappingKeyError,
     LoadingRemoteContextFailed, YAMLLDError, PyLDError,
@@ -23,6 +23,7 @@ class ExpandOptions(BaseOptions):
     context: Document | None = Field(default=None, alias='expandContext')
 
 
+@specified_by(API / '#dom-jsonldprocessor-expand')
 def expand(   # noqa: C901, WPS211
     document: SerializedDocument | Document,
     base: Annotated[str | None, Help('The base IRI to use.')] = None,
@@ -33,7 +34,7 @@ def expand(   # noqa: C901, WPS211
     extract_all_scripts: ExtractAllScripts = False,
     mode: ProcessingMode = ProcessingMode.JSON_LD_1_1,
     document_loader: DocumentLoader | None = None,
-):
+) -> Document | list[Document]:
     """Expand a YAML-LD document."""
     if isinstance(document, (str, bytes, Path, URL)):
         if isinstance(document, Path) and base is None:
