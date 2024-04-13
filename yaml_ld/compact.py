@@ -3,6 +3,7 @@ from typing import Annotated
 from pydantic import Field
 from pyld import jsonld
 
+from yaml_ld.annotations import specified_by, API
 from yaml_ld.parse import parse  # noqa: WPS347
 from yaml_ld.errors import MappingKeyError, CycleDetected
 from yaml_ld.models import (
@@ -19,6 +20,7 @@ class CompactOptions(BaseOptions):
     skip_expansion: bool = Field(default=False, alias='skipExpansion')
 
 
+@specified_by(API / '#dom-jsonldprocessor-compact')
 def compact(  # noqa: WPS211
     document: str | bytes | Document,
     context: Annotated[Document | None, 'Context to compact with.'],
