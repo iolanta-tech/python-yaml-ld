@@ -150,8 +150,17 @@ def ci():
     try:
         post_new_comment('--edit-last')
     except ErrorReturnCode as err:
-        if 'no comments found for current user' in err.stderr.decode():
+        error_text = err.stderr.decode()
+        if 'no comments found for current user' in error_text:
             post_new_comment()
+
+        elif (
+            'GraphQL: Resource not accessible by integration (addComment)'
+            in error_text
+        ):
+            print(f'Cannot post a comment: {error_text}')
+            return
+
         else:
             raise
 
