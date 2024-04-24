@@ -95,9 +95,11 @@ def test_expand(test_case: TestCase):
             # Try running `pyld` against this example.
             jsonld_actual = jsonld.expand(json.loads(test_case.result.read_text()))
 
-            if jsonld_actual != expected:
-                pytest.skip('PyLD fails on this test, skipping it.')
+            if jsonld_actual == expected:
+                # PyLD is fine. We're having a trouble with YAML-LD.
+                assert actual == expected
 
-            assert actual == expected
+            pytest.skip('PyLD fails on this test, skipping it.')
+
     else:
         raise ValueError(f'What to do with this test? {test_case}')
