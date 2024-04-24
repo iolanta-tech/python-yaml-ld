@@ -97,5 +97,7 @@ def test_expand(test_case: TestCase):
 
             if jsonld_actual != expected:
                 pytest.skip('PyLD fails on this test, skipping it.')
+
+            assert actual == expected
     else:
         raise ValueError(f'What to do with this test? {test_case}')
