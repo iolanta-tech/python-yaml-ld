@@ -90,7 +90,9 @@ def test_expand(test_case: TestCase):
         actual = yaml_ld.expand(
             test_case.input,
             extract_all_scripts=test_case.extract_all_scripts,
+            base=test_case.base,
         )
+
         if actual != expected:
             # Try running `pyld` against this example.
             jsonld_actual = jsonld.expand(json.loads(test_case.result.read_text()))

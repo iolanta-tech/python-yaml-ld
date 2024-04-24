@@ -29,6 +29,7 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
                 result=self._process_result(row['result']),
                 req=(req := row.get('req')) and req.value,
                 extract_all_scripts=extract_all_scripts,
+                base=row.get('base'),
             )
 
     def _process_result(
