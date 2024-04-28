@@ -71,14 +71,6 @@ def test_to_rdf(test_case: TestCase):
 
 
 @pytest.fixture()
-def test_expand_against_json_ld():
-    def _test(test_case: TestCase) -> None:
-        ...
-
-    return _test
-
-
-@pytest.fixture()
 def test_against_ld_library():
     def _test(test_case: TestCase, parse: Callable, expand: Callable) -> None:
         match test_case.result:
