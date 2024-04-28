@@ -1,7 +1,7 @@
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, TypedDict
 
-from pydantic import Field
+from pydantic import Field, validate_call
 from pyld import jsonld
 from urlpath import URL
 
@@ -23,40 +23,33 @@ class ExpandOptions(BaseOptions):
     context: Document | None = Field(default=None, alias='expandContext')
 
 
+class ExpandOptionsDict(TypedDict):
+    context: Document | None
+    base: str | None
+    extract_all_scripts: ExtractAllScripts
+    document_loader: DocumentLoader | None
+
+
 @specified_by(API / '#dom-jsonldprocessor-expand')
+@validate_call(config=dict(arbitrary_types_allowed=True))
 def expand(   # noqa: C901, WPS211
     document: SerializedDocument | Document,
-    base: Annotated[str | None, Help('The base IRI to use.')] = None,
-    context: Annotated[
-        Document | None,
-        Help('A context to expand with.'),
-    ] = None,
-    extract_all_scripts: ExtractAllScripts = False,
-    mode: ProcessingMode = ProcessingMode.JSON_LD_1_1,
-    document_loader: DocumentLoader | None = None,
+    options: ExpandOptions = ExpandOptions(),
 ) -> Document | list[Document]:
     """Expand a YAML-LD document."""
     if isinstance(document, (str, bytes, Path, URL)):
-        if isinstance(document, Path) and base is None:
-            base = f'file://{document.parent}/'
+        if isinstance(document, Path) and options.base is None:
+            options.base = f'file://{document.parent}/'
 
-        document = parse(document, extract_all_scripts=extract_all_scripts)
-
-    options = ExpandOptions(
-        base=base,
-        context=context,
-        extract_all_scripts=extract_all_scripts,
-        mode=mode,
-        document_loader=document_loader,
-    ).model_dump(
-        exclude_defaults=True,
-        by_alias=True,
-    )
+        document = parse(
+            document,
+            extract_all_scripts=options.extract_all_scripts,
+        )
 
     try:
         return jsonld.expand(
             input_=document,
-            options=options,
+            options=options.model_dump(),
         )
     except TypeError as err:
         raise MappingKeyError() from err

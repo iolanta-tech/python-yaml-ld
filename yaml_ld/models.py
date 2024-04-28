@@ -2,7 +2,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Any, Annotated, NewType
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from urlpath import URL
 
 Document = dict[str, Any]   # type: ignore
@@ -43,11 +43,9 @@ class BaseOptions(BaseModel):
 
     base: str | None = Field(default=None)
     extract_all_scripts: bool = Field(default=False, alias='extractAllScripts')
-    mode: ProcessingMode = Field(
-        default=ProcessingMode.JSON_LD_1_1,
-        alias='processingMode',
-    )
     document_loader: DocumentLoader | None = Field(
         default=None,
         alias='documentLoader',
     )
+
+    model_config = ConfigDict(populate_by_name=True)

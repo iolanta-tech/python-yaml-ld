@@ -1,6 +1,7 @@
 import json
 import operator
 from pathlib import Path
+from typing import Callable
 
 import pytest
 from pyld import jsonld
@@ -15,6 +16,8 @@ from tests.common import load_tests
 from tests.errors import FailureToFail
 from yaml_ld.errors import YAMLLDError
 from lambdas import _
+
+from yaml_ld.expand import ExpandOptions
 
 tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
 
@@ -67,41 +70,53 @@ def test_to_rdf(test_case: TestCase):
     assert actual_graph.isomorphic(expected_graph)
 
 
-@pytest.mark.parametrize('test_case', load_tests(tests.ExpandTest), ids=_get_id)
-def test_expand(test_case: TestCase):
-    if isinstance(test_case.result, str):
-        try:
-            expanded_document = yaml_ld.expand(
-                test_case.input,
-                extract_all_scripts=test_case.extract_all_scripts,
-            )
-        except YAMLLDError as error:
-            assert error.code == test_case.result
-        else:
-            pytest.fail(str(FailureToFail(
-                test_case=test_case,
-                expected_error_code=test_case.result,
-                raw_document=test_case.raw_document,
-                expanded_document=expanded_document,
-            )))
+@pytest.fixture()
+def test_against_ld_library():
+    def _test(test_case: TestCase, parse: Callable, expand: Callable) -> None:
+        match test_case.result:
+            case str() as error_code:
+                try:
+                    expanded_document = expand(
+                        test_case.input,
+                        options=ExpandOptions(
+                            extract_all_scripts=test_case.extract_all_scripts,
+                        ).model_dump(),
+                    )
+                except YAMLLDError as error:
+                    assert error.code == error_code
+                else:
+                    pytest.fail(str(FailureToFail(
+                        test_case=test_case,
+                        expected_error_code=test_case.result,
+                        raw_document=test_case.raw_document,
+                        expanded_document=expanded_document,
+                    )))
 
-    elif isinstance(test_case.result, Path):
-        expected = yaml_ld.parse(test_case.result.read_text())
-        actual = yaml_ld.expand(
-            test_case.input,
-            extract_all_scripts=test_case.extract_all_scripts,
-            base=test_case.base,
-        )
+            case Path() as result_path:
+                expected = parse(result_path.read_text())
+                actual = expand(
+                    test_case.input,
+                    options=ExpandOptions(
+                        extract_all_scripts=test_case.extract_all_scripts,
+                        base=test_case.base,
+                    ).model_dump(by_alias=True),
+                )
 
-        if actual != expected:
-            # Try running `pyld` against this example.
-            jsonld_actual = jsonld.expand(json.loads(test_case.result.read_text()))
-
-            if jsonld_actual == expected:
-                # PyLD is fine. We're having a trouble with YAML-LD.
                 assert actual == expected
 
-            pytest.skip('PyLD fails on this test, skipping it.')
+            case _:
+                raise ValueError(f'What to do with this test? {test_case}')
 
-    else:
-        raise ValueError(f'What to do with this test? {test_case}')
+    return _test
+
+
+@pytest.mark.parametrize('test_case', load_tests(tests.ExpandTest), ids=_get_id)
+def test_expand(
+    test_case: TestCase,
+    test_against_ld_library,
+):
+    test_against_ld_library(
+        test_case=test_case,
+        parse=yaml_ld.parse,
+        expand=yaml_ld.expand,
+    )

@@ -6,6 +6,7 @@ from urlpath import URL
 
 import yaml_ld
 from yaml_ld.annotations import Help
+from yaml_ld.expand import ExpandOptions
 from yaml_ld.models import (
     Document, DocumentLoader, ExtractAllScripts,
     SerializedDocument,
@@ -22,8 +23,10 @@ def to_rdf(
     """Convert a YAML-LD document to RDF."""
     expanded_document = yaml_ld.expand(
         document=document,
-        document_loader=document_loader,
-        extract_all_scripts=extract_all_scripts,
+        options=ExpandOptions(
+            document_loader=document_loader,
+            extract_all_scripts=extract_all_scripts,
+        ),
     )
 
     return jsonld.to_rdf(
