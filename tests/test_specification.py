@@ -80,7 +80,7 @@ def test_against_ld_library():
                         test_case.input,
                         options=ExpandOptions(
                             extract_all_scripts=test_case.extract_all_scripts,
-                        ).model_dump(),
+                        ).model_dump(by_alias=True),
                     )
                 except YAMLLDError as error:
                     assert error.code == error_code
