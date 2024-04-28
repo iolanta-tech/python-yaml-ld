@@ -107,7 +107,7 @@ def test_against_ld_library():
                     options=ExpandOptions(
                         extract_all_scripts=test_case.extract_all_scripts,
                         base=test_case.base,
-                    ).model_dump(),
+                    ).model_dump(by_alias=True),
                 )
 
                 assert actual == expected
