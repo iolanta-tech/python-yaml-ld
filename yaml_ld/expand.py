@@ -49,7 +49,7 @@ def expand(   # noqa: C901, WPS211
     try:
         return jsonld.expand(
             input_=document,
-            options=options.model_dump(),
+            options=options.model_dump(by_alias=True),
         )
     except TypeError as err:
         raise MappingKeyError() from err
