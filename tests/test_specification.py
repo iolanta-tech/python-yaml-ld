@@ -16,6 +16,8 @@ from tests.errors import FailureToFail
 from yaml_ld.errors import YAMLLDError
 from lambdas import _
 
+from yaml_ld.expand import ExpandOptions
+
 tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
 
 
@@ -67,13 +69,65 @@ def test_to_rdf(test_case: TestCase):
     assert actual_graph.isomorphic(expected_graph)
 
 
+@pytest.fixture()
+def test_expand_against_json_ld():
+    def _test(test_case: TestCase) -> None:
+        ...
+
+    return _test
+
+
+@pytest.fixture()
+def test_expand_against_yaml_ld():
+    def _test(test_case: TestCase) -> None:
+        match test_case.result:
+            case str() as error_code:
+                try:
+                    expanded_document = yaml_ld.expand(
+                        test_case.input,
+                        options=ExpandOptions(
+                            extract_all_scripts=test_case.extract_all_scripts,
+                        ),
+                    )
+                except YAMLLDError as error:
+                    assert error.code == error_code
+                else:
+                    pytest.fail(str(FailureToFail(
+                        test_case=test_case,
+                        expected_error_code=test_case.result,
+                        raw_document=test_case.raw_document,
+                        expanded_document=expanded_document,
+                    )))
+
+            case Path() as result_path:
+                expected = yaml_ld.parse(result_path.read_text())
+                actual = yaml_ld.expand(
+                    test_case.input,
+                    options=ExpandOptions(
+                        extract_all_scripts=test_case.extract_all_scripts,
+                        base=test_case.base,
+                    ),
+                )
+
+                assert actual == expected
+
+            case _:
+                raise ValueError(f'What to do with this test? {test_case}')
+
+    return _test
+
+
 @pytest.mark.parametrize('test_case', load_tests(tests.ExpandTest), ids=_get_id)
-def test_expand(test_case: TestCase):
+def test_expand(
+    test_case: TestCase,
+):
     if isinstance(test_case.result, str):
         try:
             expanded_document = yaml_ld.expand(
                 test_case.input,
-                extract_all_scripts=test_case.extract_all_scripts,
+                options=ExpandOptions(
+                    extract_all_scripts=test_case.extract_all_scripts,
+                ),
             )
         except YAMLLDError as error:
             assert error.code == test_case.result
@@ -102,8 +156,10 @@ def test_expand(test_case: TestCase):
         expected = yaml_ld.parse(test_case.result.read_text())
         actual = yaml_ld.expand(
             test_case.input,
-            extract_all_scripts=test_case.extract_all_scripts,
-            base=test_case.base,
+            options=ExpandOptions(
+                extract_all_scripts=test_case.extract_all_scripts,
+                base=test_case.base,
+            )
         )
 
         if actual != expected:

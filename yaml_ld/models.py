@@ -43,10 +43,6 @@ class BaseOptions(BaseModel):
 
     base: str | None = Field(default=None)
     extract_all_scripts: bool = Field(default=False, alias='extractAllScripts')
-    mode: ProcessingMode = Field(
-        default=ProcessingMode.JSON_LD_1_1,
-        alias='processingMode',
-    )
     document_loader: DocumentLoader | None = Field(
         default=None,
         alias='documentLoader',
