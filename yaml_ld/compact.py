@@ -3,12 +3,12 @@ from typing import Annotated
 from pydantic import Field
 from pyld import jsonld
 
-from yaml_ld.annotations import specified_by, API
-from yaml_ld.parse import parse  # noqa: WPS347
+from yaml_ld.annotations import API
 from yaml_ld.errors import MappingKeyError, CycleDetected
 from yaml_ld.models import (
     Document, ProcessingMode, DocumentLoader, BaseOptions, ExtractAllScripts,
 )
+from yaml_ld.parse import parse  # noqa: WPS347
 
 
 class CompactOptions(BaseOptions):
@@ -20,7 +20,6 @@ class CompactOptions(BaseOptions):
     skip_expansion: bool = Field(default=False, alias='skipExpansion')
 
 
-@specified_by(API / '#dom-jsonldprocessor-compact')
 def compact(  # noqa: WPS211
     document: str | bytes | Document,
     context: Annotated[Document | None, 'Context to compact with.'],
@@ -44,7 +43,7 @@ def compact(  # noqa: WPS211
         bool,
         'Treat the input as already expanded, and do not expand it again.',
     ] = False,
-):
+) -> Annotated[Document | list[Document], API / '#dom-jsonldprocessor-compact']:
     """Compact a JSON-LD document."""
     if isinstance(document, (str, bytes)):
         document = parse(document)
