@@ -5,14 +5,14 @@ from pydantic import Field, validate_call
 from pyld import jsonld
 from urlpath import URL
 
-from yaml_ld.annotations import Help, specified_by, API
+from yaml_ld.annotations import API
 from yaml_ld.errors import (
     CycleDetected, MappingKeyError,
-    LoadingRemoteContextFailed, YAMLLDError, PyLDError,
+    LoadingRemoteContextFailed, PyLDError,
 )
 from yaml_ld.models import (
-    Document, ProcessingMode,
-    DocumentLoader, BaseOptions, ExtractAllScripts, SerializedDocument,
+    Document, DocumentLoader, BaseOptions, ExtractAllScripts,
+    SerializedDocument,
 )
 from yaml_ld.parse import parse  # noqa: WPS347
 
@@ -30,12 +30,11 @@ class ExpandOptionsDict(TypedDict):
     document_loader: DocumentLoader | None
 
 
-@specified_by(API / '#dom-jsonldprocessor-expand')
 @validate_call(config=dict(arbitrary_types_allowed=True))
 def expand(   # noqa: C901, WPS211
     document: SerializedDocument | Document,
     options: ExpandOptions = ExpandOptions(),
-) -> Document | list[Document]:
+) -> Annotated[Document | list[Document], API / '#dom-jsonldprocessor-expand']:
     """Expand a YAML-LD document."""
     if isinstance(document, (str, bytes, Path, URL)):
         if isinstance(document, Path) and options.base is None:
