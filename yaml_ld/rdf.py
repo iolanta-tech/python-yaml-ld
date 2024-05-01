@@ -1,14 +1,32 @@
-from typing import Literal, TypedDict
+from typing import Literal
+from typing_extensions import TypedDict
 
 TermType = Literal['IRI', 'blank node', 'literal']
 
 
-class Term(TypedDict):
+class IRITerm(TypedDict):
     """RDF Term."""
 
-    type: TermType
+    type: Literal['IRI']
+    value: str   # noqa: WPS110
+
+
+class BlankTerm(TypedDict):
+    """RDF Term."""
+
+    type: Literal['blank node']
+    value: str   # noqa: WPS110
+
+
+class LiteralTerm(TypedDict):
+    """RDF Term."""
+
+    type: Literal['literal']
     value: str   # noqa: WPS110
     datatype: str | None
+
+
+Term = IRITerm | BlankTerm | LiteralTerm
 
 
 class Triple(TypedDict):

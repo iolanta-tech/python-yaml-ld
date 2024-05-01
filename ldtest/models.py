@@ -25,7 +25,7 @@ class TestCase:
         return path.read_bytes()
 
     @property
-    def raw_expected_document(self):
+    def raw_expected_document(self) -> str:
         """Text of the expected processed document."""
         if isinstance(path := self.result, Path):
             return path.read_text()

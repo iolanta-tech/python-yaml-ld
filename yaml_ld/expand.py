@@ -1,6 +1,7 @@
 import contextlib
 from pathlib import Path
-from typing import Annotated, TypedDict
+from typing import Annotated
+from typing_extensions import TypedDict
 
 from pydantic import Field, validate_call
 from pyld import jsonld

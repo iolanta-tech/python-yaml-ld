@@ -13,6 +13,7 @@ from pyld import jsonld
 from rdflib import Graph, Namespace
 from rdflib_pyld_compat.convert import (  # noqa: WPS450
     _rdflib_graph_from_pyld_dataset,
+    _pyld_dataset_from_rdflib_graph,
 )
 
 import yaml_ld
@@ -227,3 +228,34 @@ def test_expand(
             pytest.skip('This test fails for pyld as well as for yaml-ld.')
         else:
             raise
+
+
+@pytest.mark.parametrize('test_case', load_tests(tests.FromRDFTest), ids=_get_id)
+def test_from_rdf(
+    test_case: TestCase,
+):
+    input_dataset = _pyld_dataset_from_rdflib_graph(
+        rdflib.Graph().parse(test_case.input, format='nquads'),
+    )
+
+    if isinstance(input_dataset, list):
+        input_dataset = {'@default': input_dataset}
+
+    actual_ld = yaml_ld.from_rdf(input_dataset)
+
+    expected_ld = json.loads(test_case.raw_expected_document)
+    assert actual_ld == expected_ld
+
+
+@pytest.mark.parametrize('test_case', load_tests(tests.CompactTest), ids=_get_id)
+def test_compact(
+    test_case: TestCase,
+):
+    raise ValueError(test_case)
+
+
+@pytest.mark.parametrize('test_case', load_tests(tests.FlattenTest), ids=_get_id)
+def test_flatten(
+    test_case: TestCase,
+):
+    raise ValueError(test_case)
