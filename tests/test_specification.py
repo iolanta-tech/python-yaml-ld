@@ -22,6 +22,7 @@ from lambdas import _
 
 from yaml_ld.expand import ExpandOptions
 from yaml_ld.models import Document
+from yaml_ld.to_rdf import ToRDFOptions
 
 tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
 
@@ -93,7 +94,9 @@ def to_rdf():
             try:
                 rdf_document = to_rdf(
                     test_case.input,
-                    extract_all_scripts=test_case.extract_all_scripts,
+                    options=ToRDFOptions(
+                        extract_all_scripts=test_case.extract_all_scripts,
+                    ).model_dump(by_alias=True)
                 )
             except YAMLLDError as error:
                 assert error.code == test_case.result
@@ -107,7 +110,7 @@ def to_rdf():
                     expanded_document=rdf_document,
                 )))
 
-        actual_dataset = to_rdf(test_case.raw_document)
+        actual_dataset = to_rdf(parse(test_case.raw_document))
         raw_expected_quads = test_case.raw_expected_document
 
         actual_triples = actual_dataset['@default']
@@ -136,14 +139,14 @@ def test_to_rdf(test_case: TestCase, to_rdf):
             parse=yaml_ld.parse,
             to_rdf=yaml_ld.to_rdf,
         )
-    except Exception:
+    except NotIsomorphic:
         try:
             to_rdf(
                 test_case=test_case,
                 parse=json.loads,
                 to_rdf=jsonld.to_rdf,
             )
-        except Exception:
+        except NotIsomorphic:
             pytest.skip('This test fails for pyld as well as for yaml-ld.')
         else:
             raise

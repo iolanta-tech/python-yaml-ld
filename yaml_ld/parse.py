@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, cast
 
 import funcy
 import yaml
@@ -93,12 +93,15 @@ def load_yaml_document(
 
 
 def parse(   # noqa: WPS238, WPS231, C901
-    raw_document: str | bytes | Path | URL,
+    raw_document: str | bytes | Path | URL | Document,
     extract_all_scripts: ExtractAllScripts = False,
     document_type: DocumentType | None = None,
 ) -> Document:
     """Parse a YAML-LD document."""
     fragment = None
+
+    if isinstance(raw_document, dict | list):
+        return cast(Document, raw_document)
 
     if isinstance(raw_document, URL):
         fragment = raw_document.fragment or None
