@@ -4,3 +4,7 @@ iolanta:supports:
 iolanta:isFacetOf:
   - $id: tests:ExpandTest
   - $id: tests:ToRDFTest
+  - $id: tests:FromRDFTest
+  - $id: tests:CompactTest
+  - $id: tests:FlattenTest
+  - $id: tests:FrameTest
