@@ -8,6 +8,7 @@ import funcy
 import pytest
 import rdflib
 from documented import Documented, DocumentedError
+from pydantic import ValidationError
 from pyld import jsonld
 from rdflib import Graph, Namespace
 from rdflib_pyld_compat.convert import (  # noqa: WPS450
@@ -115,7 +116,15 @@ def to_rdf():
                     expanded_document=rdf_document,
                 )))
 
-        actual_dataset = to_rdf(parse(test_case.raw_document))
+        try:
+            actual_dataset = to_rdf(parse(test_case.raw_document))
+        except ValidationError:
+            raise ValueError(
+                f'{test_case.raw_document!r} has type '
+                f'{type(test_case.raw_document)}, that is not what {to_rdf} '
+                'expects.',
+            )
+
         raw_expected_quads = test_case.raw_expected_document
 
         actual_triples = actual_dataset['@default']

@@ -5,7 +5,7 @@ from typing import Any, Annotated, NewType
 from pydantic import BaseModel, Field, ConfigDict
 from urlpath import URL
 
-Document = dict[str, Any]   # type: ignore
+Document = dict[str, Any] | list[Any]  # type: ignore
 DocumentLoader = Any  # type: ignore   # FIXME: This is actually a callable.
 
 
