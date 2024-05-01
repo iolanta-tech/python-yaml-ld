@@ -4,9 +4,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
+import funcy
 import pytest
 import rdflib
 from documented import Documented, DocumentedError
+from pydantic import ValidationError
 from pyld import jsonld
 from rdflib import Graph, Namespace
 from rdflib_pyld_compat.convert import (  # noqa: WPS450
@@ -22,6 +24,7 @@ from lambdas import _
 
 from yaml_ld.expand import ExpandOptions
 from yaml_ld.models import Document
+from yaml_ld.to_rdf import ToRDFOptions
 
 tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
 
@@ -88,12 +91,18 @@ class NotIsomorphic(DocumentedError):
 
 @pytest.fixture()
 def to_rdf():
-    def _test(test_case: TestCase, parse: Callable, to_rdf: Callable) -> None:
+    def _test(
+        test_case: TestCase,
+        to_rdf: Callable,
+        parse: Callable = funcy.identity,
+    ) -> None:
         if isinstance(test_case.result, str):
             try:
                 rdf_document = to_rdf(
                     test_case.input,
-                    extract_all_scripts=test_case.extract_all_scripts,
+                    options=ToRDFOptions(
+                        extract_all_scripts=test_case.extract_all_scripts,
+                    ).model_dump(by_alias=True)
                 )
             except YAMLLDError as error:
                 assert error.code == test_case.result
@@ -107,12 +116,20 @@ def to_rdf():
                     expanded_document=rdf_document,
                 )))
 
-        actual_dataset = to_rdf(test_case.raw_document)
+        try:
+            actual_dataset = to_rdf(parse(test_case.raw_document))
+        except ValidationError:
+            raise ValueError(
+                f'{test_case.raw_document!r} has type '
+                f'{type(test_case.raw_document)}, that is not what {to_rdf} '
+                'expects.',
+            )
+
         raw_expected_quads = test_case.raw_expected_document
 
         actual_triples = actual_dataset['@default']
         actual_graph: Graph = _rdflib_graph_from_pyld_dataset(actual_triples)
-        expected_graph = Graph().parse(data=raw_expected_quads)
+        expected_graph = Graph().parse(data=raw_expected_quads, format='nquads')
 
         if not actual_graph.isomorphic(expected_graph):
             raise NotIsomorphic(
@@ -133,17 +150,16 @@ def test_to_rdf(test_case: TestCase, to_rdf):
     try:
         to_rdf(
             test_case=test_case,
-            parse=yaml_ld.parse,
             to_rdf=yaml_ld.to_rdf,
+            parse=yaml_ld.parse,
         )
-    except Exception:
+    except NotIsomorphic:
         try:
             to_rdf(
                 test_case=test_case,
-                parse=json.loads,
                 to_rdf=jsonld.to_rdf,
             )
-        except Exception:
+        except NotIsomorphic:
             pytest.skip('This test fails for pyld as well as for yaml-ld.')
         else:
             raise

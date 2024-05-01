@@ -21,6 +21,6 @@ YAML-LD is a YAML-based serialization for Linked Data, drawing inspiration from 
 - [:material-arrow-expand-all: `expand()`](/expand/)
 - :material-arrow-collapse: `compact()`
 - :compression: `flatten()`
-- :material-graph: `to_rdf()`
+- [:material-graph: `to_rdf()`](/to-rdf/)
 - :material-image-filter-frames: `frame()`
 </div>
