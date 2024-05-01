@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
+import funcy
 import pytest
 import rdflib
 from documented import Documented, DocumentedError
@@ -89,7 +90,11 @@ class NotIsomorphic(DocumentedError):
 
 @pytest.fixture()
 def to_rdf():
-    def _test(test_case: TestCase, parse: Callable, to_rdf: Callable) -> None:
+    def _test(
+        test_case: TestCase,
+        to_rdf: Callable,
+        parse: Callable = funcy.identity,
+    ) -> None:
         if isinstance(test_case.result, str):
             try:
                 rdf_document = to_rdf(
@@ -136,14 +141,13 @@ def test_to_rdf(test_case: TestCase, to_rdf):
     try:
         to_rdf(
             test_case=test_case,
-            parse=yaml_ld.parse,
             to_rdf=yaml_ld.to_rdf,
+            parse=yaml_ld.parse,
         )
     except NotIsomorphic:
         try:
             to_rdf(
                 test_case=test_case,
-                parse=json.loads,
                 to_rdf=jsonld.to_rdf,
             )
         except NotIsomorphic:
