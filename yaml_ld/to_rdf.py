@@ -7,7 +7,7 @@ from urlpath import URL
 
 import yaml_ld
 from yaml_ld.annotations import Help
-from yaml_ld.expand import ExpandOptions
+from yaml_ld.expand import ExpandOptions, except_json_ld_errors
 from yaml_ld.models import (
     Document, DocumentLoader, ExtractAllScripts,
     SerializedDocument, BaseOptions,
@@ -25,9 +25,10 @@ def to_rdf(
     options: ToRDFOptions = ToRDFOptions(),
 ) -> Dataset:
     """Convert a YAML-LD document to RDF."""
-    expanded_document = yaml_ld.parse(
+    parsed_document = yaml_ld.parse(
         raw_document=document,
         extract_all_scripts=options.extract_all_scripts,
     )
 
-    return jsonld.to_rdf(expanded_document)
+    with except_json_ld_errors():
+        return jsonld.to_rdf(parsed_document)

@@ -1,3 +1,4 @@
+import contextlib
 from pathlib import Path
 from typing import Annotated, TypedDict
 
@@ -30,6 +31,34 @@ class ExpandOptionsDict(TypedDict):
     document_loader: DocumentLoader | None
 
 
+@contextlib.contextmanager
+def except_json_ld_errors():
+    """Convert pyld errors to typed YAML-LD exceptions."""
+    try:
+        yield
+    except TypeError as err:
+        raise MappingKeyError() from err
+    except RecursionError as err:
+        raise CycleDetected() from err
+    except jsonld.JsonLdError as err:
+        # We need to drill down; for instance, `to_rdf()` raises an error which
+        # contains an actual error from `expand()` in its `.cause` field.
+        err = err.cause or err
+
+        match err.code:
+            case LoadingRemoteContextFailed.code:
+                raise LoadingRemoteContextFailed(
+                    context=err.details['url'],
+                    reason=str(err.details['cause']),
+                ) from err
+
+            case _:
+                raise PyLDError(
+                    message=str(err),
+                    code=err.code,
+                ) from err
+
+
 @validate_call(config=dict(arbitrary_types_allowed=True))
 def expand(   # noqa: C901, WPS211
     document: SerializedDocument | Document,
@@ -45,25 +74,8 @@ def expand(   # noqa: C901, WPS211
             extract_all_scripts=options.extract_all_scripts,
         )
 
-    try:
+    with except_json_ld_errors():
         return jsonld.expand(
             input_=document,
             options=options.model_dump(by_alias=True),
         )
-    except TypeError as err:
-        raise MappingKeyError() from err
-    except RecursionError as err:
-        raise CycleDetected() from err
-    except jsonld.JsonLdError as err:
-        match err.code:
-            case LoadingRemoteContextFailed.code:
-                raise LoadingRemoteContextFailed(
-                    context=err.details['url'],
-                    reason=str(err.details['cause']),
-                ) from err
-
-            case _:
-                raise PyLDError(
-                    message=str(err),
-                    code=err.code,
-                ) from err
