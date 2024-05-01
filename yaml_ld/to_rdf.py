@@ -6,7 +6,7 @@ from pyld import jsonld
 from urlpath import URL
 
 import yaml_ld
-from yaml_ld.annotations import Help
+from yaml_ld.annotations import Help, API
 from yaml_ld.expand import ExpandOptions, except_json_ld_errors
 from yaml_ld.models import (
     Document, DocumentLoader, ExtractAllScripts,
@@ -23,7 +23,7 @@ class ToRDFOptions(BaseOptions):
 def to_rdf(
     document: SerializedDocument | Document,
     options: ToRDFOptions = ToRDFOptions(),
-) -> Dataset:
+) -> Annotated[Dataset, API / '#dom-jsonldprocessor-tordf']:
     """Convert a YAML-LD document to RDF."""
     parsed_document = yaml_ld.parse(
         raw_document=document,
