@@ -120,7 +120,7 @@ def to_rdf():
 
         actual_triples = actual_dataset['@default']
         actual_graph: Graph = _rdflib_graph_from_pyld_dataset(actual_triples)
-        expected_graph = Graph().parse(data=raw_expected_quads)
+        expected_graph = Graph().parse(data=raw_expected_quads, format='nquads')
 
         if not actual_graph.isomorphic(expected_graph):
             raise NotIsomorphic(
