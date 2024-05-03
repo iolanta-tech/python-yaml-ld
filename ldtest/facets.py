@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from typing import Iterable
 
@@ -23,6 +24,11 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
             except KeyError:
                 extract_all_scripts = False
 
+            try:
+                ctx = json.loads(Path(URL(row['context']).path).read_text())
+            except KeyError:
+                ctx = None
+
             yield TestCase(
                 test=f'{test_url.name}#{test_url.fragment}',
                 input=URL(row['input']),
@@ -30,6 +36,7 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
                 req=(req := row.get('req')) and req.value,
                 extract_all_scripts=extract_all_scripts,
                 base=row.get('base'),
+                ctx=ctx,
             )
 
     def _process_result(
