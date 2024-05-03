@@ -174,9 +174,7 @@ def test_against_ld_library():
                 try:
                     expanded_document = expand(
                         test_case.input,
-                        options=ExpandOptions(
-                            extract_all_scripts=test_case.extract_all_scripts,
-                        ).model_dump(by_alias=True),
+                        **test_case.kwargs,
                     )
                 except YAMLLDError as error:
                     assert error.code == error_code
@@ -192,10 +190,7 @@ def test_against_ld_library():
                 expected = parse(result_path.read_text())
                 actual = expand(
                     test_case.input,
-                    options=ExpandOptions(
-                        extract_all_scripts=test_case.extract_all_scripts,
-                        base=test_case.base,
-                    ).model_dump(by_alias=True),
+                    **test_case.kwargs,
                 )
 
                 assert actual == expected
@@ -250,8 +245,25 @@ def test_from_rdf(
 @pytest.mark.parametrize('test_case', load_tests(tests.CompactTest), ids=_get_id)
 def test_compact(
     test_case: TestCase,
+    test_against_ld_library,
 ):
-    raise ValueError(test_case)
+    try:
+        test_against_ld_library(
+            test_case=test_case,
+            parse=yaml_ld.parse,
+            expand=yaml_ld.compact,
+        )
+    except AssertionError:
+        try:
+            test_against_ld_library(
+                test_case=test_case,
+                parse=json.loads,
+                expand=jsonld.compact,
+            )
+        except Exception:
+            pytest.skip('This test fails for pyld as well as for yaml-ld.')
+        else:
+            raise
 
 
 @pytest.mark.parametrize('test_case', load_tests(tests.FlattenTest), ids=_get_id)
