@@ -219,7 +219,7 @@ def test_expand(
                 parse=json.loads,
                 expand=jsonld.expand,
             )
-        except Exception:
+        except AssertionError:
             pytest.skip('This test fails for pyld as well as for yaml-ld.')
         else:
             raise
@@ -260,7 +260,7 @@ def test_compact(
                 parse=json.loads,
                 expand=jsonld.compact,
             )
-        except Exception:
+        except AssertionError:
             pytest.skip('This test fails for pyld as well as for yaml-ld.')
         else:
             raise
@@ -284,7 +284,7 @@ def test_flatten(
                 parse=json.loads,
                 expand=jsonld.flatten,
             )
-        except Exception:
+        except AssertionError:
             pytest.skip('This test fails for pyld as well as for yaml-ld.')
         else:
             raise
