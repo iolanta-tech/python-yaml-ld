@@ -2,7 +2,7 @@
 hide: [toc]
 ---
 
-# :material-arrow-compact-all: `compact()`
+# :material-arrow-collapse: `compact()`
 
 !!! info "Specified by: [JSON-LD API]({{ yaml_ld.compact.__annotations__.return.__metadata__|first }})"
 
@@ -20,7 +20,7 @@ hide: [toc]
 
 ## `CompactOptions` | `CompactOptionsDict`
 
-| `ExpandOptions` | `ExpandOptionsDict` | Type                                       | Default | Description |
+| `CompactOptions` | `CompactOptionsDict` | Type                                       | Default | Description |
 |-----|------------------|---------------------------------------------|-------------|---|
 | `compact_arrays` | `compactArrays` | `bool` | :heavy_check_mark: `True` |  |
 | `graph` | `graph`     | `bool`           | :x: `False` | Document Loader. |
