@@ -6,10 +6,13 @@ from pyld import jsonld
 from yaml_ld import parse
 from yaml_ld.annotations import API
 from yaml_ld.expand import except_json_ld_errors
-from yaml_ld.models import Document, BaseOptions, SerializedDocument
+from yaml_ld.models import (
+    Document, BaseOptions, SerializedDocument,
+    ExtractAllScriptsOptions,
+)
 
 
-class FlattenOptions(BaseOptions):
+class FlattenOptions(BaseOptions, ExtractAllScriptsOptions):
     """Options to flatten a YAML-LD document."""
 
     expand_context: Document | None = None

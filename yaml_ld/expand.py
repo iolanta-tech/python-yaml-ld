@@ -14,23 +14,16 @@ from yaml_ld.errors import (
 )
 from yaml_ld.models import (
     Document, DocumentLoader, BaseOptions, ExtractAllScripts,
-    SerializedDocument,
+    SerializedDocument, ExtractAllScriptsOptions,
 )
 from yaml_ld.parse import parse  # noqa: WPS347
 
 
-class ExpandOptions(BaseOptions):
+class ExpandOptions(BaseOptions, ExtractAllScriptsOptions):
     """Options for `jsonld.expand()`."""
 
     expand_context: Document | None = None
     """A context to expand with."""
-
-
-class ExpandOptionsDict(TypedDict):
-    context: Document | None
-    base: str | None
-    extract_all_scripts: ExtractAllScripts
-    document_loader: DocumentLoader | None
 
 
 @contextlib.contextmanager

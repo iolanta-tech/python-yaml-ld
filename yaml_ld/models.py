@@ -39,17 +39,21 @@ class ProcessingMode(str, Enum):  # noqa: WPS600
     JSON_LD_1_1 = 'json-ld-1.1'   # noqa: WPS114, WPS115
 
 
-class BaseOptions(BaseModel):
-    """Base options shared by all YAML-LD API methods."""
-
-    base: str | None = None
-    """The base IRI to use."""
+class ExtractAllScriptsOptions(BaseModel):
+    """Options flag to extract all scripts or not."""
 
     extract_all_scripts: bool = False
     """
     True to extract all YAML-LD script elements from HTML, False to extract just
     the first.
     """
+
+
+class BaseOptions(BaseModel):
+    """Base options shared by all YAML-LD API methods."""
+
+    base: str | None = None
+    """The base IRI to use."""
 
     document_loader: DocumentLoader | None = None
     """The document loader."""

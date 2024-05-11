@@ -8,12 +8,12 @@ from yaml_ld.errors import MappingKeyError, CycleDetected
 from yaml_ld.expand import except_json_ld_errors
 from yaml_ld.models import (
     Document, ProcessingMode, DocumentLoader, BaseOptions, ExtractAllScripts,
-    SerializedDocument,
+    SerializedDocument, ExtractAllScriptsOptions,
 )
 from yaml_ld.parse import parse  # noqa: WPS347
 
 
-class CompactOptions(BaseOptions):
+class CompactOptions(BaseOptions, ExtractAllScriptsOptions):
     """Options to compact a YAML-LD document."""
 
     compact_arrays: bool = True
