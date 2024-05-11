@@ -39,16 +39,25 @@ plugins:
       default_handler: python
       handlers:
         python:
-          import:
-            - https://docs.python-requests.org/en/master/objects.inv
+          paths: [python-yaml-ld]
+          load_external_modules: true
           options:
-            show_root_heading: false
+            docstring_style: null
+            docstring_section_style: spacy
+
+            show_root_heading: true
+            parameter_headings: true
             show_source: false
             show_symbol_type_heading: true
             separate_signature: true
             show_signature_annotations: true
+            signature_crossrefs: true
             allow_inspection: true
             show_if_no_docstring: true
+            inherited_members: true
+            filters:
+              - "!model_config"
+
   - macros:
       on_error_fail: true
 
@@ -60,7 +69,7 @@ theme:
   features:
     - navigation.sections
     - navigation.indexes
-    # - navigation.tabs
+    - navigation.tabs
     - navigation.tabs.sticky
     - content.code.annotate
     - content.action.edit
