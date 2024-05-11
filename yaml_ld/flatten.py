@@ -10,7 +10,10 @@ from yaml_ld.models import Document, BaseOptions, SerializedDocument
 
 
 class FlattenOptions(BaseOptions):
-    ...
+    """Options to flatten a YAML-LD document."""
+
+    expand_context: Document | None = None
+    """A context to expand with."""
 
 
 @validate_call(config=dict(arbitrary_types_allowed=True))
