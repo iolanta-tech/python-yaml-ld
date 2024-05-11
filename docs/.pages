@@ -2,6 +2,7 @@ nav:
   - index.md
   - expand(): expand
   - compact(): compact
+  - flatten(): flatten
   - ...
   - types
   - blog
