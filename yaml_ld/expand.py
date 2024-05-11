@@ -22,8 +22,8 @@ from yaml_ld.parse import parse  # noqa: WPS347
 class ExpandOptions(BaseOptions):
     """Options for `jsonld.expand()`."""
 
-    context: Document | None = Field(default=None, alias='expandContext')
-
+    expand_context: Document | None = None
+    """A context to expand with."""
 
 class ExpandOptionsDict(TypedDict):
     context: Document | None
