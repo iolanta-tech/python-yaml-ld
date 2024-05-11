@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any, Annotated, NewType
 
 from pydantic import BaseModel, Field, ConfigDict
+from pydantic.alias_generators import to_camel
 from urlpath import URL
 
 Document = dict[str, Any] | list[Any]  # type: ignore
@@ -41,11 +42,19 @@ class ProcessingMode(str, Enum):  # noqa: WPS600
 class BaseOptions(BaseModel):
     """Base options shared by all YAML-LD API methods."""
 
-    base: str | None = Field(default=None)
-    extract_all_scripts: bool = Field(default=False, alias='extractAllScripts')
-    document_loader: DocumentLoader | None = Field(
-        default=None,
-        alias='documentLoader',
-    )
+    base: str | None = None
+    """The base IRI to use."""
 
-    model_config = ConfigDict(populate_by_name=True)
+    extract_all_scripts: bool = False
+    """
+    True to extract all YAML-LD script elements from HTML, False to extract just
+    the first.
+    """
+
+    document_loader: DocumentLoader | None = None
+    """The document loader."""
+
+    model_config = ConfigDict(
+        populate_by_name=True,
+        alias_generator=to_camel,
+    )
