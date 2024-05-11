@@ -67,7 +67,7 @@ theme:
     primary: orange
   custom_dir: overrides
   features:
-    - navigation.sections
+    # - navigation.sections
     - navigation.indexes
     - navigation.tabs
     - navigation.tabs.sticky
