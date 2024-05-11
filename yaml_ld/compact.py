@@ -8,18 +8,25 @@ from yaml_ld.errors import MappingKeyError, CycleDetected
 from yaml_ld.expand import except_json_ld_errors
 from yaml_ld.models import (
     Document, ProcessingMode, DocumentLoader, BaseOptions, ExtractAllScripts,
-    SerializedDocument,
+    SerializedDocument, ExtractAllScriptsOptions,
 )
 from yaml_ld.parse import parse  # noqa: WPS347
 
 
-class CompactOptions(BaseOptions):
-    """Options structure for `jsonld.compact()`."""
+class CompactOptions(BaseOptions, ExtractAllScriptsOptions):
+    """Options to compact a YAML-LD document."""
 
-    compact_arrays: bool = Field(default=True, alias='compactArrays')
+    compact_arrays: bool = True
+    """Compact arrays to single values when appropriate?"""
+
     graph: bool = False
-    expand_context: Document | None = Field(default=None, alias='expandContext')
-    skip_expansion: bool = Field(default=False, alias='skipExpansion')
+    """True to always output a top-level graph."""
+
+    expand_context: Document | None = None
+    """A context to expand with."""
+
+    skip_expansion: bool = False
+    """True to skip the expansion process, False to include it."""
 
 
 @validate_call(config=dict(arbitrary_types_allowed=True))

@@ -25,6 +25,7 @@ dominate = "^2.9.1"
 mkdocs-awesome-pages-plugin = "^2.9.2"
 mkdocs-blogging-plugin = "^2.2.11"
 mkdocstrings-python = "^1.10.0"
+black = "^24.4.2"
 
 [build-system]
 requires = ["poetry-core"]

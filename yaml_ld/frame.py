@@ -7,7 +7,10 @@ from pyld import jsonld
 from yaml_ld import parse
 from yaml_ld.annotations import API, FRAMING
 from yaml_ld.expand import except_json_ld_errors
-from yaml_ld.models import Document, SerializedDocument, BaseOptions
+from yaml_ld.models import (
+    Document, SerializedDocument, BaseOptions,
+    ExtractAllScriptsOptions,
+)
 
 
 class Embed(StrEnum):
@@ -17,7 +20,7 @@ class Embed(StrEnum):
     LINK = '@link'
 
 
-class FrameOptions(BaseOptions):
+class FrameOptions(BaseOptions, ExtractAllScriptsOptions):
     """Options for YAML-LD framing."""
 
     expand_context: Document | None = None
