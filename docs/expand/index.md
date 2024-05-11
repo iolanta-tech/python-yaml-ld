@@ -7,23 +7,9 @@ hide: [toc]
 !!! info "Specified by: [JSON-LD API]({{ yaml_ld.expand.__annotations__.return.__metadata__|first }})"
 
 ::: yaml_ld.expand.expand
+    options:
+      unwrap_annotated: true
 
-## Input & output
-
-
-|               | Type                                       | Default | Description |
-|-----------------------|---------------------------------------------|-------------|---|
-| `document`            | [SerializedDocument](/types/serialized-document/) \| [Document](/types/document/) |  | Document to expand.         |
-| `options`                | `ExpandOptions | ExpandOptionsDict`      | | Options |
-| :material-arrow-right-bottom-bold: **Returns** | [Document](/types/document/) \| list[[Document](/types/document/)] | | Expanded document |
-
-## `ExpandOptions` | `ExpandOptionsDict`
-
-| `ExpandOptions` | `ExpandOptionsDict` | Type                                       | Default | Description |
-|-----|------------------|---------------------------------------------|-------------|---|
-| `context` | `context`            | [Document](/types/document/) \| `None` | `None` | A context to expand with. |
-| `extract_all_scripts` | `extractAllScripts` | `bool` | :x: `False` | Will we extract all scripts, or all documents in a YAML stream? |
-| `document_loader` | `documentLoader`     | `DocumentLoader`                           | `None` | Document Loader. |
 
 ## Examples
 
