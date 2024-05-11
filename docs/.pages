@@ -3,6 +3,9 @@ nav:
   - expand(): expand
   - compact(): compact
   - flatten(): flatten
+  - to_rdf(): to-rdf
+  - from_rdf(): from-rdf
   - ...
+  - frame(): frame
   - types
   - blog
