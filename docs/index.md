@@ -1,7 +1,6 @@
 ---
 title: Home
-hide:
-  - toc
+hide: [toc, navigation]
 ---
 
 # YAML-LD implementation for Python
