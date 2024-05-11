@@ -16,6 +16,7 @@ class TestCase:
     result: Path | str | Exception   # noqa: WPS110
     req: str
     ctx: Document | None = None
+    frame: Document | None = None
     extract_all_scripts: bool = False
     base: str | None = None
 
@@ -39,6 +40,9 @@ class TestCase:
     def _stream_kwargs(self):
         if self.ctx is not None:
             yield 'ctx', self.ctx
+
+        if self.frame is not None:
+            yield 'frame', self.frame
 
         yield 'options', ExpandOptions(
             base=self.base,

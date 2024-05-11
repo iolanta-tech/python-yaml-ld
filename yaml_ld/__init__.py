@@ -4,6 +4,6 @@ from yaml_ld.parse import parse  # noqa: WPS347
 from yaml_ld.to_rdf import to_rdf  # noqa: WPS347
 from yaml_ld.from_rdf import from_rdf  # noqa: WPS347
 from yaml_ld.flatten import flatten  # noqa: WPS347
+from yaml_ld.frame import frame
 
-
-__all__ = ['parse', 'expand', 'compact', 'to_rdf', 'from_rdf', 'flatten']   # noqa: WPS410
+__all__ = ['parse', 'expand', 'compact', 'to_rdf', 'from_rdf', 'flatten', 'frame']   # noqa: WPS410

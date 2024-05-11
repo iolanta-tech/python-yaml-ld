@@ -4,6 +4,7 @@ from documented import Documented
 from urlpath import URL
 
 API = URL('https://w3c.github.io/json-ld-api')
+FRAMING = URL('https://www.w3.org/TR/json-ld-framing/')
 
 
 @dataclass

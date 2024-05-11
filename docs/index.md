@@ -61,11 +61,21 @@ graph LR
         click ParsedDocument "/types/document/" "Parsed YAML-LD document"
         click parse "/parse/" "Parse a YAML-LD Document"
     end
+    
+    subgraph Framing
+        NotFramedDocument("Document\n<em><small>(not framed)</small></em>") --> frame{{"frame()"}} --> FramedDocument("Document\n<em><small>(framed)</small></em>")
+        class FramedDocument type
+        class NotFramedDocument type
+        class frame function
+        click frame "/frame/" "Frame a YAML-LD Document"
+    end
 
     ExpandedDocument --"≡"--- Document
     CompactedDocument --"≡"--- Document
     ParsedDocument --"≡"--- Document
     DocumentRDF --"≡"--- Document
+    NotFramedDocument --"≡"--- Document
+    FramedDocument --"≡"--- Document
     
     classDef type     fill:#ffa724, stroke:#e68a00, stroke-width:2px, color:#fff;
     classDef function fill:#000000de, stroke:#000000de, stroke-width:2px, color:#fff, font-style:italic;
