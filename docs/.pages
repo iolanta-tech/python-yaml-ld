@@ -1,5 +1,6 @@
 nav:
   - index.md
+  - compact(): compact
   - ...
   - types
   - blog
