@@ -2,13 +2,10 @@
 hide: [toc]
 ---
 
-# :material-arrow-expand-all: `expand()`
+::: yaml_ld.expand.expand
+
 
 !!! info "Specified by: [JSON-LD API]({{ yaml_ld.expand.__annotations__.return.__metadata__|first }})"
-
-::: yaml_ld.expand.expand
-    options:
-      unwrap_annotated: true
 
 
 ## Examples

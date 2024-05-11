@@ -45,6 +45,8 @@ plugins:
             docstring_style: null
             docstring_section_style: spacy
 
+            unwrap_annotated: true
+            heading_level: 1
             show_root_heading: true
             parameter_headings: true
             show_source: false
