@@ -8,6 +8,10 @@ hide: [toc]
 
 ::: yaml_ld.frame.frame
 
+::: yaml_ld.frame.FrameOptions
+
+::: yaml_ld.frame.Embed
+
 ## Input & output
 
 |               | Type                                       | Default | Description |
