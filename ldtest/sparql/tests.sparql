@@ -1,4 +1,4 @@
-SELECT ?test ?result ?input ?req ?extract_all_scripts ?base ?context WHERE {
+SELECT ?test ?result ?input ?req ?extract_all_scripts ?base ?context ?frame WHERE {
     ?test
         a $test_class ;
         mf:result ?result ;
@@ -18,6 +18,10 @@ SELECT ?test ?result ?input ?req ?extract_all_scripts ?base ?context WHERE {
 
     OPTIONAL {
         ?test jld:context ?context .
+    }
+
+    OPTIONAL {
+        ?test jld:frame ?frame .
     }
 
     # FIXME: We mimic how `pyld` tests work, skipping 1.0 tests. This is probably incorrect though.

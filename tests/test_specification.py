@@ -288,3 +288,28 @@ def test_flatten(
             pytest.skip('This test fails for pyld as well as for yaml-ld.')
         else:
             raise
+
+
+@pytest.mark.parametrize('test_case', load_tests(tests.FrameTest), ids=_get_id)
+def test_frame(
+    test_case: TestCase,
+    test_against_ld_library,
+):
+    try:
+        test_against_ld_library(
+            test_case=test_case,
+            parse=yaml_ld.parse,
+            expand=yaml_ld.frame,
+        )
+    except AssertionError:
+        try:
+            test_against_ld_library(
+                test_case=test_case,
+                parse=json.loads,
+                expand=jsonld.frame,
+            )
+        except AssertionError:
+            pytest.skip('This test fails for pyld as well as for yaml-ld.')
+        else:
+            raise
+

@@ -29,6 +29,11 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
             except KeyError:
                 ctx = None
 
+            try:
+                frame = json.loads(Path(URL(row['frame']).path).read_text())
+            except KeyError:
+                frame = None
+
             yield TestCase(
                 test=f'{test_url.name}#{test_url.fragment}',
                 input=URL(row['input']),
@@ -37,6 +42,7 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
                 extract_all_scripts=extract_all_scripts,
                 base=row.get('base'),
                 ctx=ctx,
+                frame=frame,
             )
 
     def _process_result(
