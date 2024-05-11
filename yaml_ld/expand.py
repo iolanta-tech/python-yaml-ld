@@ -25,6 +25,7 @@ class ExpandOptions(BaseOptions):
     expand_context: Document | None = None
     """A context to expand with."""
 
+
 class ExpandOptionsDict(TypedDict):
     context: Document | None
     base: str | None
