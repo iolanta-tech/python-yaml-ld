@@ -1,10 +1,7 @@
-from typing import Annotated
-
 from pydantic import validate_call
 from pyld import jsonld
 
 import yaml_ld
-from yaml_ld.annotations import API
 from yaml_ld.expand import except_json_ld_errors
 from yaml_ld.models import (
     Document, SerializedDocument, BaseOptions, ExtractAllScriptsOptions,
@@ -30,7 +27,7 @@ class ToRDFOptions(BaseOptions, ExtractAllScriptsOptions):
 def to_rdf(
     document: SerializedDocument | Document,
     options: ToRDFOptions = ToRDFOptions(),
-) -> Annotated[Dataset, API / '#dom-jsonldprocessor-tordf']:
+) -> Dataset:
     """Convert a YAML-LD document to RDF."""
     parsed_document = yaml_ld.parse(
         raw_document=document,
