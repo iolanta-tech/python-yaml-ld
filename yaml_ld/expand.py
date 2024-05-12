@@ -1,20 +1,16 @@
 import contextlib
 from pathlib import Path
-from typing import Annotated
-from typing_extensions import TypedDict
 
-from pydantic import Field, validate_call
+from pydantic import validate_call
 from pyld import jsonld
 from urlpath import URL
 
-from yaml_ld.annotations import API
 from yaml_ld.errors import (
     CycleDetected, MappingKeyError,
     LoadingRemoteContextFailed, PyLDError,
 )
 from yaml_ld.models import (
-    Document, DocumentLoader, BaseOptions, ExtractAllScripts,
-    SerializedDocument, ExtractAllScriptsOptions,
+    Document, BaseOptions, SerializedDocument, ExtractAllScriptsOptions,
 )
 from yaml_ld.parse import parse  # noqa: WPS347
 
@@ -58,7 +54,7 @@ def except_json_ld_errors():
 def expand(   # noqa: C901, WPS211
     document: SerializedDocument | Document,
     options: ExpandOptions = ExpandOptions(),
-) -> Annotated[Document | list[Document], API / '#dom-jsonldprocessor-expand']:
+) -> Document | list[Document]:
     """Expand a YAML-LD document."""
     if isinstance(document, (str, bytes, Path, URL)):
         if isinstance(document, Path) and options.base is None:

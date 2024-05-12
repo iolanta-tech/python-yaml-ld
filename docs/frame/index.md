@@ -1,7 +1,6 @@
 ---
 hide: [toc]
+specified-by: https://www.w3.org/TR/json-ld-framing/#dom-jsonldprocessor-frame
 ---
 
 ::: yaml_ld.frame.frame
-
-!!! info "Specified by: [JSON-LD Framing]({{ yaml_ld.frame.__annotations__.return.__metadata__|first }})"

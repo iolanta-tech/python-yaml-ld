@@ -1,14 +1,11 @@
 from typing import Annotated
 
-from pydantic import Field, validate_call
+from pydantic import validate_call
 from pyld import jsonld
 
-from yaml_ld.annotations import API
-from yaml_ld.errors import MappingKeyError, CycleDetected
 from yaml_ld.expand import except_json_ld_errors
 from yaml_ld.models import (
-    Document, ProcessingMode, DocumentLoader, BaseOptions, ExtractAllScripts,
-    SerializedDocument, ExtractAllScriptsOptions,
+    Document, BaseOptions, SerializedDocument, ExtractAllScriptsOptions,
 )
 from yaml_ld.parse import parse  # noqa: WPS347
 
@@ -34,7 +31,7 @@ def compact(  # noqa: WPS211
     document: SerializedDocument | Document,
     ctx: Annotated[Document | None, 'Context to compact with.'],
     options: CompactOptions = CompactOptions(),
-) -> Annotated[Document | list[Document], API / '#dom-jsonldprocessor-compact']:
+) -> Document | list[Document]:
     """Compact a JSON-LD document."""
     if isinstance(document, (str, bytes)):
         document = parse(document)
