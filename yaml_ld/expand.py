@@ -68,5 +68,8 @@ def expand(   # noqa: C901, WPS211
     with except_json_ld_errors():
         return jsonld.expand(
             input_=document,
-            options=options.model_dump(by_alias=True),
+            options=options.model_dump(
+                by_alias=True,
+                exclude_defaults=True,
+            ),
         )
