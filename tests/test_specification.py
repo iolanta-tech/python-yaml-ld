@@ -1,8 +1,9 @@
+import inspect
 import json
 import operator
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Any
 
 import funcy
 import pytest
@@ -10,6 +11,7 @@ import rdflib
 from documented import Documented, DocumentedError
 from pydantic import ValidationError
 from pyld import jsonld
+from pyld.jsonld import load_document
 from rdflib import Graph, Namespace
 from rdflib_pyld_compat.convert import (  # noqa: WPS450
     _rdflib_graph_from_pyld_dataset,
@@ -28,6 +30,10 @@ from yaml_ld.models import Document
 from yaml_ld.to_rdf import ToRDFOptions
 
 tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
+
+
+def _load_json_ld(source: Path):
+    return json.loads(source.read_text())
 
 
 def _get_id(test_case: TestCase) -> str | None:
@@ -166,6 +172,34 @@ def test_to_rdf(test_case: TestCase, to_rdf):
             raise
 
 
+@dataclass
+class CallableUnexpectedlyFailed(DocumentedError):
+    """
+    `{self.callable_path}()` unexpectedly failed with an exception.
+
+    Args: {self.params}
+    """
+
+    callable: Callable
+    params: Any
+
+    @property
+    def callable_path(self):
+        # Get the module where the callable is defined
+        module_name = self.callable.__module__
+
+        # Get the object name
+        obj_name = self.callable.__name__
+
+        # Construct the import path
+        if module_name == "__main__":
+            import_path = obj_name
+        else:
+            import_path = f"{module_name}:{obj_name}"
+
+        return import_path
+
+
 @pytest.fixture()
 def test_against_ld_library():
     def _test(test_case: TestCase, parse: Callable, expand: Callable) -> None:
@@ -187,7 +221,13 @@ def test_against_ld_library():
                     )))
 
             case Path() as result_path:
-                expected = parse(result_path.read_text())
+                try:
+                    expected = parse(result_path)
+                except Exception as err:
+                    raise CallableUnexpectedlyFailed(
+                        callable=parse,
+                        params=result_path,
+                    ) from err
                 actual = expand(
                     test_case.input,
                     **test_case.kwargs,
@@ -213,10 +253,17 @@ def test_expand(
             expand=yaml_ld.expand,
         )
     except Exception:
+        if test_case.input.suffix == '.yamlld':
+            # The source document is in YAML-LD format, and we are failing on it
+            raise
+
+        # The source document is in JSON-LD format, and we can try running the
+        # test again, but with `pyld` library — so as to check where the bug is:
+        # in `pyld` or in `python-yaml-ld`.
         try:
             test_against_ld_library(
                 test_case=test_case,
-                parse=json.loads,
+                parse=_load_json_ld,
                 expand=jsonld.expand,
             )
         except AssertionError:

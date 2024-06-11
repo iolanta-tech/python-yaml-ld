@@ -1,8 +1,28 @@
+import json
+
 import pytest
+from pyld import jsonld
 from pyld.jsonld import JsonLdError
 
 import yaml_ld
 from tests.common import specifications_root
+
+
+def test_pyld_expand_json_string():
+    """
+    pyld does not accept a string serialization of a JSON document to expand.
+
+    We shall do the same.
+    """
+    document = {
+        '@context': {'@vocab': 'https://example.com'},
+        'something': None,
+    }
+
+    with pytest.raises(JsonLdError) as error_info:
+        jsonld.expand(json.dumps(document))
+
+    assert error_info.value.type == 'jsonld.InvalidUrl'
 
 
 def test_empty_value():
