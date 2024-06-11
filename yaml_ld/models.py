@@ -6,6 +6,8 @@ from pydantic import BaseModel, Field, ConfigDict
 from pydantic.alias_generators import to_camel
 from urlpath import URL
 
+from yaml_ld.document_loaders.local_file import LocalFileDocumentLoader
+
 Document = dict[str, Any] | list[Any]  # type: ignore
 DocumentLoader = Any  # type: ignore   # FIXME: This is actually a callable.
 
@@ -52,10 +54,10 @@ class ExtractAllScriptsOptions(BaseModel):
 class BaseOptions(BaseModel):
     """Base options shared by all YAML-LD API methods."""
 
-    base: str | None = None
+    base: str | Path | None = None
     """The base IRI to use."""
 
-    document_loader: DocumentLoader | None = None
+    document_loader: Annotated[DocumentLoader, Field(default_factory=LocalFileDocumentLoader)]
     """The document loader."""
 
     model_config = ConfigDict(

@@ -1,12 +1,16 @@
+from pathlib import Path
+
 import funcy
 import more_itertools
 import pytest
 import yaml
+from urlpath import URL
 from yaml.parser import ParserError
 
 import yaml_ld
 from tests.common import specifications_root, tests_root
 from yaml_ld.errors import LoadingDocumentFailed
+from yaml_ld.parse import as_url_or_path
 
 
 def test_invalid_yaml():
@@ -27,3 +31,20 @@ def test_closing_html_comment_in_yaml():
                 source_path.read_text(),
                 Loader=yaml.SafeLoader),
         )
+
+
+@pytest.mark.parametrize(
+    ('given', 'expected'),
+    [
+        (raw := 'http://schema.org', URL(raw)),
+        (raw := 'https://schema.org', URL(raw)),
+        (raw := 'ipns://iolanta.tech', URL(raw)),
+        (raw := 'ipfs://iolanta.tech', URL(raw)),
+        (raw := '/home/iolanta/', Path(raw)),
+        (raw := '/home/iolanta/test.jsonld', Path(raw)),
+        (raw := '/home/iolanta/test.yamlld', Path(raw)),
+        (raw := 'test.yamlld', Path(raw)),
+    ],
+)
+def test_string_as_url_or_path(given: str, expected: URL):
+    assert as_url_or_path(given) == expected

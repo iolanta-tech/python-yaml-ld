@@ -40,7 +40,7 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
                 result=self._process_result(row['result']),
                 req=(req := row.get('req')) and req.value,
                 extract_all_scripts=extract_all_scripts,
-                base=row.get('base'),
+                base=row.get('base') or str(URL(row['input']).parent) + '/',
                 ctx=ctx,
                 frame=frame,
             )

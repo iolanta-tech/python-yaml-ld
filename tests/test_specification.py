@@ -217,7 +217,7 @@ def test_against_ld_library():
 
             case Path() as result_path:
                 try:
-                    expected = parse(result_path.read_text())
+                    expected = parse(result_path)
                 except Exception as err:
                     raise CallableUnexpectedlyFailed(
                         callable=parse,

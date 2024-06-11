@@ -92,13 +92,25 @@ def load_yaml_document(
     return first_document
 
 
+def as_url_or_path(raw: str) -> URL | Path:
+    """Interpret a raw string as a URL or a local disk path."""
+    if (url := URL(raw)).scheme:
+        return url
+
+    return Path(raw)
+
+
 def parse(   # noqa: WPS238, WPS231, C901
-    raw_document: str | bytes | Path | URL | Document,
+    raw_document: str | Path | URL | Document,
     extract_all_scripts: ExtractAllScripts = False,
     document_type: DocumentType | None = None,
 ) -> Document:
     """Parse a YAML-LD document."""
     fragment = None
+
+    if isinstance(raw_document, str):
+        # Coerce to a URL.
+        raw_document = as_url_or_path(raw_document)
 
     if isinstance(raw_document, dict | list):
         return cast(Document, raw_document)
@@ -118,19 +130,7 @@ def parse(   # noqa: WPS238, WPS231, C901
 
         raw_document = raw_document.read_bytes()
 
-    if isinstance(raw_document, bytes):
-        try:
-            raw_document = raw_document.decode('utf-8')
-        except UnicodeDecodeError as err:
-            raise InvalidEncoding() from err
-
     # Now, `raw_document` is a string, let's try guessing its format.
-    if (
-        document_type is None
-        and raw_document.lstrip()[:len(HTML_HEADER)].lower() == HTML_HEADER
-    ):
-        document_type = DocumentType.HTML
-
     if document_type == DocumentType.HTML:
         return _parse_html(
             raw_document,
