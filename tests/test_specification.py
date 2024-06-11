@@ -11,6 +11,7 @@ import rdflib
 from documented import Documented, DocumentedError
 from pydantic import ValidationError
 from pyld import jsonld
+from pyld.jsonld import load_document
 from rdflib import Graph, Namespace
 from rdflib_pyld_compat.convert import (  # noqa: WPS450
     _rdflib_graph_from_pyld_dataset,
@@ -29,6 +30,10 @@ from yaml_ld.models import Document
 from yaml_ld.to_rdf import ToRDFOptions
 
 tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
+
+
+def _load_json_ld(source: Path):
+    return json.loads(source.read_text())
 
 
 def _get_id(test_case: TestCase) -> str | None:
@@ -258,7 +263,7 @@ def test_expand(
         try:
             test_against_ld_library(
                 test_case=test_case,
-                parse=json.loads,
+                parse=_load_json_ld,
                 expand=jsonld.expand,
             )
         except AssertionError:
