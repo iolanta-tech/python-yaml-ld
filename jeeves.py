@@ -72,6 +72,7 @@ def test_with_artifacts():
             _out=artifacts / 'coverage.txt',
         )
     except ErrorReturnCode as err:
+        print(err)
         print(err.stdout)
         print(err.stderr)
 
