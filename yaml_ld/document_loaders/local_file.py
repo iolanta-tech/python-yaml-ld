@@ -12,12 +12,15 @@ from yaml_ld.loader import YAMLLDLoader
 
 class LocalFileDocumentLoader(DocumentLoader):
     def __call__(self, source: str, options: dict[str, Any]) -> PyLDResponse:
+        from yaml_ld.errors import LoadingDocumentFailed
+
         path = Path(URL(source).path)
 
         if path.suffix in {'.yaml', '.yml', '.yamlld', '.json', '.jsonld'}:
             with path.open() as f:
                 from yaml_ld.errors import MappingKeyError
 
+                from yaml.scanner import ScannerError
                 try:
                     yaml_document = yaml.load(  # noqa: S506
                         stream=f.read(),
@@ -28,6 +31,9 @@ class LocalFileDocumentLoader(DocumentLoader):
                         raise MappingKeyError() from err
 
                     raise
+
+                except ScannerError as err:
+                    raise LoadingDocumentFailed() from err
 
                 if not isinstance(yaml_document, (dict, list)):
                     from yaml_ld.errors import DocumentIsScalar
@@ -56,5 +62,4 @@ class LocalFileDocumentLoader(DocumentLoader):
                 'contentType': 'application/ld+yaml',
             }
 
-        from yaml_ld.errors import LoadingDocumentFailed
         raise LoadingDocumentFailed()

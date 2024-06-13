@@ -143,15 +143,6 @@ def parse(   # noqa: WPS238, WPS231, C901
             raw_document,
             extract_all_scripts=extract_all_scripts,
         )
-    except ScannerError as err:
-        if document_type != DocumentType.YAML:
-            return _parse_html(
-                raw_document,
-                fragment=fragment,
-                extract_all_scripts=extract_all_scripts,
-            )
-
-        raise LoadingDocumentFailed() from err
 
     except ComposerError as err:
         raise UndefinedAliasFound() from err
