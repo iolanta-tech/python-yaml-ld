@@ -57,7 +57,9 @@ class BaseOptions(BaseModel):
     base: str | Path | None = None
     """The base IRI to use."""
 
-    document_loader: Annotated[DocumentLoader, Field(default_factory=LocalFileDocumentLoader)]
+    document_loader: Annotated[DocumentLoader, Field(
+        default_factory=LocalFileDocumentLoader,
+    )]
     """The document loader."""
 
     model_config = ConfigDict(

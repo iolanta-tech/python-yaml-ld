@@ -15,11 +15,17 @@ class LocalFileDocumentLoader(DocumentLoader):
 
         if path.suffix in {'.yaml', '.yml', '.yamlld', '.json', '.jsonld'}:
             with path.open() as f:
+                yaml_document = yaml.load(  # noqa: S506
+                    stream=f.read(),
+                    Loader=YAMLLDLoader,
+                )
+
+                if not isinstance(yaml_document, (dict, list)):
+                    from yaml_ld.errors import DocumentIsScalar
+                    raise DocumentIsScalar(yaml_document)
+
                 return {
-                    'document': yaml.load(  # noqa: S506
-                        stream=f.read(),
-                        Loader=YAMLLDLoader,
-                    ),
+                    'document': yaml_document,
                     'documentUrl': source,
                     'contextUrl': None,
                     'contentType': 'application/ld+yaml',
@@ -27,16 +33,18 @@ class LocalFileDocumentLoader(DocumentLoader):
 
         if path.suffix in {'.html', '.xhtml'}:
             with path.open() as f:
-                return {
-                    'document': load_html(
-                        input=f.read(),
-                        url=source,
-                        profile=None,
-                        options=options,
-                    ),
-                    'documentUrl': source,
-                    'contextUrl': None,
-                    'contentType': 'application/ld+yaml',
-                }
+                loaded_html = load_html(
+                    input=f.read(),
+                    url=source,
+                    profile=None,
+                    options=options,
+                )
+
+            return {
+                'document': loaded_html,
+                'documentUrl': source,
+                'contextUrl': None,
+                'contentType': 'application/ld+yaml',
+            }
 
         raise ValueError(f'Unknown file type: {source}')
