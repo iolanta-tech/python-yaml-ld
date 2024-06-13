@@ -58,7 +58,9 @@ def expand(   # noqa: C901, WPS211
     """Expand a YAML-LD document."""
     with except_json_ld_errors():
         return jsonld.expand(
-            input_=document,
+            input_=str(document) if (
+                isinstance(document, (Path, URL))
+            ) else document,
             options=options.model_dump(
                 by_alias=True,
                 exclude_defaults=True,

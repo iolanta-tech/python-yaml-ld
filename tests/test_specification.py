@@ -12,7 +12,7 @@ from _pytest.main import Failed
 from documented import Documented, DocumentedError
 from pydantic import ValidationError
 from pyld import jsonld
-from pyld.jsonld import load_document
+from pyld.jsonld import load_document, _is_string
 from rdflib import Graph, Namespace
 from rdflib_pyld_compat.convert import (  # noqa: WPS450
     _rdflib_graph_from_pyld_dataset,
@@ -234,7 +234,7 @@ def test_against_ld_library():
                     **test_case.kwargs,
                 )
 
-                assert actual == expected
+                assert actual == expected, test_case.input
 
             case _:
                 raise ValueError(f'What to do with this test? {test_case}')
@@ -254,7 +254,7 @@ def test_expand(
             expand=yaml_ld.expand,
         )
     except (AssertionError, FailureToFail):
-        if test_case.input.suffix == '.yamlld':
+        if test_case.input.suffix in {'.yamlld', '.yaml'}:
             # The source document is in YAML-LD format, and we are failing on it
             raise
 
