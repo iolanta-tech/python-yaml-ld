@@ -56,4 +56,5 @@ class LocalFileDocumentLoader(DocumentLoader):
                 'contentType': 'application/ld+yaml',
             }
 
-        raise ValueError(f'Unknown file type: {source}')
+        from yaml_ld.errors import LoadingDocumentFailed
+        raise LoadingDocumentFailed()
