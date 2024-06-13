@@ -1,14 +1,14 @@
 import json
 from dataclasses import dataclass
 
-from documented import Documented
+from documented import Documented, DocumentedError
 
 from ldtest.models import TestCase
 from yaml_ld.models import Document
 
 
 @dataclass
-class FailureToFail(Documented):
+class FailureToFail(DocumentedError):
     """
     YAMLLDError not raised.
 
