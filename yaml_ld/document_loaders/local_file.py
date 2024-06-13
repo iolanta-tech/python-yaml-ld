@@ -12,7 +12,7 @@ class LocalFileDocumentLoader(DocumentLoader):
     def __call__(self, source: str, options: dict[str, Any]) -> PyLDResponse:
         path = Path(URL(source).path)
 
-        if path.suffix in {'.yaml', '.yml', '.yamlld'}:
+        if path.suffix in {'.yaml', '.yml', '.yamlld', '.json', '.jsonld'}:
             with path.open() as f:
                 return {
                     'document': yaml.safe_load(f),
