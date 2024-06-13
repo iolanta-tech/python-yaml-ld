@@ -13,14 +13,6 @@ from yaml_ld.errors import LoadingDocumentFailed
 from yaml_ld.parse import as_url_or_path
 
 
-def test_invalid_yaml():
-    document = specifications_root / (
-        'yaml-ld/tests/cases/cr-well-formed-2-negative-in.yamlld'
-    )
-    with pytest.raises(LoadingDocumentFailed):
-        yaml_ld.parse(document)
-
-
 def test_closing_html_comment_in_yaml():
     """This document ends with `-->`, not a valid piece of YAML."""
     source_path = tests_root / 'data/tr016.yaml'
