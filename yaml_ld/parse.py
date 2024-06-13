@@ -156,16 +156,7 @@ def parse(   # noqa: WPS238, WPS231, C901
     except ComposerError as err:
         raise UndefinedAliasFound() from err
 
-    except ConstructorError as err:
-        if err.problem == 'found unhashable key':
-            raise MappingKeyError() from err
-
-        raise
-
     except ParserError as err:
         raise InvalidScriptElement() from err
-
-    if not isinstance(document, (dict, list)):
-        raise DocumentIsScalar(document=document)
 
     return document

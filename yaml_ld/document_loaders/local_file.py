@@ -4,6 +4,7 @@ from typing import Any
 import yaml
 from pyld.jsonld import load_html
 from urlpath import URL
+from yaml.constructor import ConstructorError
 
 from yaml_ld.document_loaders.base import DocumentLoader, PyLDResponse
 from yaml_ld.loader import YAMLLDLoader
@@ -15,10 +16,18 @@ class LocalFileDocumentLoader(DocumentLoader):
 
         if path.suffix in {'.yaml', '.yml', '.yamlld', '.json', '.jsonld'}:
             with path.open() as f:
-                yaml_document = yaml.load(  # noqa: S506
-                    stream=f.read(),
-                    Loader=YAMLLDLoader,
-                )
+                from yaml_ld.errors import MappingKeyError
+
+                try:
+                    yaml_document = yaml.load(  # noqa: S506
+                        stream=f.read(),
+                        Loader=YAMLLDLoader,
+                    )
+                except ConstructorError as err:
+                    if err.problem == 'found unhashable key':
+                        raise MappingKeyError() from err
+
+                    raise
 
                 if not isinstance(yaml_document, (dict, list)):
                     from yaml_ld.errors import DocumentIsScalar
