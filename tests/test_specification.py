@@ -8,10 +8,11 @@ from typing import Callable, Any
 import funcy
 import pytest
 import rdflib
+from _pytest.main import Failed
 from documented import Documented, DocumentedError
 from pydantic import ValidationError
 from pyld import jsonld
-from pyld.jsonld import load_document
+from pyld.jsonld import load_document, _is_string
 from rdflib import Graph, Namespace
 from rdflib_pyld_compat.convert import (  # noqa: WPS450
     _rdflib_graph_from_pyld_dataset,
@@ -116,12 +117,12 @@ def to_rdf():
                 return
 
             else:
-                pytest.fail(str(FailureToFail(
+                raise FailureToFail(
                     test_case=test_case,
                     expected_error_code=test_case.result,
                     raw_document=test_case.raw_document,
                     expanded_document=rdf_document,
-                )))
+                )
 
         try:
             actual_dataset = to_rdf(parse(test_case.raw_document))
@@ -213,12 +214,12 @@ def test_against_ld_library():
                 except YAMLLDError as error:
                     assert error.code == error_code
                 else:
-                    pytest.fail(str(FailureToFail(
+                    raise FailureToFail(
                         test_case=test_case,
                         expected_error_code=test_case.result,
                         raw_document=test_case.raw_document,
                         expanded_document=expanded_document,
-                    )))
+                    )
 
             case Path() as result_path:
                 try:
@@ -233,7 +234,7 @@ def test_against_ld_library():
                     **test_case.kwargs,
                 )
 
-                assert actual == expected
+                assert actual == expected, test_case.input
 
             case _:
                 raise ValueError(f'What to do with this test? {test_case}')
@@ -252,8 +253,8 @@ def test_expand(
             parse=yaml_ld.parse,
             expand=yaml_ld.expand,
         )
-    except Exception:
-        if test_case.input.suffix == '.yamlld':
+    except (AssertionError, FailureToFail):
+        if test_case.input.suffix in {'.yamlld', '.yaml'}:
             # The source document is in YAML-LD format, and we are failing on it
             raise
 
@@ -266,7 +267,7 @@ def test_expand(
                 parse=_load_json_ld,
                 expand=jsonld.expand,
             )
-        except AssertionError:
+        except (AssertionError, FailureToFail):
             pytest.skip('This test fails for pyld as well as for yaml-ld.')
         else:
             raise

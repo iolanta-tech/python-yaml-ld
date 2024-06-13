@@ -138,34 +138,9 @@ def parse(   # noqa: WPS238, WPS231, C901
             extract_all_scripts=extract_all_scripts,
         )
 
-    try:
-        document: Document = load_yaml_document(
-            raw_document,
-            extract_all_scripts=extract_all_scripts,
-        )
-    except ScannerError as err:
-        if document_type != DocumentType.YAML:
-            return _parse_html(
-                raw_document,
-                fragment=fragment,
-                extract_all_scripts=extract_all_scripts,
-            )
-
-        raise LoadingDocumentFailed() from err
-
-    except ComposerError as err:
-        raise UndefinedAliasFound() from err
-
-    except ConstructorError as err:
-        if err.problem == 'found unhashable key':
-            raise MappingKeyError() from err
-
-        raise
-
-    except ParserError as err:
-        raise InvalidScriptElement() from err
-
-    if not isinstance(document, (dict, list)):
-        raise DocumentIsScalar(document=document)
+    document: Document = load_yaml_document(
+        raw_document,
+        extract_all_scripts=extract_all_scripts,
+    )
 
     return document
