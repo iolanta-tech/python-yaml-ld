@@ -4,7 +4,9 @@ from typing import Any
 import yaml
 from pyld.jsonld import load_html
 from urlpath import URL
+from yaml.composer import ComposerError
 from yaml.constructor import ConstructorError
+from yaml.parser import ParserError
 
 from yaml_ld.document_loaders.base import DocumentLoader, PyLDResponse
 from yaml_ld.loader import YAMLLDLoader
@@ -34,6 +36,14 @@ class LocalFileDocumentLoader(DocumentLoader):
 
                 except ScannerError as err:
                     raise LoadingDocumentFailed() from err
+
+                except ComposerError as err:
+                    from yaml_ld.errors import UndefinedAliasFound
+                    raise UndefinedAliasFound() from err
+
+                except ParserError as err:
+                    from yaml_ld.errors import InvalidScriptElement
+                    raise InvalidScriptElement() from err
 
                 if not isinstance(yaml_document, (dict, list)):
                     from yaml_ld.errors import DocumentIsScalar

@@ -138,16 +138,9 @@ def parse(   # noqa: WPS238, WPS231, C901
             extract_all_scripts=extract_all_scripts,
         )
 
-    try:
-        document: Document = load_yaml_document(
-            raw_document,
-            extract_all_scripts=extract_all_scripts,
-        )
-
-    except ComposerError as err:
-        raise UndefinedAliasFound() from err
-
-    except ParserError as err:
-        raise InvalidScriptElement() from err
+    document: Document = load_yaml_document(
+        raw_document,
+        extract_all_scripts=extract_all_scripts,
+    )
 
     return document
