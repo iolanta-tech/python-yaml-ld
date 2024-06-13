@@ -6,6 +6,7 @@ from pyld.jsonld import load_html
 from urlpath import URL
 
 from yaml_ld.document_loaders.base import DocumentLoader, PyLDResponse
+from yaml_ld.loader import YAMLLDLoader
 
 
 class LocalFileDocumentLoader(DocumentLoader):
@@ -15,7 +16,10 @@ class LocalFileDocumentLoader(DocumentLoader):
         if path.suffix in {'.yaml', '.yml', '.yamlld', '.json', '.jsonld'}:
             with path.open() as f:
                 return {
-                    'document': yaml.safe_load(f),
+                    'document': yaml.load(  # noqa: S506
+                        stream=f.read(),
+                        Loader=YAMLLDLoader,
+                    ),
                     'documentUrl': source,
                     'contextUrl': None,
                     'contentType': 'application/ld+yaml',
