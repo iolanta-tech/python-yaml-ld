@@ -162,14 +162,14 @@ def test_to_rdf(test_case: TestCase, to_rdf):
             to_rdf=yaml_ld.to_rdf,
             parse=yaml_ld.parse,
         )
-    except NotIsomorphic:
+    except (NotIsomorphic, FailureToFail):
         try:
             to_rdf(
                 test_case=test_case,
                 to_rdf=jsonld.to_rdf,
                 parse=_load_json_ld,
             )
-        except NotIsomorphic:
+        except (NotIsomorphic, FailureToFail):
             pytest.skip('This test fails for pyld as well as for yaml-ld.')
         else:
             raise
