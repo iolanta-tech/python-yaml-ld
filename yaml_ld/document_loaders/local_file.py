@@ -1,20 +1,21 @@
+import functools
 from pathlib import Path
 from typing import Any
 
 import yaml
-from pyld.jsonld import load_html
 from urlpath import URL
 from yaml.composer import ComposerError
 from yaml.constructor import ConstructorError
 from yaml.parser import ParserError
 
 from yaml_ld.document_loaders.base import DocumentLoader, PyLDResponse
+from yaml_ld.load_html import load_html
 from yaml_ld.loader import YAMLLDLoader
 
 
 class LocalFileDocumentLoader(DocumentLoader):
     def __call__(self, source: str, options: dict[str, Any]) -> PyLDResponse:
-        from yaml_ld.errors import LoadingDocumentFailed
+        from yaml_ld.errors import LoadingDocumentFailed, DocumentIsScalar
 
         path = Path(URL(source).path)
 
@@ -46,7 +47,6 @@ class LocalFileDocumentLoader(DocumentLoader):
                     raise InvalidScriptElement() from err
 
                 if not isinstance(yaml_document, (dict, list)):
-                    from yaml_ld.errors import DocumentIsScalar
                     raise DocumentIsScalar(yaml_document)
 
                 return {
@@ -63,7 +63,14 @@ class LocalFileDocumentLoader(DocumentLoader):
                     url=source,
                     profile=None,
                     options=options,
+                    parse_script_content=functools.partial(
+                        yaml.load,
+                        Loader=YAMLLDLoader,
+                    ),
                 )
+
+                if isinstance(loaded_html, str):
+                    raise DocumentIsScalar(loaded_html)
 
             return {
                 'document': loaded_html,
