@@ -34,7 +34,6 @@ def except_json_ld_errors():
     except RecursionError as err:
         raise CycleDetected() from err
     except JSONDecodeError as err:
-        load_html()
         raise InvalidScriptElement() from err
     except jsonld.JsonLdError as err:
         # We need to drill down; for instance, `to_rdf()` raises an error which
