@@ -1,8 +1,10 @@
 import contextlib
+from json import JSONDecodeError
 from pathlib import Path
 
 from pydantic import validate_call
 from pyld import jsonld
+from pyld.jsonld import load_html
 from urlpath import URL
 
 from yaml_ld.errors import (
@@ -31,6 +33,9 @@ def except_json_ld_errors():
         raise MappingKeyError() from err
     except RecursionError as err:
         raise CycleDetected() from err
+    except JSONDecodeError as err:
+        load_html()
+        raise InvalidScriptElement() from err
     except jsonld.JsonLdError as err:
         # We need to drill down; for instance, `to_rdf()` raises an error which
         # contains an actual error from `expand()` in its `.cause` field.
