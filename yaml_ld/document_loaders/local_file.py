@@ -72,4 +72,4 @@ class LocalFileDocumentLoader(DocumentLoader):
                 'contentType': 'application/ld+yaml',
             }
 
-        raise LoadingDocumentFailed()
+        raise LoadingDocumentFailed(path=path)
