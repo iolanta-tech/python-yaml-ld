@@ -305,7 +305,7 @@ def test_compact(
         try:
             test_against_ld_library(
                 test_case=test_case,
-                parse=json.loads,
+                parse=_load_json_ld,
                 expand=jsonld.compact,
             )
         except AssertionError:
@@ -329,7 +329,7 @@ def test_flatten(
         try:
             test_against_ld_library(
                 test_case=test_case,
-                parse=json.loads,
+                parse=_load_json_ld,
                 expand=jsonld.flatten,
             )
         except AssertionError:
@@ -353,11 +353,10 @@ def test_frame(
         try:
             test_against_ld_library(
                 test_case=test_case,
-                parse=json.loads,
+                parse=_load_json_ld,
                 expand=jsonld.frame,
             )
         except AssertionError:
             pytest.skip('This test fails for pyld as well as for yaml-ld.')
         else:
             raise
-
