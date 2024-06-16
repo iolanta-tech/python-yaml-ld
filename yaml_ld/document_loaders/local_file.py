@@ -2,6 +2,7 @@ import functools
 from pathlib import Path
 from typing import Any
 
+import more_itertools
 import yaml
 from urlpath import URL
 from yaml.composer import ComposerError
@@ -14,6 +15,14 @@ from yaml_ld.loader import YAMLLDLoader
 
 
 class LocalFileDocumentLoader(DocumentLoader):
+    def _parse_script_content(self, content: str):
+        return list(
+            yaml.load_all(
+                content,
+                Loader=YAMLLDLoader,
+            ),
+        )
+
     def __call__(self, source: str, options: dict[str, Any]) -> PyLDResponse:
         from yaml_ld.errors import LoadingDocumentFailed, DocumentIsScalar
 
@@ -25,9 +34,11 @@ class LocalFileDocumentLoader(DocumentLoader):
 
                 from yaml.scanner import ScannerError
                 try:
-                    yaml_document = yaml.load(  # noqa: S506
-                        stream=f.read(),
-                        Loader=YAMLLDLoader,
+                    yaml_document = more_itertools.first(
+                        yaml.load_all(  # noqa: S506
+                            stream=f.read(),
+                            Loader=YAMLLDLoader,
+                        ),
                     )
                 except ConstructorError as err:
                     if err.problem == 'found unhashable key':
@@ -63,10 +74,8 @@ class LocalFileDocumentLoader(DocumentLoader):
                     url=source,
                     profile=None,
                     options=options,
-                    parse_script_content=functools.partial(
-                        yaml.load,
-                        Loader=YAMLLDLoader,
-                    ),
+                    content_type='application/ld+yaml',
+                    parse_script_content=self._parse_script_content,
                 )
 
                 if isinstance(loaded_html, str):
