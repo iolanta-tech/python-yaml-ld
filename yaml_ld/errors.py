@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 
 from documented import DocumentedError
 
@@ -35,8 +36,13 @@ class DocumentIsScalar(YAMLLDError):
 
 @dataclass
 class LoadingDocumentFailed(YAMLLDError):
-    """Document is not a valid YAML."""
+    """
+    Document is not a valid YAML.
 
+    Path: {self.path}
+    """
+
+    path: Path
     code: str = 'loading document failed'
 
 

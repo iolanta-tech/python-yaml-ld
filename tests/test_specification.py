@@ -253,7 +253,7 @@ def test_expand(
             parse=yaml_ld.parse,
             expand=yaml_ld.expand,
         )
-    except (AssertionError, FailureToFail):
+    except (AssertionError, FailureToFail, YAMLLDError):
         if test_case.input.suffix in {'.yamlld', '.yaml'}:
             # The source document is in YAML-LD format, and we are failing on it
             raise

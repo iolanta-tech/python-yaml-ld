@@ -35,7 +35,7 @@ class LocalFileDocumentLoader(DocumentLoader):
                     raise
 
                 except ScannerError as err:
-                    raise LoadingDocumentFailed() from err
+                    raise LoadingDocumentFailed(path=path) from err
 
                 except ComposerError as err:
                     from yaml_ld.errors import UndefinedAliasFound
@@ -72,4 +72,4 @@ class LocalFileDocumentLoader(DocumentLoader):
                 'contentType': 'application/ld+yaml',
             }
 
-        raise LoadingDocumentFailed()
+        raise LoadingDocumentFailed(path=path)
