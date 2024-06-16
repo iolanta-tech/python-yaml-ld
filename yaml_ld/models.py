@@ -1,4 +1,3 @@
-import functools
 from enum import Enum
 from pathlib import Path
 from typing import Any, Annotated
@@ -7,10 +6,7 @@ from pydantic import BaseModel, Field, ConfigDict
 from pydantic.alias_generators import to_camel
 from urlpath import URL
 
-from yaml_ld.document_loaders.choice_by_scheme import \
-    ChoiceBySchemeDocumentLoader
-from yaml_ld.document_loaders.http import HTTPDocumentLoader
-from yaml_ld.document_loaders.local_file import LocalFileDocumentLoader
+from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
 
 Document = dict[str, Any] | list[Any]  # type: ignore
 DocumentLoader = Any  # type: ignore   # FIXME: This is actually a callable.
@@ -61,14 +57,7 @@ class BaseOptions(BaseModel):
 
     document_loader: Annotated[
         DocumentLoader,
-        Field(
-            default_factory=functools.partial(
-                ChoiceBySchemeDocumentLoader,
-                file=LocalFileDocumentLoader(),
-                http=HTTPDocumentLoader(),
-                https=HTTPDocumentLoader(),
-            ),
-        ),
+        Field(default_factory=lambda: DEFAULT_DOCUMENT_LOADER),
     ]
     """The document loader."""
 

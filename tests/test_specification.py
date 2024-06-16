@@ -13,7 +13,7 @@ from _pytest.main import Failed
 from documented import Documented, DocumentedError
 from pydantic import ValidationError
 from pyld import jsonld
-from pyld.jsonld import load_document, _is_string
+from pyld.jsonld import load_document, _is_string, requests_document_loader
 from rdflib import Graph, Namespace
 from rdflib_pyld_compat.convert import (  # noqa: WPS450
     _rdflib_graph_from_pyld_dataset,
@@ -24,6 +24,7 @@ import yaml_ld
 from ldtest.models import TestCase
 from tests.common import load_tests
 from tests.errors import FailureToFail
+from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
 from yaml_ld.errors import YAMLLDError
 from lambdas import _
 
@@ -193,7 +194,10 @@ class CallableUnexpectedlyFailed(DocumentedError):
         module_name = self.callable.__module__
 
         # Get the object name
-        obj_name = self.callable.__name__
+        try:
+            obj_name = self.callable.__name__
+        except AttributeError:
+            obj_name = str(self.callable)
 
         # Construct the import path
         if module_name == "__main__":
@@ -253,7 +257,7 @@ def test_expand(
     try:
         test_against_ld_library(
             test_case=test_case,
-            parse=yaml_ld.parse,
+            parse=yaml_ld.load_document,
             expand=yaml_ld.expand,
         )
     except (AssertionError, FailureToFail, YAMLLDError):
@@ -267,7 +271,10 @@ def test_expand(
         try:
             test_against_ld_library(
                 test_case=test_case,
-                parse=functools.partial(jsonld.load_document, options={}),
+                parse=lambda input_: jsonld.load_document(
+                    input_,
+                    options={'documentLoader': DEFAULT_DOCUMENT_LOADER},
+                ),
                 expand=jsonld.expand,
             )
         except (AssertionError, FailureToFail):
