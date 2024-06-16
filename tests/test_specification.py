@@ -124,7 +124,7 @@ def to_rdf():
 
         try:
             actual_dataset = to_rdf(
-                parse(test_case.raw_document),
+                test_case.input,
                 **test_case.kwargs,
             )
         except ValidationError:
