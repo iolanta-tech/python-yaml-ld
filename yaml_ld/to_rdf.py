@@ -29,10 +29,11 @@ def to_rdf(
     options: ToRDFOptions = ToRDFOptions(),
 ) -> Dataset:
     """Convert a YAML-LD document to RDF."""
-    parsed_document = yaml_ld.parse(
-        raw_document=document,
-        extract_all_scripts=options.extract_all_scripts,
-    )
-
     with except_json_ld_errors():
-        return jsonld.to_rdf(parsed_document)
+        return jsonld.to_rdf(
+            document,
+            options=options.model_dump(
+                by_alias=True,
+                exclude_defaults=True,
+            ),
+        )

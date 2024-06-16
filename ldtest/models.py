@@ -5,6 +5,7 @@ from urlpath import URL
 
 from yaml_ld.expand import ExpandOptions
 from yaml_ld.models import Document
+from yaml_ld.to_rdf import ToRDFOptions
 
 
 @dataclass
@@ -44,7 +45,12 @@ class TestCase:
         if self.frame is not None:
             yield 'frame', self.frame
 
-        yield 'options', ExpandOptions(
+        if self.test.startswith('toRdf'):
+            options_class = ToRDFOptions
+        else:
+            options_class = ExpandOptions
+
+        yield 'options', options_class(
             base=self.base,
             extract_all_scripts=self.extract_all_scripts,
         ).model_dump(
