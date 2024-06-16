@@ -279,14 +279,7 @@ def test_expand(
 def test_from_rdf(
     test_case: TestCase,
 ):
-    input_dataset = _pyld_dataset_from_rdflib_graph(
-        rdflib.Graph().parse(test_case.input, format='nquads'),
-    )
-
-    if isinstance(input_dataset, list):
-        input_dataset = {'@default': input_dataset}
-
-    actual_ld = yaml_ld.from_rdf(input_dataset)
+    actual_ld = yaml_ld.from_rdf(test_case.raw_document)
 
     expected_ld = json.loads(test_case.raw_expected_document)
     assert actual_ld == expected_ld
