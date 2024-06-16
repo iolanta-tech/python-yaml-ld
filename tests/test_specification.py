@@ -108,9 +108,7 @@ def to_rdf():
             try:
                 rdf_document = to_rdf(
                     test_case.input,
-                    options=ToRDFOptions(
-                        extract_all_scripts=test_case.extract_all_scripts,
-                    ).model_dump(by_alias=True)
+                    **test_case.kwargs,
                 )
             except YAMLLDError as error:
                 assert error.code == test_case.result
@@ -125,7 +123,10 @@ def to_rdf():
                 )
 
         try:
-            actual_dataset = to_rdf(parse(test_case.raw_document))
+            actual_dataset = to_rdf(
+                parse(test_case.raw_document),
+                **test_case.kwargs,
+            )
         except ValidationError:
             raise ValueError(
                 f'{test_case.raw_document!r} has type '
@@ -161,13 +162,14 @@ def test_to_rdf(test_case: TestCase, to_rdf):
             to_rdf=yaml_ld.to_rdf,
             parse=yaml_ld.parse,
         )
-    except NotIsomorphic:
+    except (NotIsomorphic, FailureToFail):
         try:
             to_rdf(
                 test_case=test_case,
                 to_rdf=jsonld.to_rdf,
+                parse=_load_json_ld,
             )
-        except NotIsomorphic:
+        except (NotIsomorphic, FailureToFail):
             pytest.skip('This test fails for pyld as well as for yaml-ld.')
         else:
             raise
