@@ -1,7 +1,9 @@
 import json
+from typing import Callable, Any
 
 import lxml
 from pyld.jsonld import prepend_base, parse_url, JsonLdError, _is_array
+
 
 
 # This function is from pyld. Replaced hard coded `json.loads` with an arg.
@@ -10,7 +12,8 @@ def load_html(
     url,
     profile,
     options,
-    parse_script_content=json.loads,
+    content_type: str,
+    parse_script_content: Callable[[str], Any],
 ):
     """
     Load one or more script tags from an HTML source.
@@ -50,7 +53,7 @@ def load_html(
                 'jsonld.LoadDocumentError',
                 {'id': id}, code='loading document failed')
         types = element[0].xpath('@type')
-        if not types or not types[0].startswith('application/ld+json'):
+        if not types or not types[0].startswith(content_type):
             raise JsonLdError(
                 'Wrong type for script tag.',
                 'jsonld.LoadDocumentError',
@@ -66,9 +69,9 @@ def load_html(
 
     elements = []
     if profile:
-        elements = document.xpath('//script[starts-with(@type, "application/ld+json;profile=%s")]' % profile)
+        elements = document.xpath(f'//script[starts-with(@type, "{content_type};profile=%s")]' % profile)
     if not elements:
-        elements = document.xpath('//script[starts-with(@type, "application/ld+json")]')
+        elements = document.xpath(f'//script[starts-with(@type, "{content_type}")]')
     if options.get('extractAllScripts'):
         result = []
         for element in elements:
