@@ -40,10 +40,6 @@ def test_empty_value():
     assert not yaml_ld.expand(document)
 
 
-@pytest.mark.xfail(
-    raises=JsonLdError,
-    reason='`pyld` does not handle `file://` paths.',
-)
 def test_local_context():
     document = specifications_root / 'json-ld-api/tests/expand/0127-in.jsonld'
     yaml_ld.expand(document)
