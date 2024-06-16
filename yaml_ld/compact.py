@@ -33,9 +33,6 @@ def compact(  # noqa: WPS211
     options: CompactOptions = CompactOptions(),
 ) -> Document | list[Document]:
     """Compact a JSON-LD document."""
-    if isinstance(document, (str, bytes)):
-        document = parse(document)
-
     with except_json_ld_errors():
         return jsonld.compact(
             input_=document,
