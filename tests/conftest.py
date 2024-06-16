@@ -47,6 +47,6 @@ def verify_from_rdf():
 
         expected_ld = json.loads(test_case.raw_expected_document)
 
-        assert actual_ld == expected_ld
+        assert actual_ld == expected_ld, (test_case.input, test_case.result)
 
     return _test

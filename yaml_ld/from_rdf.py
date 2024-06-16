@@ -14,7 +14,7 @@ class FromRDFOptions(BaseOptions):
     use_rdf_type: bool = False
     """True to use `rdf:type`, False to use `@type`."""
 
-    use_native_types: bool = True
+    use_native_types: bool = False
     """Convert XSD types into native types (boolean, integer, double)?"""
 
 
