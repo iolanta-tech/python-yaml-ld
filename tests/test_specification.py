@@ -1,3 +1,4 @@
+import functools
 import inspect
 import json
 import operator
@@ -236,7 +237,7 @@ def test_against_ld_library():
                     **test_case.kwargs,
                 )
 
-                assert actual == expected, test_case.input
+                assert actual == expected, (test_case.input, test_case.result)
 
             case _:
                 raise ValueError(f'What to do with this test? {test_case}')
@@ -256,7 +257,7 @@ def test_expand(
             expand=yaml_ld.expand,
         )
     except (AssertionError, FailureToFail, YAMLLDError):
-        if test_case.input.suffix in {'.yamlld', '.yaml'}:
+        if test_case.specification == 'yaml-ld':
             # The source document is in YAML-LD format, and we are failing on it
             raise
 
@@ -266,7 +267,7 @@ def test_expand(
         try:
             test_against_ld_library(
                 test_case=test_case,
-                parse=_load_json_ld,
+                parse=functools.partial(jsonld.load_document, options={}),
                 expand=jsonld.expand,
             )
         except (AssertionError, FailureToFail):

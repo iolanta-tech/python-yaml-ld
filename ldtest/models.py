@@ -9,6 +9,9 @@ from yaml_ld.models import Document
 from yaml_ld.to_rdf import ToRDFOptions
 
 
+SPECIFICATIONS_ROOT = Path(__file__).parent.parent / "specifications"
+
+
 @dataclass
 class TestCase:
     """JSON-LD Test Case."""
@@ -21,6 +24,17 @@ class TestCase:
     frame: Document | None = None
     extract_all_scripts: bool = False
     base: str | None = None
+
+    @property
+    def specification(self) -> str:
+        return self.input_path.relative_to(SPECIFICATIONS_ROOT).parts[0]
+
+    @property
+    def input_path(self):
+        if isinstance(self.input, Path):
+            return self.input
+
+        return Path(self.input.path)
 
     @property
     def raw_document(self) -> bytes:
