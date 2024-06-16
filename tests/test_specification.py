@@ -257,7 +257,7 @@ def test_expand(
     try:
         test_against_ld_library(
             test_case=test_case,
-            parse=yaml_ld.load_document,
+            parse=lambda input_: yaml_ld.load_document(input_)['document'],
             expand=yaml_ld.expand,
         )
     except (AssertionError, FailureToFail, YAMLLDError):
@@ -274,7 +274,7 @@ def test_expand(
                 parse=lambda input_: jsonld.load_document(
                     input_,
                     options={'documentLoader': DEFAULT_DOCUMENT_LOADER},
-                ),
+                )['document'],
                 expand=jsonld.expand,
             )
         except (AssertionError, FailureToFail):

@@ -1,8 +1,10 @@
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Iterable
 
 import funcy
 from documented import DocumentedError
+from pydantic import validate_call
 from urlpath import URL
 
 from yaml_ld.document_loaders.base import DocumentLoader, PyLDResponse
@@ -37,7 +39,8 @@ class ChoiceBySchemeDocumentLoader(DocumentLoader):
     def __init__(self, **loaders: DocumentLoader) -> None:
         self.loaders = loaders
 
-    def __call__(self, source: str, options: dict[str, Any]) -> PyLDResponse:
+    @validate_call(config=dict(arbitrary_types_allowed=True))
+    def __call__(self, source: str | Path, options: dict[str, Any]) -> PyLDResponse:
         url = URL(source)
 
         try:

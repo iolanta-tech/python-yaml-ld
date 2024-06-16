@@ -23,7 +23,7 @@ class LocalFileDocumentLoader(DocumentLoader):
             ),
         )
 
-    def __call__(self, source: str, options: dict[str, Any]) -> PyLDResponse:
+    def __call__(self, source: str | Path, options: dict[str, Any]) -> PyLDResponse:
         from yaml_ld.errors import LoadingDocumentFailed, DocumentIsScalar
 
         path = Path(URL(source).path)

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import TypedDict, Any
 
 PyLDResponse = TypedDict(
@@ -13,5 +14,5 @@ PyLDResponse = TypedDict(
 
 class DocumentLoader(ABC):
     @abstractmethod
-    def __call__(self, source: str, options: dict[str, Any]) -> PyLDResponse:
+    def __call__(self, source: str | Path, options: dict[str, Any]) -> PyLDResponse:
         raise NotImplementedError()

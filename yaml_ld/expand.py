@@ -67,6 +67,6 @@ def expand(   # noqa: C901, WPS211
             ) else document,
             options=options.model_dump(
                 by_alias=True,
-                exclude_defaults=True,
+                # exclude_defaults=True,
             ),
         )
