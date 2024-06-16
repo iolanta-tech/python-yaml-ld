@@ -1,16 +1,19 @@
+import functools
 from enum import Enum
 from pathlib import Path
-from typing import Any, Annotated, NewType
+from typing import Any, Annotated
 
 from pydantic import BaseModel, Field, ConfigDict
 from pydantic.alias_generators import to_camel
 from urlpath import URL
 
+from yaml_ld.document_loaders.choice_by_scheme import \
+    ChoiceBySchemeDocumentLoader
+from yaml_ld.document_loaders.http import HTTPDocumentLoader
 from yaml_ld.document_loaders.local_file import LocalFileDocumentLoader
 
 Document = dict[str, Any] | list[Any]  # type: ignore
 DocumentLoader = Any  # type: ignore   # FIXME: This is actually a callable.
-
 
 SerializedDocument = Annotated[  # type: ignore
     str | bytes | Path | URL,
@@ -19,7 +22,6 @@ SerializedDocument = Annotated[  # type: ignore
         'or a location where one can be found.'
     ),
 ]
-
 
 ExtractAllScripts = Annotated[
     bool,
@@ -37,8 +39,8 @@ class DocumentType(str, Enum):
 class ProcessingMode(str, Enum):  # noqa: WPS600
     """JSON-LD API version."""
 
-    JSON_LD_1_0 = 'json-ld-1.0'   # noqa: WPS114, WPS115
-    JSON_LD_1_1 = 'json-ld-1.1'   # noqa: WPS114, WPS115
+    JSON_LD_1_0 = 'json-ld-1.0'  # noqa: WPS114, WPS115
+    JSON_LD_1_1 = 'json-ld-1.1'  # noqa: WPS114, WPS115
 
 
 class ExtractAllScriptsOptions(BaseModel):
@@ -57,9 +59,17 @@ class BaseOptions(BaseModel):
     base: str | Path | None = None
     """The base IRI to use."""
 
-    document_loader: Annotated[DocumentLoader, Field(
-        default_factory=LocalFileDocumentLoader,
-    )]
+    document_loader: Annotated[
+        DocumentLoader,
+        Field(
+            default_factory=functools.partial(
+                ChoiceBySchemeDocumentLoader,
+                file=LocalFileDocumentLoader(),
+                http=HTTPDocumentLoader(),
+                https=HTTPDocumentLoader(),
+            ),
+        ),
+    ]
     """The document loader."""
 
     model_config = ConfigDict(
