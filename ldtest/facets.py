@@ -6,6 +6,7 @@ from iolanta.facets.facet import Facet
 from rdflib import Literal, Namespace, URIRef
 from urlpath import URL
 
+import yaml_ld
 from ldtest.models import TestCase
 from yaml_ld.errors import YAMLLDError
 
@@ -25,7 +26,9 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
                 extract_all_scripts = False
 
             try:
-                ctx = json.loads(Path(URL(row['context']).path).read_text())
+                ctx = yaml_ld.load_document(
+                    str(Path(URL(row['context']).path)),
+                )['document']
             except KeyError:
                 ctx = None
 
@@ -35,6 +38,7 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
                 frame = None
 
             yield TestCase(
+                test_class=URL(self.iri).fragment,
                 test=f'{test_url.name}#{test_url.fragment}',
                 input=URL(row['input']),
                 result=self._process_result(row['result']),
