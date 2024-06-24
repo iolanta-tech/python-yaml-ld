@@ -1,7 +1,7 @@
 [submodule "specifications/yaml-ld"]
 	path = specifications/yaml-ld
 	url = git@github.com:json-ld/yaml-ld.git
-	branch = main
+	branch = 145-missing-tests
 [submodule "specifications/json-ld-api"]
 	path = specifications/json-ld-api
 	url = git@github.com:w3c/json-ld-api.git
