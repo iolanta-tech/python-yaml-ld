@@ -6,6 +6,7 @@ from iolanta.facets.facet import Facet
 from rdflib import Literal, Namespace, URIRef
 from urlpath import URL
 
+import yaml_ld
 from ldtest.models import TestCase
 from yaml_ld.errors import YAMLLDError
 
@@ -25,7 +26,9 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
                 extract_all_scripts = False
 
             try:
-                ctx = json.loads(Path(URL(row['context']).path).read_text())
+                ctx = yaml_ld.load_document(
+                    str(Path(URL(row['context']).path)),
+                )['document']
             except KeyError:
                 ctx = None
 
@@ -34,15 +37,27 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
             except KeyError:
                 frame = None
 
+            redirect_to = row.get('redirect_to')
+
+            base = row.get('base')
+            if not base and redirect_to:
+                base = 'https://example.com/'
+
+            if not base:
+                base = str(URL(row['input']).parent) + '/'
+
             yield TestCase(
+                test_class=URL(self.iri).fragment,
                 test=f'{test_url.name}#{test_url.fragment}',
                 input=URL(row['input']),
                 result=self._process_result(row['result']),
                 req=(req := row.get('req')) and req.value,
                 extract_all_scripts=extract_all_scripts,
-                base=row.get('base') or str(URL(row['input']).parent) + '/',
+                base=base,
                 ctx=ctx,
                 frame=frame,
+                redirect_to=redirect_to,
+                base_iri=(base_iri := row.get('base_iri')) and URL(base_iri),
             )
 
     def _process_result(

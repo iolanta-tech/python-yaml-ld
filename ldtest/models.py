@@ -1,10 +1,14 @@
 from dataclasses import dataclass
 from pathlib import Path
 
+import funcy
 from urlpath import URL
 
 from yaml_ld.compact import CompactOptions
 from yaml_ld.expand import ExpandOptions
+from yaml_ld.flatten import FlattenOptions
+from yaml_ld.frame import FrameOptions
+from yaml_ld.from_rdf import FromRDFOptions
 from yaml_ld.models import Document
 from yaml_ld.to_rdf import ToRDFOptions
 
@@ -17,6 +21,7 @@ class TestCase:
     """JSON-LD Test Case."""
 
     test: str
+    test_class: str
     input: Path | URL
     result: Path | str | Exception   # noqa: WPS110
     req: str
@@ -24,6 +29,8 @@ class TestCase:
     frame: Document | None = None
     extract_all_scripts: bool = False
     base: str | None = None
+    redirect_to: str | None = None
+    base_iri: URL | None = None
 
     @property
     def specification(self) -> str:
@@ -53,19 +60,23 @@ class TestCase:
 
         raise ValueError(f'{self.result} is not a Path.')
 
-    def _stream_kwargs(self):
+    @property
+    @funcy.post_processing(dict)
+    def kwargs(self):
         if self.ctx is not None:
             yield 'ctx', self.ctx
 
         if self.frame is not None:
             yield 'frame', self.frame
 
-        if self.test.startswith('toRdf'):
-            options_class = ToRDFOptions
-        elif self.test.startswith('compact'):
-            options_class = CompactOptions
-        else:
-            options_class = ExpandOptions
+        options_class = {
+            'ToRDFTest': ToRDFOptions,
+            'FromRDFTest': FromRDFOptions,
+            'CompactTest': CompactOptions,
+            'ExpandTest': ExpandOptions,
+            'FlattenTest': FlattenOptions,
+            'FrameTest': FrameOptions,
+        }[self.test_class]
 
         yield 'options', options_class(
             base=self.base,
@@ -75,7 +86,3 @@ class TestCase:
             by_alias=True,
             exclude_defaults=True,
         )
-
-    @property
-    def kwargs(self):
-        return dict(self._stream_kwargs())

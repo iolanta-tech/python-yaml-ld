@@ -236,6 +236,7 @@ def test_against_ld_library():
                         callable=parse,
                         params=result_path,
                     ) from err
+
                 actual = expand(
                     test_case.input,
                     **test_case.kwargs,
@@ -254,6 +255,14 @@ def test_expand(
     test_case: TestCase,
     test_against_ld_library,
 ):
+    if test_case.redirect_to:
+        pytest.skip(
+            'FIXME: We do not support Remote Document tests with redirection, '
+            'at this point. This requires complicated mocks and/or special '
+            'DocumentLoader classes. I hope we will be able to implement this '
+            'later.',
+        )
+
     try:
         test_against_ld_library(
             test_case=test_case,

@@ -1,8 +1,17 @@
-SELECT ?test ?result ?input ?req ?extract_all_scripts ?base ?context ?frame WHERE {
+SELECT
+    ?manifest ?base_iri ?test ?result ?input ?req ?extract_all_scripts ?base
+    ?context ?frame ?redirect_to
+WHERE {
+    ?manifest mf:entries/rdf:rest*/rdf:first ?test .
+
     ?test
         a $test_class ;
         mf:result ?result ;
         mf:action ?input .
+
+    OPTIONAL {
+        ?manifest jld:baseIri ?base_iri .
+    }
 
     OPTIONAL {
         ?test jld:req ?req .
@@ -14,6 +23,10 @@ SELECT ?test ?result ?input ?req ?extract_all_scripts ?base ?context ?frame WHER
 
     OPTIONAL {
         ?test jld:option / jld:base ?base .
+    }
+
+    OPTIONAL {
+        ?test jld:option / jld:redirectTo ?redirect_to .
     }
 
     OPTIONAL {
