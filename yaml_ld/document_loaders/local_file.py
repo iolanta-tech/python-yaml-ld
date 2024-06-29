@@ -1,4 +1,3 @@
-import functools
 from pathlib import Path
 from typing import Any
 
@@ -8,6 +7,7 @@ from urlpath import URL
 from yaml.composer import ComposerError
 from yaml.constructor import ConstructorError
 from yaml.parser import ParserError
+from yaml.scanner import ScannerError
 
 from yaml_ld.document_loaders.base import DocumentLoader, PyLDResponse
 from yaml_ld.load_html import load_html
@@ -29,43 +29,46 @@ class LocalFileDocumentLoader(DocumentLoader):
         path = Path(URL(source).path)
 
         if path.suffix in {'.yaml', '.yml', '.yamlld', '.json', '.jsonld'}:
-            with path.open() as f:
-                from yaml_ld.errors import MappingKeyError
+            try:
+                with path.open() as f:
+                    from yaml_ld.errors import MappingKeyError
 
-                from yaml.scanner import ScannerError
-                try:
-                    yaml_document = more_itertools.first(
-                        yaml.load_all(  # noqa: S506
-                            stream=f.read(),
-                            Loader=YAMLLDLoader,
-                        ),
-                    )
-                except ConstructorError as err:
-                    if err.problem == 'found unhashable key':
-                        raise MappingKeyError() from err
+                    try:
+                        yaml_document = more_itertools.first(
+                            yaml.load_all(  # noqa: S506
+                                stream=f.read(),
+                                Loader=YAMLLDLoader,
+                            ),
+                        )
+                    except ConstructorError as err:
+                        if err.problem == 'found unhashable key':
+                            raise MappingKeyError() from err
 
-                    raise
+                        raise
 
-                except ScannerError as err:
-                    raise LoadingDocumentFailed(path=path) from err
+                    except ScannerError as err:
+                        raise LoadingDocumentFailed(path=path) from err
 
-                except ComposerError as err:
-                    from yaml_ld.errors import UndefinedAliasFound
-                    raise UndefinedAliasFound() from err
+                    except ComposerError as err:
+                        from yaml_ld.errors import UndefinedAliasFound
+                        raise UndefinedAliasFound() from err
 
-                except ParserError as err:
-                    from yaml_ld.errors import InvalidScriptElement
-                    raise InvalidScriptElement() from err
+                    except ParserError as err:
+                        from yaml_ld.errors import InvalidScriptElement
+                        raise InvalidScriptElement() from err
 
-                if not isinstance(yaml_document, (dict, list)):
-                    raise DocumentIsScalar(yaml_document)
+                    if not isinstance(yaml_document, (dict, list)):
+                        raise DocumentIsScalar(yaml_document)
 
-                return {
-                    'document': yaml_document,
-                    'documentUrl': source,
-                    'contextUrl': None,
-                    'contentType': 'application/ld+yaml',
-                }
+                    return {
+                        'document': yaml_document,
+                        'documentUrl': source,
+                        'contextUrl': None,
+                        'contentType': 'application/ld+yaml',
+                    }
+            except FileNotFoundError as file_not_found:
+                from yaml_ld.errors import NotFound
+                raise NotFound(path) from file_not_found
 
         if path.suffix in {'.html', '.xhtml'}:
             with path.open() as f:

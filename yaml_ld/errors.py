@@ -47,6 +47,18 @@ class LoadingDocumentFailed(YAMLLDError):
 
 
 @dataclass
+class NotFound(YAMLLDError):
+    """
+    Document has not been found.
+
+    Path: {self.path}
+    """
+
+    path: Path
+    code: str = 'loading document failed'
+
+
+@dataclass
 class InvalidScriptElement(YAMLLDError):
     """HTML <script> element content is not valid YAML."""
 
