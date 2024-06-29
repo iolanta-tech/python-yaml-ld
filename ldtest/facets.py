@@ -26,6 +26,11 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
                 extract_all_scripts = False
 
             try:
+                compact_arrays = row['compact_arrays'].value
+            except KeyError:
+                compact_arrays = False
+
+            try:
                 ctx = yaml_ld.load_document(
                     str(Path(URL(row['context']).path)),
                 )['document']
@@ -58,6 +63,7 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
                 frame=frame,
                 redirect_to=redirect_to,
                 base_iri=(base_iri := row.get('base_iri')) and URL(base_iri),
+                compact_arrays=compact_arrays,
             )
 
     def _process_result(

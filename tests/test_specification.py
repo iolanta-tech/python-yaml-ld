@@ -362,6 +362,10 @@ def test_flatten(
             expand=yaml_ld.flatten,
         )
     except (AssertionError, FailureToFail):
+        if test_case.specification == 'yaml-ld':
+            # The source document is in YAML-LD format, and we are failing on it
+            raise
+
         try:
             test_against_ld_library(
                 test_case=test_case,

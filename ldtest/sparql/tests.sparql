@@ -1,6 +1,6 @@
 SELECT
     ?manifest ?base_iri ?test ?result ?input ?req ?extract_all_scripts ?base
-    ?context ?frame ?redirect_to
+    ?context ?frame ?redirect_to ?compact_arrays
 WHERE {
     ?manifest mf:entries/rdf:rest*/rdf:first ?test .
 
@@ -27,6 +27,11 @@ WHERE {
 
     OPTIONAL {
         ?test jld:option / jld:redirectTo ?redirect_to .
+    }
+
+
+    OPTIONAL {
+        ?test jld:option / jld:compactArrays ?compact_arrays .
     }
 
     OPTIONAL {
