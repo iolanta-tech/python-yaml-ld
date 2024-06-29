@@ -9,7 +9,8 @@ from urlpath import URL
 
 from yaml_ld.errors import (
     CycleDetected, MappingKeyError,
-    LoadingRemoteContextFailed, PyLDError,
+    LoadingRemoteContextFailed, PyLDError, InvalidScriptElement,
+    InvalidJSONLiteral,
 )
 from yaml_ld.models import (
     Document, BaseOptions, SerializedDocument, ExtractAllScriptsOptions,
@@ -39,6 +40,9 @@ def except_json_ld_errors():
         # We need to drill down; for instance, `to_rdf()` raises an error which
         # contains an actual error from `expand()` in its `.cause` field.
         err = err.cause or err
+
+        if isinstance(err, JSONDecodeError):
+            raise InvalidJSONLiteral() from err
 
         match err.code:
             case LoadingRemoteContextFailed.code:

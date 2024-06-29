@@ -80,6 +80,13 @@ class MappingKeyError(YAMLLDError):
 
 
 @dataclass
+class InvalidJSONLiteral(YAMLLDError):
+    """A mapping key MUST be a string."""
+
+    code: str = 'invalid JSON literal'
+
+
+@dataclass
 class InvalidEncoding(YAMLLDError):
     """
     A YAML-LD document MUST be encoded in UTF-8.
