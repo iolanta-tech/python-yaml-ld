@@ -34,9 +34,15 @@ class LocalFileDocumentLoader(DocumentLoader):
                     from yaml_ld.errors import MappingKeyError
 
                     try:
+                        stream = f.read()
+                    except UnicodeDecodeError as unicode_decode_error:
+                        from yaml_ld.errors import InvalidEncoding
+                        raise InvalidEncoding()
+
+                    try:
                         yaml_document = more_itertools.first(
                             yaml.load_all(  # noqa: S506
-                                stream=f.read(),
+                                stream=stream,
                                 Loader=YAMLLDLoader,
                             ),
                         )
