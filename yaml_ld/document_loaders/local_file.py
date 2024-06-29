@@ -40,12 +40,15 @@ class LocalFileDocumentLoader(DocumentLoader):
                         raise InvalidEncoding()
 
                     try:
-                        yaml_document = more_itertools.first(
-                            yaml.load_all(  # noqa: S506
-                                stream=stream,
-                                Loader=YAMLLDLoader,
-                            ),
+                        yaml_documents_stream = yaml.load_all(  # noqa: S506
+                            stream=stream,
+                            Loader=YAMLLDLoader,
                         )
+
+                        if options.get('extractAllScripts'):
+                            yaml_document = list(yaml_documents_stream)
+                        else:
+                            yaml_document = more_itertools.first(yaml_documents_stream)
                     except ConstructorError as err:
                         if err.problem == 'found unhashable key':
                             raise MappingKeyError() from err
