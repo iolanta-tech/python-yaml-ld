@@ -29,6 +29,8 @@ class TestCase:
     frame: Document | None = None
     extract_all_scripts: bool = False
     base: str | None = None
+    redirect_to: str | None = None
+    base_iri: URL | None = None
 
     @property
     def specification(self) -> str:

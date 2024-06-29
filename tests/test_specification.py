@@ -236,6 +236,7 @@ def test_against_ld_library():
                         callable=parse,
                         params=result_path,
                     ) from err
+
                 actual = expand(
                     test_case.input,
                     **test_case.kwargs,
