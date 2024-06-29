@@ -385,14 +385,14 @@ def test_frame(
             parse=yaml_ld.parse,
             expand=yaml_ld.frame,
         )
-    except AssertionError:
+    except (AssertionError, FailureToFail):
         try:
             test_against_ld_library(
                 test_case=test_case,
                 parse=_load_json_ld,
                 expand=jsonld.frame,
             )
-        except AssertionError:
+        except (AssertionError, FailureToFail):
             pytest.skip('This test fails for pyld as well as for yaml-ld.')
         else:
             raise
