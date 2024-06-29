@@ -22,7 +22,7 @@ from ldtest.models import TestCase
 from tests.common import load_tests
 from tests.errors import FailureToFail
 from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
-from yaml_ld.errors import YAMLLDError
+from yaml_ld.errors import YAMLLDError, PyLDError
 
 tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
 console = Console()
@@ -333,7 +333,7 @@ def test_compact(
             parse=yaml_ld.parse,
             expand=yaml_ld.compact,
         )
-    except (AssertionError, FailureToFail):
+    except (AssertionError, FailureToFail, PyLDError):
         if test_case.specification == 'yaml-ld':
             # The source document is in YAML-LD format, and we are failing on it
             raise
