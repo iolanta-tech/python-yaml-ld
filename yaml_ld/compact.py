@@ -35,7 +35,7 @@ def compact(  # noqa: WPS211
     """Compact a JSON-LD document."""
     with except_json_ld_errors():
         return jsonld.compact(
-            input_=document,
+            input_=str(document),
             ctx=ctx,
             options=options.model_dump(by_alias=True),
         )

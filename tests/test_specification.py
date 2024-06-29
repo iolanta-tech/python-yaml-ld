@@ -1,7 +1,4 @@
-import functools
-import inspect
 import json
-import operator
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Any
@@ -9,16 +6,16 @@ from typing import Callable, Any
 import funcy
 import pytest
 import rdflib
-from _pytest.main import Failed
-from documented import Documented, DocumentedError
+from documented import DocumentedError
 from pydantic import ValidationError
 from pyld import jsonld
-from pyld.jsonld import load_document, _is_string, requests_document_loader
 from rdflib import Graph, Namespace
 from rdflib_pyld_compat.convert import (  # noqa: WPS450
     _rdflib_graph_from_pyld_dataset,
-    _pyld_dataset_from_rdflib_graph,
 )
+from rich.columns import Columns
+from rich.console import Console
+from rich.syntax import Syntax
 
 import yaml_ld
 from ldtest.models import TestCase
@@ -26,13 +23,9 @@ from tests.common import load_tests
 from tests.errors import FailureToFail
 from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
 from yaml_ld.errors import YAMLLDError
-from lambdas import _
-
-from yaml_ld.expand import ExpandOptions
-from yaml_ld.models import Document
-from yaml_ld.to_rdf import ToRDFOptions
 
 tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
+console = Console()
 
 
 def _load_json_ld(source: Path):
@@ -208,6 +201,18 @@ class CallableUnexpectedlyFailed(DocumentedError):
         return import_path
 
 
+def print_diff(actual, expected):
+    actual_string = json.dumps(actual, indent=2)
+    expected_string = json.dumps(expected, indent=2)
+
+    console.print(
+        Columns([
+            Syntax(actual_string, lexer='json'),
+            Syntax(expected_string, lexer='json'),
+        ]),
+    )
+
+
 @pytest.fixture()
 def test_against_ld_library():
     def _test(test_case: TestCase, parse: Callable, expand: Callable) -> None:
@@ -242,7 +247,10 @@ def test_against_ld_library():
                     **test_case.kwargs,
                 )
 
-                assert actual == expected, (test_case.input, test_case.result)
+                if actual != expected:
+                    print_diff(actual=actual, expected=expected)
+
+                assert actual == expected
 
             case _:
                 raise ValueError(f'What to do with this test? {test_case}')
@@ -326,6 +334,10 @@ def test_compact(
             expand=yaml_ld.compact,
         )
     except (AssertionError, FailureToFail):
+        if test_case.specification == 'yaml-ld':
+            # The source document is in YAML-LD format, and we are failing on it
+            raise
+
         try:
             test_against_ld_library(
                 test_case=test_case,
