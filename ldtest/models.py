@@ -12,7 +12,6 @@ from yaml_ld.from_rdf import FromRDFOptions
 from yaml_ld.models import Document
 from yaml_ld.to_rdf import ToRDFOptions
 
-
 SPECIFICATIONS_ROOT = Path(__file__).parent.parent / "specifications"
 
 

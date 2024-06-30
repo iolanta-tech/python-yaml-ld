@@ -5,7 +5,10 @@ from pyld import jsonld
 
 from yaml_ld.expand import except_json_ld_errors
 from yaml_ld.models import (
-    Document, BaseOptions, SerializedDocument, ExtractAllScriptsOptions,
+    BaseOptions,
+    Document,
+    ExtractAllScriptsOptions,
+    SerializedDocument,
 )
 from yaml_ld.parse import parse  # noqa: WPS347
 

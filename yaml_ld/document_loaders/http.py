@@ -23,16 +23,16 @@ class HTTPDocumentLoader(DocumentLoader):
         )
 
     def __call__(self, source: str | Path, options: dict[str, Any]) -> PyLDResponse:
-        from yaml_ld.errors import LoadingDocumentFailed, DocumentIsScalar
+        from yaml_ld.errors import DocumentIsScalar, LoadingDocumentFailed
 
         url = URL(source)
 
         if url.suffix in {'.yaml', '.yml', '.yamlld', '.json', '.jsonld'}:
             content = url.get().text
 
-            from yaml_ld.errors import MappingKeyError
-
             from yaml.scanner import ScannerError
+
+            from yaml_ld.errors import MappingKeyError
             try:
                 yaml_document = more_itertools.first(
                     yaml.load_all(  # noqa: S506

@@ -8,12 +8,18 @@ from pyld.jsonld import load_html
 from urlpath import URL
 
 from yaml_ld.errors import (
-    CycleDetected, MappingKeyError,
-    LoadingRemoteContextFailed, PyLDError, InvalidScriptElement,
+    CycleDetected,
     InvalidJSONLiteral,
+    InvalidScriptElement,
+    LoadingRemoteContextFailed,
+    MappingKeyError,
+    PyLDError,
 )
 from yaml_ld.models import (
-    Document, BaseOptions, SerializedDocument, ExtractAllScriptsOptions,
+    BaseOptions,
+    Document,
+    ExtractAllScriptsOptions,
+    SerializedDocument,
 )
 from yaml_ld.parse import parse  # noqa: WPS347
 

@@ -1,9 +1,8 @@
 import json
-from typing import Callable, Any
+from typing import Any, Callable
 
 import lxml
-from pyld.jsonld import prepend_base, parse_url, JsonLdError, _is_array
-
+from pyld.jsonld import JsonLdError, _is_array, parse_url, prepend_base
 
 
 # This function is from pyld. Replaced hard coded `json.loads` with an arg.
@@ -51,13 +50,15 @@ def load_html(
             raise JsonLdError(
                 'No script tag found for id.',
                 'jsonld.LoadDocumentError',
-                {'id': id}, code='loading document failed')
+                {'id': id}, code='loading document failed',
+            )
         types = element[0].xpath('@type')
         if not types or not types[0].startswith(content_type):
             raise JsonLdError(
                 'Wrong type for script tag.',
                 'jsonld.LoadDocumentError',
-                {'type': types}, code='loading document failed')
+                {'type': types}, code='loading document failed',
+            )
         content = element[0].text
         try:
             return parse_script_content(content)
@@ -65,7 +66,8 @@ def load_html(
             raise JsonLdError(
                 'Invalid JSON syntax.',
                 'jsonld.SyntaxError',
-                {'content': content}, code='invalid script element', cause=cause)
+                {'content': content}, code='invalid script element', cause=cause,
+            )
 
     elements = []
     if profile:
@@ -85,7 +87,8 @@ def load_html(
                 raise JsonLdError(
                     'Invalid JSON syntax.',
                     'jsonld.SyntaxError',
-                    {'content': element.text}, code='invalid script element', cause=cause)
+                    {'content': element.text}, code='invalid script element', cause=cause,
+                )
         return result
     elif elements:
         try:
@@ -94,9 +97,11 @@ def load_html(
             raise JsonLdError(
                 'Invalid JSON syntax.',
                 'jsonld.SyntaxError',
-                {'content': elements[0].text}, code='invalid script element', cause=cause)
+                {'content': elements[0].text}, code='invalid script element', cause=cause,
+            )
     else:
         raise JsonLdError(
             'No script tag found.',
             'jsonld.LoadDocumentError',
-            {'type': type}, code='loading document failed')
+            {'type': type}, code='loading document failed',
+        )
