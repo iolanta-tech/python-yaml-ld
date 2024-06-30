@@ -1,7 +1,7 @@
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Any
+from typing import Any, Callable
 
 import funcy
 import pytest
@@ -23,7 +23,7 @@ from ldtest.models import TestCase
 from tests.common import load_tests
 from tests.errors import FailureToFail
 from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
-from yaml_ld.errors import YAMLLDError, PyLDError
+from yaml_ld.errors import PyLDError, YAMLLDError
 
 tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
 console = Console()

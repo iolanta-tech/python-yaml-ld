@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import TypedDict, Any
+from typing import Any, TypedDict
 
 PyLDResponse = TypedDict(
     'PyLDResponse', {

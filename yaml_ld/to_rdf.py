@@ -4,7 +4,10 @@ from pyld import jsonld
 import yaml_ld
 from yaml_ld.expand import except_json_ld_errors
 from yaml_ld.models import (
-    Document, SerializedDocument, BaseOptions, ExtractAllScriptsOptions,
+    BaseOptions,
+    Document,
+    ExtractAllScriptsOptions,
+    SerializedDocument,
 )
 from yaml_ld.rdf import Dataset
 

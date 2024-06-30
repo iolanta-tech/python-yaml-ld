@@ -1,8 +1,8 @@
 from enum import Enum
 from pathlib import Path
-from typing import Any, Annotated
+from typing import Annotated, Any
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 from urlpath import URL
 

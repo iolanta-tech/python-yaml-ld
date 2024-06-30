@@ -1,5 +1,5 @@
-from pyld import jsonld
 from pydantic import validate_call
+from pyld import jsonld
 
 from yaml_ld.models import BaseOptions
 

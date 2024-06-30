@@ -12,13 +12,15 @@ from yaml.scanner import ScannerError
 
 from yaml_ld.errors import (
     DocumentIsScalar,
-    LoadingDocumentFailed,
-    UndefinedAliasFound, MappingKeyError, InvalidEncoding, NoYAMLWithinHTML,
+    InvalidEncoding,
     InvalidScriptElement,
+    LoadingDocumentFailed,
+    MappingKeyError,
+    NoYAMLWithinHTML,
+    UndefinedAliasFound,
 )
 from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import Document, DocumentType, ExtractAllScripts
-
 
 HTML_HEADER = '<html'
 
@@ -46,10 +48,12 @@ def _parse_html(
     extract_all_scripts: ExtractAllScripts = False,
 ) -> Document:
     """Parse all YAML-LD scripts embedded into HTML."""
-    html_yaml_scripts = list(try_extracting_yaml_from_html(
-        html_string,
-        fragment=fragment,
-    ))
+    html_yaml_scripts = list(
+        try_extracting_yaml_from_html(
+            html_string,
+            fragment=fragment,
+        ),
+    )
 
     if not html_yaml_scripts:
         if extract_all_scripts:
