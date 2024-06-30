@@ -1,6 +1,7 @@
-from enum import StrEnum
+from enum import StrEnum, Enum
+from typing import Annotated
 
-from pydantic import validate_call
+from pydantic import validate_call, Field, field_serializer
 from pyld import jsonld
 
 from yaml_ld import parse
@@ -39,6 +40,10 @@ class FrameOptions(BaseOptions, ExtractAllScriptsOptions):
     require_all: bool = False
     """Default `@require_all` flag."""
 
+    @field_serializer('embed')
+    def serialize_embed(self, embed: Embed) -> str:
+        return embed.value
+
 
 @validate_call(config=dict(arbitrary_types_allowed=True))
 def frame(
@@ -47,12 +52,9 @@ def frame(
     options: FrameOptions,
 ) -> Document:
     """Frame a YAML-LD document."""
-    if isinstance(document, (str, bytes)):
-        document = parse(document)
-
     with except_json_ld_errors():
         return jsonld.frame(
-            input_=document,
+            input_=str(document),
             frame=frame,
             options=options.model_dump(by_alias=True),
         )
