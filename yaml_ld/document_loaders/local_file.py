@@ -10,6 +10,7 @@ from yaml.parser import ParserError
 from yaml.scanner import ScannerError
 
 from yaml_ld.document_loaders.base import DocumentLoader, PyLDResponse
+from yaml_ld.document_parsers.yaml_parser import YAMLDocumentParser
 from yaml_ld.load_html import load_html
 from yaml_ld.loader import YAMLLDLoader
 
@@ -31,43 +32,7 @@ class LocalFileDocumentLoader(DocumentLoader):
         if path.suffix in {'.yaml', '.yml', '.yamlld', '.json', '.jsonld'}:
             try:
                 with path.open() as f:
-                    from yaml_ld.errors import MappingKeyError
-
-                    try:
-                        stream = f.read()
-                    except UnicodeDecodeError as unicode_decode_error:
-                        from yaml_ld.errors import InvalidEncoding
-                        raise InvalidEncoding()
-
-                    try:
-                        yaml_documents_stream = yaml.load_all(  # noqa: S506
-                            stream=stream,
-                            Loader=YAMLLDLoader,
-                        )
-
-                        if options.get('extractAllScripts'):
-                            yaml_document = list(yaml_documents_stream)
-                        else:
-                            yaml_document = more_itertools.first(yaml_documents_stream)
-                    except ConstructorError as err:
-                        if err.problem == 'found unhashable key':
-                            raise MappingKeyError() from err
-
-                        raise
-
-                    except ScannerError as err:
-                        raise LoadingDocumentFailed(path=path) from err
-
-                    except ComposerError as err:
-                        from yaml_ld.errors import UndefinedAliasFound
-                        raise UndefinedAliasFound() from err
-
-                    except ParserError as err:
-                        from yaml_ld.errors import InvalidScriptElement
-                        raise InvalidScriptElement() from err
-
-                    if not isinstance(yaml_document, (dict, list)):
-                        raise DocumentIsScalar(yaml_document)
+                    yaml_document = YAMLDocumentParser()(f, options)
 
                     return {
                         'document': yaml_document,

@@ -36,6 +36,8 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
                 )['document']
             except KeyError:
                 ctx = None
+            except Exception:
+                raise ValueError(row['context'])
 
             try:
                 frame = yaml_ld.load_document(row['frame'])['document']

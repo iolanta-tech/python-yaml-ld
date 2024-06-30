@@ -6,8 +6,6 @@ from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 from urlpath import URL
 
-from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
-
 Document = dict[str, Any] | list[Any]  # type: ignore
 DocumentLoader = Any  # type: ignore   # FIXME: This is actually a callable.
 
@@ -48,6 +46,10 @@ class ExtractAllScriptsOptions(BaseModel):
     the first.
     """
 
+def _default_document_loader():
+    from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
+    return DEFAULT_DOCUMENT_LOADER
+
 
 class BaseOptions(BaseModel):
     """Base options shared by all YAML-LD API methods."""
@@ -57,7 +59,7 @@ class BaseOptions(BaseModel):
 
     document_loader: Annotated[
         DocumentLoader,
-        Field(default_factory=lambda: DEFAULT_DOCUMENT_LOADER),
+        Field(default_factory=_default_document_loader),
     ]
     """The document loader."""
 
