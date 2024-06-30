@@ -31,6 +31,7 @@ class TestCase:
     base: str | None = None
     redirect_to: str | None = None
     base_iri: URL | None = None
+    compact_arrays: bool | None = None
 
     @property
     def specification(self) -> str:
@@ -82,6 +83,7 @@ class TestCase:
             base=self.base,
             extract_all_scripts=self.extract_all_scripts,
             expand_context=self.ctx,
+            compact_arrays=self.compact_arrays,
         ).model_dump(
             by_alias=True,
             exclude_defaults=True,

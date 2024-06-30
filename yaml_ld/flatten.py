@@ -15,6 +15,9 @@ class FlattenOptions(BaseOptions, ExtractAllScriptsOptions):
     expand_context: Document | None = None
     """A context to expand with."""
 
+    compact_arrays: bool = True
+    """Compact arrays to single values when appropriate?"""
+
 
 @validate_call(config=dict(arbitrary_types_allowed=True))
 def flatten(
@@ -23,12 +26,9 @@ def flatten(
     options: FlattenOptions = FlattenOptions(),
 ) -> Document:
     """Flatten a document."""
-    if isinstance(document, (str, bytes)):
-        document = parse(document)
-
     with except_json_ld_errors():
         return jsonld.flatten(
-            input_=document,
+            input_=str(document),
             ctx=ctx,
             options=options.model_dump(by_alias=True),
         )
