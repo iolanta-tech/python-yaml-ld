@@ -356,8 +356,13 @@ def test_flatten(
     test_case: TestCase,
     test_against_ld_library,
 ):
-    if 'html-manifest#tf003' in test_case.test:
-        pytest.skip('We expecting a ld+yaml <script> tag but we get ld+json.')
+    if test_case.test in {
+        'html-manifest#tf001',
+        'html-manifest#tf002',
+        'html-manifest#tf003',
+        'html-manifest#tf004',
+    }:
+        pytest.skip('We expect ld+yaml but tests have ld+json.')
 
     try:
         test_against_ld_library(
