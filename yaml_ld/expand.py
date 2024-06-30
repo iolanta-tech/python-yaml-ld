@@ -84,9 +84,6 @@ def expand(   # noqa: C901, WPS211
     options: ExpandOptions = ExpandOptions(),
 ) -> Document | list[Document]:
     """Expand a YAML-LD document."""
-    if not options.base:
-        options.base = construct_base_by_document(document)
-
     with except_json_ld_errors():
         return jsonld.expand(
             input_=str(document) if (
@@ -94,6 +91,6 @@ def expand(   # noqa: C901, WPS211
             ) else document,
             options=options.model_dump(
                 by_alias=True,
-                # exclude_defaults=True,
+                exclude_none=True,
             ),
         )
