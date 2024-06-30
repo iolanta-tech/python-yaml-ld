@@ -1,7 +1,7 @@
 import json
-from pathlib import Path
 
 import pytest
+from dirty_equals import IsList, IsPartialDict
 from pyld import jsonld
 from pyld.jsonld import JsonLdError
 
@@ -48,3 +48,15 @@ def test_local_context():
 def test_api_html_e016():
     source = specifications_root / 'json-ld-api/tests/html/e016-in.html'
     jsonld.expand(source)
+
+
+def test_https():
+    response = yaml_ld.expand(
+        'https://json-ld.github.io/yaml-ld/tests/manifest.jsonld',
+    )
+
+    assert response == [
+        IsPartialDict({
+            '@id': 'https://json-ld.github.io/yaml-ld/tests/basic-manifest',
+        }),
+    ]

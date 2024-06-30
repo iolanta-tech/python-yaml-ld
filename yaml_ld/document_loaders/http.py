@@ -62,7 +62,7 @@ class HTTPDocumentLoader(DocumentLoader):
 
             return {
                 'document': yaml_document,
-                'documentUrl': source,
+                'documentUrl': str(source),
                 'contextUrl': None,
                 'contentType': 'application/ld+yaml',
             }
