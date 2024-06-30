@@ -38,7 +38,7 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
                 ctx = None
 
             try:
-                frame = json.loads(Path(URL(row['frame']).path).read_text())
+                frame = yaml_ld.load_document(row['frame'])['document']
             except KeyError:
                 frame = None
 
