@@ -16,7 +16,7 @@ from yaml_ld.models import Document
 
 
 class YAMLDocumentParser(BaseDocumentParser):
-    def __call__(self, data: io.TextIOBase, options: dict[str, Any]) -> Document:
+    def __call__(self, data: io.TextIOBase, source: str, options: dict[str, Any]) -> Document:
 
         from yaml_ld.errors import MappingKeyError
 

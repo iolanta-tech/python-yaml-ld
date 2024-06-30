@@ -64,20 +64,6 @@ def except_json_ld_errors():
                 ) from err
 
 
-def construct_base_by_document(document: str) -> str | None:
-    if isinstance(document, list | str):
-        return None
-
-    if isinstance(document, str):
-        document = URL(document)
-
-    if isinstance(document, URL):
-        document = Path(document.path)
-
-    if isinstance(document, Path):
-        return f'file://{document.parent}/'
-
-
 @validate_call(config=dict(arbitrary_types_allowed=True))
 def expand(   # noqa: C901, WPS211
     document: SerializedDocument | Document,
