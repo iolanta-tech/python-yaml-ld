@@ -28,7 +28,7 @@ class JSONLDTests(Facet[Iterable[TestCase]]):
             try:
                 compact_arrays = row['compact_arrays'].value
             except KeyError:
-                compact_arrays = False
+                compact_arrays = True
 
             try:
                 ctx = yaml_ld.load_document(
