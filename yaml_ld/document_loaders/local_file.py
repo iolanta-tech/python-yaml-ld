@@ -13,6 +13,7 @@ from yaml_ld.document_loaders import content_types
 from yaml_ld.document_loaders.base import DocumentLoader, PyLDResponse
 from yaml_ld.document_parsers.html_parser import HTMLDocumentParser
 from yaml_ld.document_parsers.yaml_parser import YAMLDocumentParser
+from yaml_ld.errors import NotFound
 from yaml_ld.load_html import load_html
 from yaml_ld.loader import YAMLLDLoader
 
