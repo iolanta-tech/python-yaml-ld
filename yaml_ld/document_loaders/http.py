@@ -8,6 +8,7 @@ from yaml.composer import ComposerError
 from yaml.constructor import ConstructorError
 from yaml.parser import ParserError
 
+from yaml_ld.document_loaders import content_types
 from yaml_ld.document_loaders.base import DocumentLoader, PyLDResponse
 from yaml_ld.document_parsers.html_parser import HTMLDocumentParser
 from yaml_ld.document_parsers.yaml_parser import YAMLDocumentParser
@@ -25,27 +26,19 @@ class HTTPDocumentLoader(DocumentLoader):
         content = url.get(stream=True).raw
         content.decode_content = True
 
-        if url.suffix in {'.yaml', '.yml', '.yamlld', '.json', '.jsonld'}:
-            yaml_document = YAMLDocumentParser()(content, source, options)
+        content_type = content_types.by_extension(path.suffix)
+        if content_type is None:
+            raise ValueError(f'What content type is extension {path.suffix}?')
 
-            return {
-                'document': yaml_document,
-                'documentUrl': str(source),
-                'contextUrl': None,
-                'contentType': 'application/ld+yaml',
-            }
+        parser = content_types.parser_by_content_type(content_type)
+        if parser is None:
+            raise LoadingDocumentFailed(path=source)
 
-        if url.suffix in {'.html', '.xhtml'}:
-            loaded_html = HTMLDocumentParser()(content, source, options)
+        yaml_document = parser(content, source, options)
 
-            if isinstance(loaded_html, str):
-                raise DocumentIsScalar(loaded_html)
-
-            return {
-                'document': loaded_html,
-                'documentUrl': source,
-                'contextUrl': None,
-                'contentType': 'application/ld+yaml',
-            }
-
-        raise LoadingDocumentFailed(path=url)
+        return {
+            'document': yaml_document,
+            'documentUrl': str(source),
+            'contextUrl': None,
+            'contentType': 'application/ld+yaml',
+        }
