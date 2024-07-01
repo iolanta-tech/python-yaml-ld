@@ -1,7 +1,6 @@
 from pydantic import validate_call
 from pyld import jsonld
 
-from yaml_ld import parse
 from yaml_ld.expand import except_json_ld_errors
 from yaml_ld.models import (
     BaseOptions,

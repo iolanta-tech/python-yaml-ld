@@ -10,7 +10,6 @@ from yaml_ld.models import (
     ExtractAllScriptsOptions,
     SerializedDocument,
 )
-from yaml_ld.parse import parse  # noqa: WPS347
 
 
 class CompactOptions(BaseOptions, ExtractAllScriptsOptions):
