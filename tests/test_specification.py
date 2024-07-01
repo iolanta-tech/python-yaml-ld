@@ -22,7 +22,6 @@ import yaml_ld
 from ldtest.models import TestCase
 from tests.common import load_tests
 from tests.errors import FailureToFail
-from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
 from yaml_ld.errors import PyLDError, YAMLLDError
 
 tests = Namespace('https://w3c.github.io/json-ld-api/tests/vocab#')
@@ -98,7 +97,6 @@ def to_rdf():
     def _test(
         test_case: TestCase,
         to_rdf: Callable,
-        parse: Callable = funcy.identity,
     ) -> None:
         if isinstance(test_case.result, str):
             try:
@@ -156,14 +154,12 @@ def test_to_rdf(test_case: TestCase, to_rdf):
         to_rdf(
             test_case=test_case,
             to_rdf=yaml_ld.to_rdf,
-            parse=yaml_ld.parse,
         )
     except (NotIsomorphic, FailureToFail):
         try:
             to_rdf(
                 test_case=test_case,
                 to_rdf=jsonld.to_rdf,
-                parse=_load_json_ld,
             )
         except (NotIsomorphic, FailureToFail):
             pytest.skip('This test fails for pyld as well as for yaml-ld.')
@@ -216,7 +212,7 @@ def print_diff(actual, expected):
 
 @pytest.fixture()
 def test_against_ld_library():
-    def _test(test_case: TestCase, parse: Callable, expand: Callable) -> None:
+    def _test(test_case: TestCase, expand: Callable) -> None:
         match test_case.result:
             case str() as error_code:
                 try:
@@ -235,13 +231,7 @@ def test_against_ld_library():
                     )
 
             case Path() as result_path:
-                try:
-                    expected = parse(result_path)
-                except Exception as err:
-                    raise CallableUnexpectedlyFailed(
-                        callable=parse,
-                        params=result_path,
-                    ) from err
+                expected = yaml_ld.load_document(result_path)['document']
 
                 actual = expand(
                     test_case.input,
@@ -275,7 +265,6 @@ def test_expand(
     try:
         test_against_ld_library(
             test_case=test_case,
-            parse=lambda input_: yaml_ld.load_document(input_)['document'],
             expand=yaml_ld.expand,
         )
     except (AssertionError, FailureToFail, YAMLLDError):
@@ -289,10 +278,6 @@ def test_expand(
         try:
             test_against_ld_library(
                 test_case=test_case,
-                parse=lambda input_: jsonld.load_document(
-                    input_,
-                    options={'documentLoader': DEFAULT_DOCUMENT_LOADER},
-                )['document'],
                 expand=jsonld.expand,
             )
         except (AssertionError, FailureToFail):
@@ -331,7 +316,6 @@ def test_compact(
     try:
         test_against_ld_library(
             test_case=test_case,
-            parse=yaml_ld.parse,
             expand=yaml_ld.compact,
         )
     except (AssertionError, FailureToFail, PyLDError):
@@ -342,7 +326,6 @@ def test_compact(
         try:
             test_against_ld_library(
                 test_case=test_case,
-                parse=_load_json_ld,
                 expand=jsonld.compact,
             )
         except (AssertionError, FailureToFail):
@@ -367,7 +350,6 @@ def test_flatten(
     try:
         test_against_ld_library(
             test_case=test_case,
-            parse=yaml_ld.parse,
             expand=yaml_ld.flatten,
         )
     except (AssertionError, FailureToFail):
@@ -378,7 +360,6 @@ def test_flatten(
         try:
             test_against_ld_library(
                 test_case=test_case,
-                parse=_load_json_ld,
                 expand=jsonld.flatten,
             )
         except (AssertionError, FailureToFail):
@@ -398,7 +379,6 @@ def test_frame(
     try:
         test_against_ld_library(
             test_case=test_case,
-            parse=yaml_ld.parse,
             expand=yaml_ld.frame,
         )
     except (AssertionError, FailureToFail, PyLDError):
@@ -409,7 +389,6 @@ def test_frame(
         try:
             test_against_ld_library(
                 test_case=test_case,
-                parse=_load_json_ld,
                 expand=jsonld.frame,
             )
         except (AssertionError, FailureToFail, JsonLdError):

@@ -1,16 +1,13 @@
 from pathlib import Path
 
-import funcy
 import more_itertools
 import pytest
 import yaml
 from urlpath import URL
 from yaml.parser import ParserError
 
-import yaml_ld
-from tests.common import specifications_root, tests_root
-from yaml_ld.errors import LoadingDocumentFailed
-from yaml_ld.parse import as_url_or_path
+from tests.common import tests_root
+from yaml_ld.string_as_url_or_path import as_url_or_path
 
 
 def test_closing_html_comment_in_yaml():

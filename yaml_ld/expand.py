@@ -4,7 +4,6 @@ from pathlib import Path
 
 from pydantic import validate_call
 from pyld import jsonld
-from pyld.jsonld import load_html
 from urlpath import URL
 
 from yaml_ld.errors import (
@@ -21,7 +20,6 @@ from yaml_ld.models import (
     ExtractAllScriptsOptions,
     SerializedDocument,
 )
-from yaml_ld.parse import parse  # noqa: WPS347
 
 
 class ExpandOptions(BaseOptions, ExtractAllScriptsOptions):
