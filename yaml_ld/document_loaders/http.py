@@ -9,6 +9,7 @@ from yaml.constructor import ConstructorError
 from yaml.parser import ParserError
 
 from yaml_ld.document_loaders.base import DocumentLoader, PyLDResponse
+from yaml_ld.document_parsers.html_parser import HTMLDocumentParser
 from yaml_ld.document_parsers.yaml_parser import YAMLDocumentParser
 from yaml_ld.load_html import load_html
 from yaml_ld.loader import YAMLLDLoader
@@ -21,9 +22,10 @@ class HTTPDocumentLoader(DocumentLoader):
 
         url = URL(source)
 
+        content = url.get(stream=True).raw
+        content.decode_content = True
+
         if url.suffix in {'.yaml', '.yml', '.yamlld', '.json', '.jsonld'}:
-            content = url.get(stream=True).raw
-            content.decode_content = True
             yaml_document = YAMLDocumentParser()(content, source, options)
 
             return {
@@ -34,16 +36,7 @@ class HTTPDocumentLoader(DocumentLoader):
             }
 
         if url.suffix in {'.html', '.xhtml'}:
-            content = url.get().text
-
-            loaded_html = load_html(
-                input=content.read(),
-                url=source,
-                profile=None,
-                options=options,
-                content_type='application/ld+yaml',
-                parse_script_content=self._parse_script_content,
-            )
+            loaded_html = HTMLDocumentParser()(content, source, options)
 
             if isinstance(loaded_html, str):
                 raise DocumentIsScalar(loaded_html)
