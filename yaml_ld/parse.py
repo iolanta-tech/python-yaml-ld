@@ -5,22 +5,15 @@ import funcy
 import yaml
 from bs4 import BeautifulSoup
 from urlpath import URL
-from yaml.composer import ComposerError
-from yaml.constructor import ConstructorError
-from yaml.parser import ParserError
-from yaml.scanner import ScannerError
 
 from yaml_ld.errors import (
-    DocumentIsScalar,
-    InvalidEncoding,
     InvalidScriptElement,
     LoadingDocumentFailed,
-    MappingKeyError,
     NoYAMLWithinHTML,
-    UndefinedAliasFound,
 )
 from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import Document, DocumentType, ExtractAllScripts
+from yaml_ld.string_as_url_or_path import as_url_or_path
 
 HTML_HEADER = '<html'
 
@@ -94,14 +87,6 @@ def load_yaml_document(
     funcy.first(documents_stream)
 
     return first_document
-
-
-def as_url_or_path(raw: str) -> URL | Path:
-    """Interpret a raw string as a URL or a local disk path."""
-    if (url := URL(raw)).scheme:
-        return url
-
-    return Path(raw)
 
 
 def parse(   # noqa: WPS238, WPS231, C901
