@@ -8,6 +8,7 @@ def by_extension(extension: str) -> str | None:
         '.json': 'application/json',
         '.jsonld': 'application/ld+json',
         '.jldt': 'application/ld+json',
+        '.jldte': 'application/ld+json',
         '.yaml': 'application/yaml',
         '.yamlld': 'application/ld+yaml',
         '.html': 'text/html',

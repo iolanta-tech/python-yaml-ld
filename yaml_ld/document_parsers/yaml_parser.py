@@ -33,7 +33,12 @@ class YAMLDocumentParser(BaseDocumentParser):
                 if options.get('extractAllScripts'):
                     yaml_document = list(yaml_documents_stream)
                 else:
-                    yaml_document = more_itertools.first(yaml_documents_stream)
+                    try:
+                        yaml_document = more_itertools.first(yaml_documents_stream)
+                    except ValueError as empty_iterable:
+                        raise LoadingDocumentFailed(
+                            path=source,
+                        ) from empty_iterable
             except UnicodeDecodeError as unicode_decode_error:
                 raise InvalidEncoding() from unicode_decode_error
         except ConstructorError as err:
