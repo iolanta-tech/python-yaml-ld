@@ -16,16 +16,16 @@ from yaml_ld.errors import (
 )
 from yaml_ld.models import (
     BaseOptions,
-    Document,
     ExtractAllScriptsOptions,
-    SerializedDocument,
+    JsonLdInput,
+    JsonLdRecord,
 )
 
 
 class ExpandOptions(BaseOptions, ExtractAllScriptsOptions):
     """Options for `jsonld.expand()`."""
 
-    expand_context: Document | None = None
+    expand_context: JsonLdRecord | None = None
     """A context to expand with."""
 
 
@@ -64,9 +64,9 @@ def except_json_ld_errors():
 
 @validate_call(config=dict(arbitrary_types_allowed=True))
 def expand(   # noqa: C901, WPS211
-    document: SerializedDocument | Document,
+    document: JsonLdInput,
     options: ExpandOptions = ExpandOptions(),
-) -> Document | list[Document]:
+) -> JsonLdRecord | list[JsonLdRecord]:
     """Expand a YAML-LD document."""
     with except_json_ld_errors():
         return jsonld.expand(

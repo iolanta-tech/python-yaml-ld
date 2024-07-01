@@ -2,7 +2,7 @@ from pydantic import validate_call
 from pyld import jsonld
 
 from yaml_ld.expand import except_json_ld_errors
-from yaml_ld.models import BaseOptions, Document
+from yaml_ld.models import BaseOptions, JsonLdRecord
 from yaml_ld.rdf import Dataset
 
 
@@ -23,7 +23,7 @@ class FromRDFOptions(BaseOptions):
 def from_rdf(
     dataset: str,
     options: FromRDFOptions = FromRDFOptions(),
-) -> Document:
+) -> JsonLdRecord:
     """Convert a RDF dataset to a YAML-LD document."""
     with except_json_ld_errors():
         return jsonld.from_rdf(dataset, options.model_dump(by_alias=True))

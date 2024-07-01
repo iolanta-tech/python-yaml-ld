@@ -2,12 +2,14 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, TypedDict
 
+from yaml_ld.models import JsonLdRecord
+
 PyLDResponse = TypedDict(
     'PyLDResponse', {
         'contentType': str,
         'contextUrl': str | None,
         'documentUrl': str,
-        'document': dict[str, Any],
+        'document': JsonLdRecord,
     },
 )
 

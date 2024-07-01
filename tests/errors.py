@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from documented import Documented, DocumentedError
 
 from ldtest.models import TestCase
-from yaml_ld.models import Document
+from yaml_ld.models import JsonLdRecord
 
 
 @dataclass
@@ -24,7 +24,7 @@ class FailureToFail(DocumentedError):
     test_case: TestCase
     expected_error_code: str
     raw_document: bytes
-    expanded_document: Document
+    expanded_document: JsonLdRecord
 
     @property
     def formatted_raw_document(self) -> str:

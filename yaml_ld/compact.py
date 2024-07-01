@@ -6,9 +6,9 @@ from pyld import jsonld
 from yaml_ld.expand import except_json_ld_errors
 from yaml_ld.models import (
     BaseOptions,
-    Document,
     ExtractAllScriptsOptions,
-    SerializedDocument,
+    JsonLdInput,
+    JsonLdRecord,
 )
 
 
@@ -21,7 +21,7 @@ class CompactOptions(BaseOptions, ExtractAllScriptsOptions):
     graph: bool = False
     """True to always output a top-level graph."""
 
-    expand_context: Document | None = None
+    expand_context: JsonLdRecord | None = None
     """A context to expand with."""
 
     skip_expansion: bool = False
@@ -30,10 +30,10 @@ class CompactOptions(BaseOptions, ExtractAllScriptsOptions):
 
 @validate_call(config=dict(arbitrary_types_allowed=True))
 def compact(  # noqa: WPS211
-    document: SerializedDocument | Document,
-    ctx: Annotated[Document | None, 'Context to compact with.'],
+    document: JsonLdInput,
+    ctx: Annotated[JsonLdRecord | None, 'Context to compact with.'],
     options: CompactOptions = CompactOptions(),
-) -> Document | list[Document]:
+) -> JsonLdRecord | list[JsonLdRecord]:
     """Compact a JSON-LD document."""
     with except_json_ld_errors():
         return jsonld.compact(

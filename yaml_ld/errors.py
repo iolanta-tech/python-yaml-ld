@@ -3,7 +3,7 @@ from pathlib import Path
 
 from documented import DocumentedError
 
-from yaml_ld.models import Document
+from yaml_ld.models import JsonLdRecord
 
 
 class YAMLLDError(DocumentedError):
@@ -26,7 +26,7 @@ class DocumentIsScalar(YAMLLDError):
     Instead, `{self.document_type_name}` found.
     """
 
-    document: Document
+    document: JsonLdRecord
     code: str = 'loading document failed'
 
     @property

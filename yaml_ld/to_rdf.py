@@ -1,14 +1,8 @@
 from pydantic import validate_call
 from pyld import jsonld
 
-import yaml_ld
 from yaml_ld.expand import except_json_ld_errors
-from yaml_ld.models import (
-    BaseOptions,
-    Document,
-    ExtractAllScriptsOptions,
-    SerializedDocument,
-)
+from yaml_ld.models import BaseOptions, ExtractAllScriptsOptions, JsonLdInput
 from yaml_ld.rdf import Dataset
 
 
@@ -28,7 +22,7 @@ class ToRDFOptions(BaseOptions, ExtractAllScriptsOptions):
 
 @validate_call(config=dict(arbitrary_types_allowed=True))
 def to_rdf(
-    document: SerializedDocument | Document,
+    document: JsonLdInput,
     options: ToRDFOptions = ToRDFOptions(),
 ) -> Dataset:
     """Convert a YAML-LD document to RDF."""

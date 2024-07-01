@@ -9,7 +9,7 @@ from yaml_ld.expand import ExpandOptions
 from yaml_ld.flatten import FlattenOptions
 from yaml_ld.frame import FrameOptions
 from yaml_ld.from_rdf import FromRDFOptions
-from yaml_ld.models import Document
+from yaml_ld.models import JsonLdRecord
 from yaml_ld.to_rdf import ToRDFOptions
 
 SPECIFICATIONS_ROOT = Path(__file__).parent.parent / "specifications"
@@ -24,8 +24,8 @@ class TestCase:
     input: Path | URL
     result: Path | str | Exception   # noqa: WPS110
     req: str
-    ctx: Document | None = None
-    frame: Document | None = None
+    ctx: JsonLdRecord | None = None
+    frame: JsonLdRecord | None = None
     extract_all_scripts: bool = False
     base: str | None = None
     redirect_to: str | None = None
