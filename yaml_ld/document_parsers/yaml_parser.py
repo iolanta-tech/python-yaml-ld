@@ -36,9 +36,12 @@ class YAMLDocumentParser(BaseDocumentParser):
                     try:
                         yaml_document = more_itertools.first(yaml_documents_stream)
                     except ValueError as empty_iterable:
-                        raise LoadingDocumentFailed(
-                            path=source,
-                        ) from empty_iterable
+                        if 'first() was called on an empty iterable' in str(empty_iterable):
+                            raise LoadingDocumentFailed(
+                                path=source,
+                            ) from empty_iterable
+
+                        raise
             except UnicodeDecodeError as unicode_decode_error:
                 raise InvalidEncoding() from unicode_decode_error
         except ConstructorError as err:
