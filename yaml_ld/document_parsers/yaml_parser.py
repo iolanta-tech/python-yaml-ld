@@ -10,7 +10,10 @@ from yaml.parser import ParserError
 from yaml.scanner import ScannerError
 
 from yaml_ld.document_parsers.base import BaseDocumentParser
-from yaml_ld.errors import LoadingDocumentFailed, DocumentIsScalar
+from yaml_ld.errors import (
+    LoadingDocumentFailed, DocumentIsScalar,
+    InvalidEncoding,
+)
 from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import Document
 
@@ -19,23 +22,20 @@ class YAMLDocumentParser(BaseDocumentParser):
     def __call__(self, data: io.TextIOBase, source: str, options: dict[str, Any]) -> Document:
 
         from yaml_ld.errors import MappingKeyError
-        #
-        # try:
-        #     content = data.read()
-        # except UnicodeDecodeError as unicode_decode_error:
-        #     from yaml_ld.errors import InvalidEncoding
-        #     raise InvalidEncoding() from unicode_decode_error
-        #
+
         try:
             yaml_documents_stream = yaml.load_all(  # noqa: S506
                 stream=data,
                 Loader=YAMLLDLoader,
             )
 
-            if options.get('extractAllScripts'):
-                yaml_document = list(yaml_documents_stream)
-            else:
-                yaml_document = more_itertools.first(yaml_documents_stream)
+            try:
+                if options.get('extractAllScripts'):
+                    yaml_document = list(yaml_documents_stream)
+                else:
+                    yaml_document = more_itertools.first(yaml_documents_stream)
+            except UnicodeDecodeError as unicode_decode_error:
+                raise InvalidEncoding() from unicode_decode_error
         except ConstructorError as err:
             if err.problem == 'found unhashable key':
                 raise MappingKeyError() from err
