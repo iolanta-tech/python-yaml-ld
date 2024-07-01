@@ -18,19 +18,20 @@ def tag(term: str) -> str:
 class YAMLLDLoader(yaml.SafeLoader):
     pass
 
+CONSTRUCTORS = {
+    tag('timestamp'): YAMLLDLoader.construct_scalar,
+    xsd('integer'): YAMLLDLoader.construct_yaml_int,
+    xsd('decimal'): YAMLLDLoader.construct_yaml_float,
+    xsd('double'): YAMLLDLoader.construct_scalar,
+    xsd('boolean'): YAMLLDLoader.construct_yaml_bool,
+    xsd('date'): YAMLLDLoader.construct_scalar,
+    xsd('time'): YAMLLDLoader.construct_scalar,
+    xsd('dateTime'): YAMLLDLoader.construct_scalar,
+    i18n('en-US'): YAMLLDLoader.construct_yaml_str,
+    i18n('en-US_ltr'): YAMLLDLoader.construct_yaml_str,
+    i18n('_rtl'): YAMLLDLoader.construct_yaml_str,
+}
 
-YAMLLDLoader.add_constructor(tag('timestamp'), YAMLLDLoader.construct_yaml_str)
 
-YAMLLDLoader.add_constructor(xsd('integer'), YAMLLDLoader.construct_yaml_int)
-YAMLLDLoader.add_constructor(xsd('decimal'), YAMLLDLoader.construct_yaml_float)
-
-YAMLLDLoader.add_constructor(xsd('double'), YAMLLDLoader.construct_scalar)
-
-YAMLLDLoader.add_constructor(xsd('boolean'), YAMLLDLoader.construct_yaml_bool)
-YAMLLDLoader.add_constructor(xsd('date'), YAMLLDLoader.construct_scalar)
-YAMLLDLoader.add_constructor(xsd('time'), YAMLLDLoader.construct_scalar)
-YAMLLDLoader.add_constructor(xsd('dateTime'), YAMLLDLoader.construct_scalar)
-
-YAMLLDLoader.add_constructor(i18n('en-US'), YAMLLDLoader.construct_yaml_str)
-YAMLLDLoader.add_constructor(i18n('en-US_ltr'), YAMLLDLoader.construct_yaml_str)
-YAMLLDLoader.add_constructor(i18n('_rtl'), YAMLLDLoader.construct_yaml_str)
+for yaml_tag, constructor in CONSTRUCTORS.items():
+    YAMLLDLoader.add_constructor(yaml_tag, constructor)   # type: ignore

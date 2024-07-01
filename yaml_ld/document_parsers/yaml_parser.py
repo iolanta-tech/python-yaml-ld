@@ -1,8 +1,7 @@
 import io
-
-import more_itertools
 from typing import Any
 
+import more_itertools
 import yaml
 from yaml.composer import ComposerError
 from yaml.constructor import ConstructorError
@@ -11,15 +10,16 @@ from yaml.scanner import ScannerError
 
 from yaml_ld.document_parsers.base import BaseDocumentParser
 from yaml_ld.errors import (
-    LoadingDocumentFailed, DocumentIsScalar,
+    DocumentIsScalar,
     InvalidEncoding,
+    LoadingDocumentFailed,
 )
 from yaml_ld.loader import YAMLLDLoader
-from yaml_ld.models import Document
+from yaml_ld.models import JsonLdRecord
 
 
 class YAMLDocumentParser(BaseDocumentParser):
-    def __call__(self, data: io.TextIOBase, source: str, options: dict[str, Any]) -> Document:
+    def __call__(self, data: io.TextIOBase, source: str, options: dict[str, Any]) -> JsonLdRecord:
 
         from yaml_ld.errors import MappingKeyError
 

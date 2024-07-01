@@ -6,9 +6,9 @@ from pyld import jsonld
 from yaml_ld.expand import except_json_ld_errors
 from yaml_ld.models import (
     BaseOptions,
-    Document,
     ExtractAllScriptsOptions,
-    SerializedDocument,
+    JsonLdInput,
+    JsonLdRecord,
 )
 
 
@@ -22,7 +22,7 @@ class Embed(StrEnum):
 class FrameOptions(BaseOptions, ExtractAllScriptsOptions):
     """Options for YAML-LD framing."""
 
-    expand_context: Document | None = None
+    expand_context: JsonLdRecord | None = None
     """A context to expand with."""
 
     embed: Embed = Embed.LAST
@@ -47,10 +47,10 @@ class FrameOptions(BaseOptions, ExtractAllScriptsOptions):
 
 @validate_call(config=dict(arbitrary_types_allowed=True))
 def frame(
-    document: SerializedDocument | Document,
-    frame: Document,
+    document: JsonLdInput,
+    frame: JsonLdRecord,
     options: FrameOptions,
-) -> Document:
+) -> JsonLdRecord:
     """Frame a YAML-LD document."""
     with except_json_ld_errors():
         return jsonld.frame(

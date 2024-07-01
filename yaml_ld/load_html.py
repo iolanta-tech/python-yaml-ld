@@ -4,6 +4,8 @@ from typing import Any, Callable
 import lxml
 from pyld.jsonld import JsonLdError, _is_array, parse_url, prepend_base
 
+from yaml_ld.models import JsonLdRecord
+
 
 # This function is from pyld. Replaced hard coded `json.loads` with an arg.
 def load_html(
@@ -12,7 +14,7 @@ def load_html(
     profile,
     options,
     content_type: str,
-    parse_script_content: Callable[[str], Any],
+    parse_script_content: Callable[[str], JsonLdRecord],
 ):
     """
     Load one or more script tags from an HTML source.

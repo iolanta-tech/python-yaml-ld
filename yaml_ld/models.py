@@ -1,21 +1,26 @@
 from enum import Enum
 from pathlib import Path
-from typing import Annotated, Any
+from typing import Annotated, Any, Sequence
 
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
+from typing_extensions import TypedDict
 from urlpath import URL
 
-Document = dict[str, Any] | list[Any]  # type: ignore
-DocumentLoader = Any  # type: ignore   # FIXME: This is actually a callable.
+JsonLdRecord = dict[str, Any]  # type: ignore
 
-SerializedDocument = Annotated[  # type: ignore
-    str | bytes | Path | URL,
-    (
-        'Either a document serialized to a sequence of characters (or bytes) '
-        'or a location where one can be found.'
-    ),
-]
+
+class RemoteDocument(TypedDict):
+    contentType: str
+    contextUrl: str
+    document: Any   # type: ignore
+    documentUrl: str
+    profile: str
+
+
+# https://w3c.github.io/json-ld-api/#dom-jsonldrecord
+JsonLdInput = JsonLdRecord | Sequence[JsonLdRecord] | str | Path | URL | RemoteDocument
+
 
 ExtractAllScripts = Annotated[
     bool,
@@ -58,7 +63,7 @@ class BaseOptions(BaseModel):
     """The base IRI to use."""
 
     document_loader: Annotated[
-        DocumentLoader,
+        Any,
         Field(default_factory=_default_document_loader),
     ]
     """The document loader."""
@@ -66,4 +71,5 @@ class BaseOptions(BaseModel):
     model_config = ConfigDict(
         populate_by_name=True,
         alias_generator=to_camel,
+        arbitrary_types_allowed=True,
     )

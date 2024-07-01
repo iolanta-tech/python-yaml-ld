@@ -7,7 +7,7 @@ from yaml_ld.document_parsers.base import BaseDocumentParser
 from yaml_ld.errors import DocumentIsScalar
 from yaml_ld.load_html import load_html
 from yaml_ld.loader import YAMLLDLoader
-from yaml_ld.models import Document
+from yaml_ld.models import JsonLdRecord
 
 
 class HTMLDocumentParser(BaseDocumentParser):
@@ -25,7 +25,7 @@ class HTMLDocumentParser(BaseDocumentParser):
         data: io.TextIOBase,
         source: str,
         options: dict[str, Any],
-    ) -> Document:
+    ) -> JsonLdRecord:
         loaded_html = load_html(
             input=data.read(),
             url=source,
