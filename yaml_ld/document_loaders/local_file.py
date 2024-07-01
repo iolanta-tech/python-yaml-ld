@@ -26,6 +26,8 @@ class LocalFileDocumentLoader(DocumentLoader):
         path = Path(URL(source).path)
 
         content_type = content_types.by_extension(path.suffix)
+        if content_type is None:
+            raise ValueError(f'What content type is extension {path.suffix}?')
 
         parser = content_types.parser_by_content_type(content_type)
         if parser is None:
