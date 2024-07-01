@@ -9,18 +9,12 @@ from yaml.constructor import ConstructorError
 from yaml.parser import ParserError
 
 from yaml_ld.document_loaders.base import DocumentLoader, PyLDResponse
+from yaml_ld.document_parsers.yaml_parser import YAMLDocumentParser
 from yaml_ld.load_html import load_html
 from yaml_ld.loader import YAMLLDLoader
 
 
 class HTTPDocumentLoader(DocumentLoader):
-    def _parse_script_content(self, content: str):
-        return list(
-            yaml.load_all(
-                content,
-                Loader=YAMLLDLoader,
-            ),
-        )
 
     def __call__(self, source: str | Path, options: dict[str, Any]) -> PyLDResponse:
         from yaml_ld.errors import DocumentIsScalar, LoadingDocumentFailed
@@ -28,37 +22,9 @@ class HTTPDocumentLoader(DocumentLoader):
         url = URL(source)
 
         if url.suffix in {'.yaml', '.yml', '.yamlld', '.json', '.jsonld'}:
-            content = url.get().text
-
-            from yaml.scanner import ScannerError
-
-            from yaml_ld.errors import MappingKeyError
-            try:
-                yaml_document = more_itertools.first(
-                    yaml.load_all(  # noqa: S506
-                        stream=content,
-                        Loader=YAMLLDLoader,
-                    ),
-                )
-            except ConstructorError as err:
-                if err.problem == 'found unhashable key':
-                    raise MappingKeyError() from err
-
-                raise
-
-            except ScannerError as err:
-                raise LoadingDocumentFailed(path=url) from err
-
-            except ComposerError as err:
-                from yaml_ld.errors import UndefinedAliasFound
-                raise UndefinedAliasFound() from err
-
-            except ParserError as err:
-                from yaml_ld.errors import InvalidScriptElement
-                raise InvalidScriptElement() from err
-
-            if not isinstance(yaml_document, (dict, list)):
-                raise DocumentIsScalar(yaml_document)
+            content = url.get(stream=True).raw
+            content.decode_content = True
+            yaml_document = YAMLDocumentParser()(content, source, options)
 
             return {
                 'document': yaml_document,

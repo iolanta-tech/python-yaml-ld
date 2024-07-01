@@ -19,16 +19,16 @@ class YAMLDocumentParser(BaseDocumentParser):
     def __call__(self, data: io.TextIOBase, source: str, options: dict[str, Any]) -> Document:
 
         from yaml_ld.errors import MappingKeyError
-
-        try:
-            content = data.read()
-        except UnicodeDecodeError as unicode_decode_error:
-            from yaml_ld.errors import InvalidEncoding
-            raise InvalidEncoding() from unicode_decode_error
-
+        #
+        # try:
+        #     content = data.read()
+        # except UnicodeDecodeError as unicode_decode_error:
+        #     from yaml_ld.errors import InvalidEncoding
+        #     raise InvalidEncoding() from unicode_decode_error
+        #
         try:
             yaml_documents_stream = yaml.load_all(  # noqa: S506
-                stream=content,
+                stream=data,
                 Loader=YAMLLDLoader,
             )
 
