@@ -8,7 +8,10 @@ from yaml.constructor import ConstructorError
 from yaml.parser import ParserError
 from yaml.scanner import ScannerError
 
-from yaml_ld.document_parsers.base import BaseDocumentParser
+from yaml_ld.document_parsers.base import (
+    BaseDocumentParser,
+    DocumentParserOptions,
+)
 from yaml_ld.errors import (
     DocumentIsScalar,
     InvalidEncoding,
@@ -19,7 +22,7 @@ from yaml_ld.models import JsonLdRecord
 
 
 class YAMLDocumentParser(BaseDocumentParser):
-    def __call__(self, data: io.TextIOBase, source: str, options: dict[str, Any]) -> JsonLdRecord:
+    def __call__(self, data: io.TextIOBase, source: str, options: DocumentParserOptions) -> JsonLdRecord:
 
         from yaml_ld.errors import MappingKeyError
 
