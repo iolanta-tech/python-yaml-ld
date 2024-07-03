@@ -42,7 +42,7 @@ class LoadingDocumentFailed(YAMLLDError):
     Path: {self.path}
     """
 
-    path: Path
+    path: str
     code: str = 'loading document failed'
 
 
@@ -54,7 +54,7 @@ class NotFound(YAMLLDError):
     Path: {self.path}
     """
 
-    path: Path
+    path: str
     code: str = 'loading document failed'
 
 

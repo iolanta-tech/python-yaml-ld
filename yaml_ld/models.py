@@ -13,7 +13,7 @@ JsonLdRecord = dict[str, Any]  # type: ignore
 class RemoteDocument(TypedDict):
     contentType: str
     contextUrl: str
-    document: Any   # type: ignore
+    document: Any
     documentUrl: str
     profile: str
 
@@ -51,6 +51,7 @@ class ExtractAllScriptsOptions(BaseModel):
     the first.
     """
 
+
 def _default_document_loader():
     from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
     return DEFAULT_DOCUMENT_LOADER
@@ -62,7 +63,7 @@ class BaseOptions(BaseModel):
     base: str | Path | None = None
     """The base IRI to use."""
 
-    document_loader: Annotated[
+    document_loader: Annotated[  # type: ignore
         Any,
         Field(default_factory=_default_document_loader),
     ]

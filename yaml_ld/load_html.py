@@ -14,7 +14,7 @@ def load_html(
     profile,
     options,
     content_type: str,
-    parse_script_content: Callable[[str], JsonLdRecord],
+    parse_script_content: Callable[[str], JsonLdRecord | list[JsonLdRecord]],
 ):
     """
     Load one or more script tags from an HTML source.
@@ -77,14 +77,14 @@ def load_html(
     if not elements:
         elements = document.xpath(f'//script[starts-with(@type, "{content_type}")]')
     if options.get('extractAllScripts'):
-        result = []
+        result: list[JsonLdRecord] = []
         for element in elements:
             try:
                 js = parse_script_content(element.text)
                 if _is_array(js):
-                    result.extend(js)
+                    result.extend(js)   # type: ignore
                 else:
-                    result.append(js)
+                    result.append(js)   # type: ignore
             except Exception as cause:
                 raise JsonLdError(
                     'Invalid JSON syntax.',

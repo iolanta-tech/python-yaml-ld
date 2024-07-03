@@ -3,7 +3,10 @@ from typing import Any
 
 import yaml
 
-from yaml_ld.document_parsers.base import BaseDocumentParser
+from yaml_ld.document_parsers.base import (
+    BaseDocumentParser,
+    DocumentParserOptions,
+)
 from yaml_ld.errors import DocumentIsScalar
 from yaml_ld.load_html import load_html
 from yaml_ld.loader import YAMLLDLoader
@@ -24,7 +27,7 @@ class HTMLDocumentParser(BaseDocumentParser):
         self,
         data: io.TextIOBase,
         source: str,
-        options: dict[str, Any],
+        options: DocumentParserOptions,
     ) -> JsonLdRecord:
         loaded_html = load_html(
             input=data.read(),
