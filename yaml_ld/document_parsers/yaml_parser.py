@@ -1,7 +1,5 @@
 import io
-from typing import Any
 
-import more_itertools
 import yaml
 from yaml.composer import ComposerError
 from yaml.constructor import ConstructorError
@@ -15,38 +13,48 @@ from yaml_ld.document_parsers.base import (
 from yaml_ld.errors import (
     DocumentIsScalar,
     InvalidEncoding,
+    InvalidScriptElement,
     LoadingDocumentFailed,
+    MappingKeyError,
+    UndefinedAliasFound,
 )
 from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import JsonLdRecord
 
 
+def _ensure_not_scalar(document) -> JsonLdRecord | list[JsonLdRecord]:
+    if not isinstance(document, (dict, list)):
+        raise DocumentIsScalar(document)
+
+    return document
+
+
 class YAMLDocumentParser(BaseDocumentParser):
-    def __call__(self, data: io.TextIOBase, source: str, options: DocumentLoaderOptions) -> JsonLdRecord:
+    """Parse YAML documents."""
 
-        from yaml_ld.errors import MappingKeyError
+    def __call__(   # noqa: WPS238, WPS231, WPS225, C901
+        self,
+        data_stream: io.TextIOBase,
+        source: str,
+        options: DocumentLoaderOptions,
+    ) -> JsonLdRecord | list[JsonLdRecord]:
+        """Parse YAML document stream into LD."""
+        yaml_documents_stream = yaml.load_all(  # noqa: S506
+            stream=data_stream,
+            Loader=YAMLLDLoader,
+        )
 
-        try:
-            yaml_documents_stream = yaml.load_all(  # noqa: S506
-                stream=data,
-                Loader=YAMLLDLoader,
+        try:   # noqa: WPS225
+            return _ensure_not_scalar(
+                self._yaml_document_from_stream(
+                    stream=yaml_documents_stream,
+                    extract_all_scripts=options.get('extractAllScripts', False),
+                ),
             )
 
-            try:
-                if options.get('extractAllScripts'):
-                    yaml_document = list(yaml_documents_stream)
-                else:
-                    try:
-                        yaml_document = more_itertools.first(yaml_documents_stream)
-                    except ValueError as empty_iterable:
-                        if 'first() was called on an empty iterable' in str(empty_iterable):
-                            raise LoadingDocumentFailed(
-                                path=source,
-                            ) from empty_iterable
+        except UnicodeDecodeError as unicode_decode_error:
+            raise InvalidEncoding() from unicode_decode_error
 
-                        raise
-            except UnicodeDecodeError as unicode_decode_error:
-                raise InvalidEncoding() from unicode_decode_error
         except ConstructorError as err:
             if err.problem == 'found unhashable key':
                 raise MappingKeyError() from err
@@ -57,14 +65,16 @@ class YAMLDocumentParser(BaseDocumentParser):
             raise LoadingDocumentFailed(path=source) from err
 
         except ComposerError as err:
-            from yaml_ld.errors import UndefinedAliasFound
             raise UndefinedAliasFound() from err
 
         except ParserError as err:
-            from yaml_ld.errors import InvalidScriptElement
             raise InvalidScriptElement() from err
 
-        if not isinstance(yaml_document, (dict, list)):
-            raise DocumentIsScalar(yaml_document)
+    def _yaml_document_from_stream(self, stream, extract_all_scripts: bool):
+        if extract_all_scripts:
+            return list(stream)
 
-        return yaml_document
+        try:
+            return next(stream)
+        except StopIteration as stop_iteration:
+            raise LoadingDocumentFailed(path='') from stop_iteration

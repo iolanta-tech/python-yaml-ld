@@ -8,13 +8,14 @@ from pydantic import validate_call
 from urlpath import URL
 
 from yaml_ld.document_loaders.base import (
-    DocumentLoader, PyLDResponse,
+    DocumentLoader,
     DocumentLoaderOptions,
+    PyLDResponse,
 )
 
 
 @dataclass
-class ProtocolNotFound(DocumentedError):
+class ProtocolNotFound(DocumentedError):  # type: ignore
     """
     Cannot choose the loader by URL protocol.
 

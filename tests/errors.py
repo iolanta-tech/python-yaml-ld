@@ -8,7 +8,7 @@ from yaml_ld.models import JsonLdRecord
 
 
 @dataclass
-class FailureToFail(DocumentedError):
+class FailureToFail(DocumentedError):   # type: ignore
     """
     YAMLLDError not raised.
 

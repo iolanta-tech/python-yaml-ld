@@ -8,9 +8,9 @@ from yaml_ld.models import JsonLdRecord
 PyLDResponse = TypedDict(
     'PyLDResponse', {
         'contentType': str,
-        'contextUrl': str | None,
+        'contextUrl': str | None,   # noqa: WPS465
         'documentUrl': str,
-        'document': JsonLdRecord,
+        'document': JsonLdRecord | list[JsonLdRecord],
     },
 )
 
@@ -18,7 +18,7 @@ DocumentLoaderOptions = TypedDict(
     'DocumentLoaderOptions',
     {
         'extractAllScripts': bool,
-    }
+    },
 )
 
 

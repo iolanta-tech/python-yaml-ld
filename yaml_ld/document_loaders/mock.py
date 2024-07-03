@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
 
 from yaml_ld.document_loaders.base import (
-    DocumentLoader, PyLDResponse,
+    DocumentLoader,
     DocumentLoaderOptions,
+    PyLDResponse,
 )
 
 

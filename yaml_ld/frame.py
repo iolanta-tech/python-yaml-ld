@@ -1,6 +1,4 @@
-from enum import StrEnum
-
-from pydantic import field_serializer, validate_call
+from pydantic import validate_call
 from pyld import jsonld
 
 from yaml_ld.expand import except_json_ld_errors
@@ -12,14 +10,7 @@ from yaml_ld.models import (
 )
 
 
-class Embed(StrEnum):
-    LAST = '@last'
-    ALWAYS = '@always'
-    NEVER = '@never'
-    LINK = '@link'
-
-
-class FrameOptions(BaseOptions, ExtractAllScriptsOptions):
+class FrameOptions(BaseOptions, ExtractAllScriptsOptions):   # type: ignore
     """Options for YAML-LD framing."""
 
     expand_context: JsonLdRecord | None = None

@@ -42,7 +42,7 @@ class ProcessingMode(str, Enum):  # noqa: WPS600
     JSON_LD_1_1 = 'json-ld-1.1'  # noqa: WPS114, WPS115
 
 
-class ExtractAllScriptsOptions(BaseModel):
+class ExtractAllScriptsOptions(BaseModel):    # type: ignore
     """Options flag to extract all scripts or not."""
 
     extract_all_scripts: bool = False
@@ -57,7 +57,7 @@ def _default_document_loader():
     return DEFAULT_DOCUMENT_LOADER
 
 
-class BaseOptions(BaseModel):
+class BaseOptions(BaseModel):   # type: ignore
     """Base options shared by all YAML-LD API methods."""
 
     base: str | Path | None = None

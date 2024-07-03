@@ -10,7 +10,7 @@ from yaml_ld.models import (
 )
 
 
-class FlattenOptions(BaseOptions, ExtractAllScriptsOptions):
+class FlattenOptions(BaseOptions, ExtractAllScriptsOptions):   # type: ignore
     """Options to flatten a YAML-LD document."""
 
     expand_context: JsonLdRecord | None = None

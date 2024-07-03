@@ -6,7 +6,7 @@ from yaml_ld.models import BaseOptions, ExtractAllScriptsOptions, JsonLdInput
 from yaml_ld.rdf import Dataset
 
 
-class ToRDFOptions(BaseOptions, ExtractAllScriptsOptions):
+class ToRDFOptions(BaseOptions, ExtractAllScriptsOptions):   # type: ignore
     """Options for converting YAML-LD to RDF."""
 
     format: str = 'application/n-quads'

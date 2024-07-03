@@ -10,10 +10,10 @@ from yaml_ld.errors import YAMLLDError
 
 
 @pytest.fixture()
-def verify_from_rdf():
-    def _test(
+def verify_from_rdf():   # noqa: C901, WPS231
+    def _test(   # noqa: WPS430
         test_case: TestCase,
-        from_rdf: Callable,
+        from_rdf,
     ) -> None:
         if isinstance(test_case.result, str):
             try:
@@ -25,13 +25,12 @@ def verify_from_rdf():
                 assert error.code == test_case.result
                 return
 
-            else:
-                raise FailureToFail(
-                    test_case=test_case,
-                    expected_error_code=test_case.result,
-                    raw_document=test_case.raw_document,
-                    expanded_document=rdf_document,
-                )
+            raise FailureToFail(
+                test_case=test_case,
+                expected_error_code=test_case.result,
+                raw_document=test_case.raw_document,
+                expanded_document=rdf_document,
+            )
 
         try:
             actual_ld = from_rdf(

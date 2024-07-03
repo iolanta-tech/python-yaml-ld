@@ -11,10 +11,10 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
-PyLD = "^2.0.4"
-pydantic = "^2.7.4"
-pyyaml = "^6.0.1"
-beautifulsoup4 = "^4.12.2"
+PyLD = ">=2.0.4"
+pydantic = ">=2.7.4"
+pyyaml = ">=6.0.1"
+urlpath = ">=1.2.0"
 
 [tool.poetry.group.dev.dependencies]
 jeeves-yeti-pyproject = { version = "^0.2.20", markers = "python_version >= '3.10'" }
@@ -27,7 +27,23 @@ mkdocs-blogging-plugin = "^2.2.11"
 mkdocstrings-python = "^1.10.5"
 black = "^24.4.2"
 dirty-equals = "^0.7.1.post0"
+iolanta = "^1.0.19"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.flakeheaven.exceptions."yaml_ld/*.py"]
+wemake-python-styleguide = [
+    # Wrong multiline string usage
+    # Conflicts with class method docstrings.
+    "-WPS462",
+]
+
+[tool.flakeheaven.exceptions."**/*.py"]
+wemake-python-styleguide = [
+    # Found list comprehension with multiple `if`s
+    # I happen to like those ifs!
+    "-WPS307",
+]

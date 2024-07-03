@@ -1,9 +1,7 @@
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable
 
-import funcy
 import pytest
 import rdflib
 from documented import DocumentedError
@@ -40,14 +38,11 @@ def _get_id(test_case: TestCase) -> str | None:
 
     See https://github.com/pytest-dev/pytest/issues/7686
     """
-    if not isinstance(test_case, TestCase):
-        return None
-
     return test_case.test
 
 
 @dataclass
-class NotIsomorphic(DocumentedError):
+class NotIsomorphic(DocumentedError):   # type: ignore
     """
     Actual RDF graph does not match expected graph.
 
@@ -60,13 +55,28 @@ class NotIsomorphic(DocumentedError):
     actual_graph: rdflib.Graph
     expected_graph: rdflib.Graph
 
+    @property
+    def formatted_actual_graph(self):
+        """Format actual graph."""
+        return self._format_graph(self.actual_graph)
+
+    @property
+    def formatted_expected_graph(self):
+        """Format expected graph."""
+        return self._format_graph(self.expected_graph)
+
+    @property
+    def formatted_document(self):
+        """Format document."""
+        return self.document.decode('utf-8')
+
     def _format_graph(self, graph: rdflib.Graph) -> str:
-        return '\n'.join(
+        return '\n'.join(  # noqa: WPS307
             f'{formatted_subject} -{formatted_predicate}-> {formatted_obj}'
-            for subject, predicate, obj in graph
+            for subject, predicate, objectum in graph
             if (formatted_subject := self._format_term(subject))
             if (formatted_predicate := self._format_term(predicate))
-            if (formatted_obj := self._format_term(obj))
+            if (formatted_obj := self._format_term(objectum))
         )
 
     def _format_term(self, term: rdflib.term.Node) -> str:
@@ -79,28 +89,16 @@ class NotIsomorphic(DocumentedError):
             case _:
                 return str(term)
 
-    @property
-    def formatted_actual_graph(self):
-        return self._format_graph(self.actual_graph)
-
-    @property
-    def formatted_expected_graph(self):
-        return self._format_graph(self.expected_graph)
-
-    @property
-    def formatted_document(self):
-        return self.document.decode('utf-8')
-
 
 @pytest.fixture()
-def to_rdf():
-    def _test(
+def to_rdf():  # noqa: C901, WPS231
+    def _test(   # noqa: WPS430
         test_case: TestCase,
-        to_rdf: Callable,
+        to_rdf_callable,
     ) -> None:
         if isinstance(test_case.result, str):
             try:
-                rdf_document = to_rdf(
+                rdf_document = to_rdf_callable(
                     test_case.input,
                     **test_case.kwargs,
                 )
@@ -108,25 +106,17 @@ def to_rdf():
                 assert error.code == test_case.result
                 return
 
-            else:
-                raise FailureToFail(
-                    test_case=test_case,
-                    expected_error_code=test_case.result,
-                    raw_document=test_case.raw_document,
-                    expanded_document=rdf_document,
-                )
+            raise FailureToFail(
+                test_case=test_case,
+                expected_error_code=test_case.result,
+                raw_document=test_case.raw_document,
+                expanded_document=rdf_document,
+            )
 
-        try:
-            actual_dataset = to_rdf(
-                test_case.input,
-                **test_case.kwargs,
-            )
-        except ValidationError:
-            raise ValueError(
-                f'{test_case.raw_document!r} has type '
-                f'{type(test_case.raw_document)}, that is not what {to_rdf} '
-                'expects.',
-            )
+        actual_dataset = to_rdf_callable(
+            test_case.input,
+            **test_case.kwargs,
+        )
 
         raw_expected_quads = test_case.raw_expected_document
 
@@ -153,49 +143,18 @@ def test_to_rdf(test_case: TestCase, to_rdf):
     try:
         to_rdf(
             test_case=test_case,
-            to_rdf=yaml_ld.to_rdf,
+            to_rdf_callable=yaml_ld.to_rdf,
         )
     except (NotIsomorphic, FailureToFail):
-        try:
+        try:   # noqa: WPS505
             to_rdf(
                 test_case=test_case,
-                to_rdf=jsonld.to_rdf,
+                to_rdf_callable=jsonld.to_rdf,
             )
         except (NotIsomorphic, FailureToFail):
             pytest.skip('This test fails for pyld as well as for yaml-ld.')
         else:
             raise
-
-
-@dataclass
-class CallableUnexpectedlyFailed(DocumentedError):
-    """
-    `{self.callable_path}()` unexpectedly failed with an exception.
-
-    Args: {self.params}
-    """
-
-    callable: Callable
-    params: Any
-
-    @property
-    def callable_path(self):
-        # Get the module where the callable is defined
-        module_name = self.callable.__module__
-
-        # Get the object name
-        try:
-            obj_name = self.callable.__name__
-        except AttributeError:
-            obj_name = str(self.callable)
-
-        # Construct the import path
-        if module_name == "__main__":
-            import_path = obj_name
-        else:
-            import_path = f"{module_name}:{obj_name}"
-
-        return import_path
 
 
 def print_diff(actual, expected) -> None:
@@ -212,7 +171,7 @@ def print_diff(actual, expected) -> None:
 
 @pytest.fixture()
 def test_against_ld_library():
-    def _test(test_case: TestCase, expand: Callable) -> None:
+    def _test(test_case: TestCase, expand) -> None:    # noqa: WPS430
         match test_case.result:
             case str() as error_code:
                 try:

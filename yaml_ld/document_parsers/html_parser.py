@@ -25,12 +25,13 @@ class HTMLDocumentParser(BaseDocumentParser):
 
     def __call__(
         self,
-        data: io.TextIOBase,
+        data_stream: io.TextIOBase,
         source: str,
         options: DocumentLoaderOptions,
-    ) -> JsonLdRecord:
+    ) -> JsonLdRecord | list[JsonLdRecord]:
+        """Parse HTML with LD in <script> tags."""
         loaded_html = load_html(
-            input=data.read(),
+            input=data_stream.read(),
             url=source,
             profile=None,
             options=options,
