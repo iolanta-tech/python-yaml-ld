@@ -106,25 +106,17 @@ def to_rdf():  # noqa: C901, WPS231
                 assert error.code == test_case.result
                 return
 
-            else:
-                raise FailureToFail(
-                    test_case=test_case,
-                    expected_error_code=test_case.result,
-                    raw_document=test_case.raw_document,
-                    expanded_document=rdf_document,
-                )
+            raise FailureToFail(
+                test_case=test_case,
+                expected_error_code=test_case.result,
+                raw_document=test_case.raw_document,
+                expanded_document=rdf_document,
+            )
 
-        try:
-            actual_dataset = to_rdf_callable(
-                test_case.input,
-                **test_case.kwargs,
-            )
-        except ValidationError:
-            raise ValueError(
-                f'{test_case.raw_document!r} has type '
-                f'{type(test_case.raw_document)}, that is not what '
-                f'{to_rdf_callable} expects.',
-            )
+        actual_dataset = to_rdf_callable(
+            test_case.input,
+            **test_case.kwargs,
+        )
 
         raw_expected_quads = test_case.raw_expected_document
 
@@ -151,13 +143,13 @@ def test_to_rdf(test_case: TestCase, to_rdf):
     try:
         to_rdf(
             test_case=test_case,
-            to_rdf=yaml_ld.to_rdf,
+            to_rdf_callable=yaml_ld.to_rdf,
         )
     except (NotIsomorphic, FailureToFail):
-        try:
+        try:   # noqa: WPS505
             to_rdf(
                 test_case=test_case,
-                to_rdf=jsonld.to_rdf,
+                to_rdf_callable=jsonld.to_rdf,
             )
         except (NotIsomorphic, FailureToFail):
             pytest.skip('This test fails for pyld as well as for yaml-ld.')

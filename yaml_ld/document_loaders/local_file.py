@@ -12,12 +12,14 @@ from yaml_ld.errors import LoadingDocumentFailed, NotFound
 
 
 class LocalFileDocumentLoader(DocumentLoader):
+    """Load documents from a local file system."""
 
     def __call__(
         self,
         source: str | Path,
         options: DocumentLoaderOptions,
     ) -> PyLDResponse:
+        """Load documents from a local file system."""
         path = Path(URL(source).path)
 
         content_type = content_types.by_extension(path.suffix)
