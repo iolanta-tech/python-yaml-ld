@@ -22,7 +22,7 @@ class FromRDFOptions(BaseOptions):
 @validate_call(config=dict(arbitrary_types_allowed=True))
 def from_rdf(
     dataset: str,
-    options: FromRDFOptions = FromRDFOptions(),
+    options: FromRDFOptions = FromRDFOptions(),  # type: ignore
 ) -> JsonLdRecord:
     """Convert a RDF dataset to a YAML-LD document."""
     with except_json_ld_errors():

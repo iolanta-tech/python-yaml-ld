@@ -7,7 +7,10 @@ from documented import DocumentedError
 from pydantic import validate_call
 from urlpath import URL
 
-from yaml_ld.document_loaders.base import DocumentLoader, PyLDResponse
+from yaml_ld.document_loaders.base import (
+    DocumentLoader, PyLDResponse,
+    DocumentLoaderOptions,
+)
 
 
 @dataclass
@@ -39,8 +42,11 @@ class ChoiceBySchemeDocumentLoader(DocumentLoader):
     def __init__(self, **loaders: DocumentLoader) -> None:
         self.loaders = loaders
 
-    @validate_call(config=dict(arbitrary_types_allowed=True))
-    def __call__(self, source: str | Path, options: dict[str, Any]) -> PyLDResponse:
+    def __call__(
+        self,
+        source: str | Path,
+        options: DocumentLoaderOptions,
+    ) -> PyLDResponse:
         url = URL(source)
 
         try:

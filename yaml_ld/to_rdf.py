@@ -23,7 +23,7 @@ class ToRDFOptions(BaseOptions, ExtractAllScriptsOptions):
 @validate_call(config=dict(arbitrary_types_allowed=True))
 def to_rdf(
     document: JsonLdInput,
-    options: ToRDFOptions = ToRDFOptions(),
+    options: ToRDFOptions = ToRDFOptions(),  # type: ignore
 ) -> Dataset:
     """Convert a YAML-LD document to RDF."""
     with except_json_ld_errors():

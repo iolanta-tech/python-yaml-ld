@@ -60,7 +60,7 @@ class NotIsomorphic(DocumentedError):
     actual_graph: rdflib.Graph
     expected_graph: rdflib.Graph
 
-    def _format_graph(self, graph):
+    def _format_graph(self, graph: rdflib.Graph) -> str:
         return '\n'.join(
             f'{formatted_subject} -{formatted_predicate}-> {formatted_obj}'
             for subject, predicate, obj in graph
@@ -69,7 +69,7 @@ class NotIsomorphic(DocumentedError):
             if (formatted_obj := self._format_term(obj))
         )
 
-    def _format_term(self, term: rdflib.term.URIRef | rdflib.term.Literal) -> str:
+    def _format_term(self, term: rdflib.term.Node) -> str:
         match term:
             case rdflib.term.Literal():
                 if term.datatype:
@@ -198,7 +198,7 @@ class CallableUnexpectedlyFailed(DocumentedError):
         return import_path
 
 
-def print_diff(actual, expected):
+def print_diff(actual, expected) -> None:
     actual_string = json.dumps(actual, indent=2)
     expected_string = json.dumps(expected, indent=2)
 

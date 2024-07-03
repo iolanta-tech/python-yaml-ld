@@ -65,8 +65,8 @@ def except_json_ld_errors():
 @validate_call(config=dict(arbitrary_types_allowed=True))
 def expand(   # noqa: C901, WPS211
     document: JsonLdInput,
-    options: ExpandOptions = ExpandOptions(),
-) -> JsonLdRecord | list[JsonLdRecord]:
+    options: ExpandOptions = ExpandOptions(),  # type: ignore
+) -> list[JsonLdRecord]:
     """Expand a YAML-LD document."""
     with except_json_ld_errors():
         return jsonld.expand(

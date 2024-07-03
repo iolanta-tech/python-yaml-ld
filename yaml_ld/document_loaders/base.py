@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, TypedDict
+
+from typing_extensions import TypedDict
 
 from yaml_ld.models import JsonLdRecord
 
@@ -13,8 +14,19 @@ PyLDResponse = TypedDict(
     },
 )
 
+DocumentLoaderOptions = TypedDict(
+    'DocumentLoaderOptions',
+    {
+        'extractAllScripts': bool,
+    }
+)
+
 
 class DocumentLoader(ABC):
     @abstractmethod
-    def __call__(self, source: str | Path, options: dict[str, Any]) -> PyLDResponse:
+    def __call__(
+        self,
+        source: str | Path,
+        options: DocumentLoaderOptions,
+    ) -> PyLDResponse:
         raise NotImplementedError()

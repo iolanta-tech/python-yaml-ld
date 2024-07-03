@@ -52,7 +52,7 @@ class FrameOptions(BaseOptions, ExtractAllScriptsOptions):
 def frame(
     document: JsonLdInput,
     frame: JsonLdRecord,
-    options: FrameOptions = FrameOptions(),
+    options: FrameOptions = FrameOptions(),   # type: ignore
 ) -> JsonLdRecord:
     """Frame a YAML-LD document."""
     with except_json_ld_errors():

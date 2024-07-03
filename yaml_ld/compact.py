@@ -32,7 +32,7 @@ class CompactOptions(BaseOptions, ExtractAllScriptsOptions):
 def compact(  # noqa: WPS211
     document: JsonLdInput,
     ctx: Annotated[JsonLdRecord | None, 'Context to compact with.'],
-    options: CompactOptions = CompactOptions(),
+    options: CompactOptions = CompactOptions(),  # type: ignore
 ) -> JsonLdRecord | list[JsonLdRecord]:
     """Compact a JSON-LD document."""
     with except_json_ld_errors():
