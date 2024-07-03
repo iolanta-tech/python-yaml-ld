@@ -14,23 +14,23 @@ from yaml_ld.errors import (
     DocumentIsScalar,
     InvalidEncoding,
     LoadingDocumentFailed,
-    MappingKeyError,
+    MappingKeyError, InvalidScriptElement, UndefinedAliasFound,
 )
 from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import JsonLdRecord
 
 
+def _ensure_not_scalar(document) -> JsonLdRecord | list[JsonLdRecord]:
+    if not isinstance(document, (dict, list)):
+        raise DocumentIsScalar(document)
+
+    return document
+
+
 class YAMLDocumentParser(BaseDocumentParser):
-    def _yaml_document_from_stream(self, stream, extract_all_scripts: bool):
-        if extract_all_scripts:
-            return list(stream)
+    """Parse YAML documents."""
 
-        try:
-            return next(stream)
-        except StopIteration as stop_iteration:
-            raise LoadingDocumentFailed(path='') from stop_iteration
-
-    def __call__(
+    def __call__(   # noqa: WPS238, WPS231, WPS225, C901
         self,
         data_stream: io.TextIOBase,
         source: str,
@@ -42,11 +42,14 @@ class YAMLDocumentParser(BaseDocumentParser):
             Loader=YAMLLDLoader,
         )
 
-        try:
-            yaml_document = self._yaml_document_from_stream(
-                stream=yaml_documents_stream,
-                extract_all_scripts=options.get('extractAllScripts', False),
+        try:   # noqa: WPS225
+            return _ensure_not_scalar(
+                self._yaml_document_from_stream(
+                    stream=yaml_documents_stream,
+                    extract_all_scripts=options.get('extractAllScripts', False),
+                ),
             )
+
         except UnicodeDecodeError as unicode_decode_error:
             raise InvalidEncoding() from unicode_decode_error
 
@@ -60,14 +63,16 @@ class YAMLDocumentParser(BaseDocumentParser):
             raise LoadingDocumentFailed(path=source) from err
 
         except ComposerError as err:
-            from yaml_ld.errors import UndefinedAliasFound
             raise UndefinedAliasFound() from err
 
         except ParserError as err:
-            from yaml_ld.errors import InvalidScriptElement
             raise InvalidScriptElement() from err
 
-        if not isinstance(yaml_document, (dict, list)):
-            raise DocumentIsScalar(yaml_document)
+    def _yaml_document_from_stream(self, stream, extract_all_scripts: bool):
+        if extract_all_scripts:
+            return list(stream)
 
-        return yaml_document
+        try:
+            return next(stream)
+        except StopIteration as stop_iteration:
+            raise LoadingDocumentFailed(path='') from stop_iteration
