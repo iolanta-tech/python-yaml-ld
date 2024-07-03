@@ -12,7 +12,7 @@ class YAMLLDError(DocumentedError):
 
 @dataclass
 class PyLDError(YAMLLDError):   # type: ignore
-    """{self.message}"""
+    """{self.message}"""   # noqa: D400
 
     message: str
     code: str

@@ -31,3 +31,11 @@ dirty-equals = "^0.7.1.post0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.flakeheaven.exceptions."yaml_ld/*.py"]
+wemake-python-styleguide = [
+    # Wrong multiline string usage
+    # Conflicts with class method docstrings.
+    "-WPS462",
+]

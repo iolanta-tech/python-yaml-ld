@@ -15,7 +15,7 @@ from yaml_ld.document_parsers.base import (
 from yaml_ld.errors import (
     DocumentIsScalar,
     InvalidEncoding,
-    LoadingDocumentFailed,
+    LoadingDocumentFailed, MappingKeyError,
 )
 from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import JsonLdRecord
@@ -28,8 +28,6 @@ class YAMLDocumentParser(BaseDocumentParser):
         source: str,
         options: DocumentLoaderOptions,
     ) -> JsonLdRecord | list[JsonLdRecord]:
-
-        from yaml_ld.errors import MappingKeyError
 
         try:
             yaml_documents_stream = yaml.load_all(  # noqa: S506
