@@ -13,8 +13,10 @@ from yaml_ld.document_parsers.base import (
 from yaml_ld.errors import (
     DocumentIsScalar,
     InvalidEncoding,
+    InvalidScriptElement,
     LoadingDocumentFailed,
-    MappingKeyError, InvalidScriptElement, UndefinedAliasFound,
+    MappingKeyError,
+    UndefinedAliasFound,
 )
 from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import JsonLdRecord

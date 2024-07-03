@@ -40,3 +40,10 @@ wemake-python-styleguide = [
     # Conflicts with class method docstrings.
     "-WPS462",
 ]
+
+[tool.flakeheaven.exceptions."**/*.py"]
+wemake-python-styleguide = [
+    # Found list comprehension with multiple `if`s
+    # I happen to like those ifs!
+    "-WPS307",
+]

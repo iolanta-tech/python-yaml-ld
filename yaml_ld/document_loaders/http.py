@@ -23,8 +23,8 @@ class HTTPDocumentLoader(DocumentLoader):
         """Load documents from HTTP sources."""
         url = URL(source)
 
-        content = url.get(stream=True).raw
-        content.decode_content = True
+        raw_content = url.get(stream=True).raw
+        raw_content.decode_content = True
 
         content_type = content_types.by_extension(url.suffix)
         if content_type is None:
@@ -34,7 +34,7 @@ class HTTPDocumentLoader(DocumentLoader):
         if parser is None:
             raise LoadingDocumentFailed(path=source)
 
-        yaml_document = parser(content, str(source), options)
+        yaml_document = parser(raw_content, str(source), options)
 
         return {
             'document': yaml_document,

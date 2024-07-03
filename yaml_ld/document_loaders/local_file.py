@@ -8,7 +8,7 @@ from yaml_ld.document_loaders.base import (
     DocumentLoaderOptions,
     PyLDResponse,
 )
-from yaml_ld.errors import NotFound, LoadingDocumentFailed
+from yaml_ld.errors import LoadingDocumentFailed, NotFound
 
 
 class LocalFileDocumentLoader(DocumentLoader):
