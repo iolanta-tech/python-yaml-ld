@@ -29,6 +29,7 @@ class HTMLDocumentParser(BaseDocumentParser):
         source: str,
         options: DocumentLoaderOptions,
     ) -> JsonLdRecord | list[JsonLdRecord]:
+        """Parse HTML with LD in <script> tags."""
         loaded_html = load_html(
             input=data_stream.read(),
             url=source,

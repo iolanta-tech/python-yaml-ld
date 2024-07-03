@@ -29,7 +29,7 @@ class YAMLDocumentParser(BaseDocumentParser):
         source: str,
         options: DocumentLoaderOptions,
     ) -> JsonLdRecord | list[JsonLdRecord]:
-
+        """Parse YAML document stream into LD."""
         try:
             yaml_documents_stream = yaml.load_all(  # noqa: S506
                 stream=data_stream,

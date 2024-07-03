@@ -1,8 +1,6 @@
 import io
 from abc import abstractmethod
 
-from typing_extensions import TypedDict
-
 from yaml_ld.document_loaders.base import DocumentLoaderOptions
 from yaml_ld.models import JsonLdRecord
 
@@ -15,4 +13,5 @@ class BaseDocumentParser:
         source: str,
         options: DocumentLoaderOptions,
     ) -> JsonLdRecord | list[JsonLdRecord]:
+        """Parse raw data into Linked Data."""
         raise NotImplementedError()
