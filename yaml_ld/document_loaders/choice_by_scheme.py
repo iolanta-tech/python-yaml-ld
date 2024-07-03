@@ -14,7 +14,7 @@ from yaml_ld.document_loaders.base import (
 
 
 @dataclass
-class ProtocolNotFound(DocumentedError):
+class ProtocolNotFound(DocumentedError):  # type: ignore
     """
     Cannot choose the loader by URL protocol.
 

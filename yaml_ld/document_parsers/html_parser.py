@@ -28,7 +28,7 @@ class HTMLDocumentParser(BaseDocumentParser):
         data: io.TextIOBase,
         source: str,
         options: DocumentLoaderOptions,
-    ) -> JsonLdRecord:
+    ) -> JsonLdRecord | list[JsonLdRecord]:
         loaded_html = load_html(
             input=data.read(),
             url=source,

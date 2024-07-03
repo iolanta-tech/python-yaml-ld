@@ -8,5 +8,10 @@ from yaml_ld.models import JsonLdRecord
 
 class BaseDocumentParser:
     @abstractmethod
-    def __call__(self, data: io.TextIOBase, source: str, options: DocumentLoaderOptions) -> JsonLdRecord:
+    def __call__(
+        self,
+        data: io.TextIOBase,
+        source: str,
+        options: DocumentLoaderOptions,
+    ) -> JsonLdRecord | list[JsonLdRecord]:
         raise NotImplementedError()

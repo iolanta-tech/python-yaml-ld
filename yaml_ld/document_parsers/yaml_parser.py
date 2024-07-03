@@ -22,7 +22,12 @@ from yaml_ld.models import JsonLdRecord
 
 
 class YAMLDocumentParser(BaseDocumentParser):
-    def __call__(self, data: io.TextIOBase, source: str, options: DocumentLoaderOptions) -> JsonLdRecord:
+    def __call__(
+        self,
+        data: io.TextIOBase,
+        source: str,
+        options: DocumentLoaderOptions,
+    ) -> JsonLdRecord | list[JsonLdRecord]:
 
         from yaml_ld.errors import MappingKeyError
 

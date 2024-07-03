@@ -11,7 +11,7 @@ class YAMLLDError(DocumentedError):
 
 
 @dataclass
-class PyLDError(YAMLLDError):
+class PyLDError(YAMLLDError):   # type: ignore
     """{self.message}"""
 
     message: str
@@ -19,7 +19,7 @@ class PyLDError(YAMLLDError):
 
 
 @dataclass
-class DocumentIsScalar(YAMLLDError):
+class DocumentIsScalar(YAMLLDError):   # type: ignore
     """
     Document content MUST be sequence or mapping.
 
@@ -35,7 +35,7 @@ class DocumentIsScalar(YAMLLDError):
 
 
 @dataclass
-class LoadingDocumentFailed(YAMLLDError):
+class LoadingDocumentFailed(YAMLLDError):   # type: ignore
     """
     Document is not a valid YAML.
 
@@ -47,7 +47,7 @@ class LoadingDocumentFailed(YAMLLDError):
 
 
 @dataclass
-class NotFound(YAMLLDError):
+class NotFound(YAMLLDError):   # type: ignore
     """
     Document has not been found.
 
@@ -59,35 +59,35 @@ class NotFound(YAMLLDError):
 
 
 @dataclass
-class InvalidScriptElement(YAMLLDError):
+class InvalidScriptElement(YAMLLDError):   # type: ignore
     """HTML <script> element content is not valid YAML."""
 
     code: str = 'invalid script element'
 
 
 @dataclass
-class NoYAMLWithinHTML(YAMLLDError):
+class NoYAMLWithinHTML(YAMLLDError):   # type: ignore
     """No YAML-LD fragments found in an HTML document."""
 
     code: str = 'loading document failed'
 
 
 @dataclass
-class MappingKeyError(YAMLLDError):
+class MappingKeyError(YAMLLDError):   # type: ignore
     """A mapping key MUST be a string."""
 
     code: str = 'mapping-key-error'
 
 
 @dataclass
-class InvalidJSONLiteral(YAMLLDError):
+class InvalidJSONLiteral(YAMLLDError):   # type: ignore
     """A mapping key MUST be a string."""
 
     code: str = 'invalid JSON literal'
 
 
 @dataclass
-class InvalidEncoding(YAMLLDError):
+class InvalidEncoding(YAMLLDError):   # type: ignore
     """
     A YAML-LD document MUST be encoded in UTF-8.
 
@@ -98,21 +98,21 @@ class InvalidEncoding(YAMLLDError):
 
 
 @dataclass
-class CycleDetected(YAMLLDError):
+class CycleDetected(YAMLLDError):   # type: ignore
     """A YAML-LD document MUST NOT contain cycles."""
 
     code: str = 'loading document failed'
 
 
 @dataclass
-class UndefinedAliasFound(YAMLLDError):
+class UndefinedAliasFound(YAMLLDError):   # type: ignore
     """An undefined alias found."""
 
     code: str = 'loading document failed'
 
 
 @dataclass
-class LoadingRemoteContextFailed(YAMLLDError):
+class LoadingRemoteContextFailed(YAMLLDError):   # type: ignore
     """
     Failed to load the context.
 

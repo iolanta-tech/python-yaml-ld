@@ -10,7 +10,7 @@ PyLDResponse = TypedDict(
         'contentType': str,
         'contextUrl': str | None,
         'documentUrl': str,
-        'document': JsonLdRecord,
+        'document': JsonLdRecord | list[JsonLdRecord],
     },
 )
 

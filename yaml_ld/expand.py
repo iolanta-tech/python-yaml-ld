@@ -22,7 +22,7 @@ from yaml_ld.models import (
 )
 
 
-class ExpandOptions(BaseOptions, ExtractAllScriptsOptions):
+class ExpandOptions(BaseOptions, ExtractAllScriptsOptions):   # type: ignore
     """Options for `jsonld.expand()`."""
 
     expand_context: JsonLdRecord | None = None

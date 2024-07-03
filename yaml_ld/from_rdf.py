@@ -3,10 +3,9 @@ from pyld import jsonld
 
 from yaml_ld.expand import except_json_ld_errors
 from yaml_ld.models import BaseOptions, JsonLdRecord
-from yaml_ld.rdf import Dataset
 
 
-class FromRDFOptions(BaseOptions):
+class FromRDFOptions(BaseOptions):   # type: ignore
     """Options for converting RDF to YAML-LD."""
 
     format: str = 'application/n-quads'

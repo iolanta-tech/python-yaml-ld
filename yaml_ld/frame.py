@@ -19,7 +19,7 @@ class Embed(StrEnum):
     LINK = '@link'
 
 
-class FrameOptions(BaseOptions, ExtractAllScriptsOptions):
+class FrameOptions(BaseOptions, ExtractAllScriptsOptions):   # type: ignore
     """Options for YAML-LD framing."""
 
     expand_context: JsonLdRecord | None = None
