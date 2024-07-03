@@ -15,7 +15,8 @@ from yaml_ld.document_parsers.base import (
 from yaml_ld.errors import (
     DocumentIsScalar,
     InvalidEncoding,
-    LoadingDocumentFailed, MappingKeyError,
+    LoadingDocumentFailed,
+    MappingKeyError,
 )
 from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import JsonLdRecord
