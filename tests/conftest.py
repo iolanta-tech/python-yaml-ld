@@ -13,7 +13,7 @@ from yaml_ld.errors import YAMLLDError
 def verify_from_rdf():
     def _test(
         test_case: TestCase,
-        from_rdf: Callable,
+        from_rdf,
     ) -> None:
         if isinstance(test_case.result, str):
             try:

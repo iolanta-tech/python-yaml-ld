@@ -40,14 +40,11 @@ def _get_id(test_case: TestCase) -> str | None:
 
     See https://github.com/pytest-dev/pytest/issues/7686
     """
-    if not isinstance(test_case, TestCase):
-        return None
-
     return test_case.test
 
 
 @dataclass
-class NotIsomorphic(DocumentedError):
+class NotIsomorphic(DocumentedError):   # type: ignore
     """
     Actual RDF graph does not match expected graph.
 
@@ -96,7 +93,7 @@ class NotIsomorphic(DocumentedError):
 def to_rdf():
     def _test(
         test_case: TestCase,
-        to_rdf: Callable,
+        to_rdf,
     ) -> None:
         if isinstance(test_case.result, str):
             try:
@@ -168,15 +165,15 @@ def test_to_rdf(test_case: TestCase, to_rdf):
 
 
 @dataclass
-class CallableUnexpectedlyFailed(DocumentedError):
+class CallableUnexpectedlyFailed(DocumentedError):   # type: ignore
     """
     `{self.callable_path}()` unexpectedly failed with an exception.
 
     Args: {self.params}
     """
 
-    callable: Callable
-    params: Any
+    callable: Any    # type: ignore
+    params: Any      # type: ignore
 
     @property
     def callable_path(self):
@@ -212,7 +209,7 @@ def print_diff(actual, expected) -> None:
 
 @pytest.fixture()
 def test_against_ld_library():
-    def _test(test_case: TestCase, expand: Callable) -> None:
+    def _test(test_case: TestCase, expand) -> None:
         match test_case.result:
             case str() as error_code:
                 try:

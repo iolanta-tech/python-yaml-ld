@@ -12,7 +12,7 @@ from yaml_ld.models import (
 )
 
 
-class CompactOptions(BaseOptions, ExtractAllScriptsOptions):
+class CompactOptions(BaseOptions, ExtractAllScriptsOptions):   # type: ignore
     """Options to compact a YAML-LD document."""
 
     compact_arrays: bool = True
