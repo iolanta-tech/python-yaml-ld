@@ -8,8 +8,9 @@ from pydantic import validate_call
 from urlpath import URL
 
 from yaml_ld.document_loaders.base import (
-    DocumentLoader, PyLDResponse,
+    DocumentLoader,
     DocumentLoaderOptions,
+    PyLDResponse,
 )
 
 

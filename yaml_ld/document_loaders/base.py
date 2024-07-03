@@ -18,7 +18,7 @@ DocumentLoaderOptions = TypedDict(
     'DocumentLoaderOptions',
     {
         'extractAllScripts': bool,
-    }
+    },
 )
 
 

@@ -1,5 +1,6 @@
 import io
 from abc import abstractmethod
+
 from typing_extensions import TypedDict
 
 from yaml_ld.document_loaders.base import DocumentLoaderOptions

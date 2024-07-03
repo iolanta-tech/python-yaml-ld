@@ -11,8 +11,9 @@ from yaml.scanner import ScannerError
 
 from yaml_ld.document_loaders import content_types
 from yaml_ld.document_loaders.base import (
-    DocumentLoader, PyLDResponse,
+    DocumentLoader,
     DocumentLoaderOptions,
+    PyLDResponse,
 )
 from yaml_ld.document_parsers.html_parser import HTMLDocumentParser
 from yaml_ld.document_parsers.yaml_parser import YAMLDocumentParser
