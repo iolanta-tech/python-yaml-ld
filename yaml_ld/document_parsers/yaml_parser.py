@@ -24,14 +24,14 @@ from yaml_ld.models import JsonLdRecord
 class YAMLDocumentParser(BaseDocumentParser):
     def __call__(
         self,
-        data: io.TextIOBase,
+        data_stream: io.TextIOBase,
         source: str,
         options: DocumentLoaderOptions,
     ) -> JsonLdRecord | list[JsonLdRecord]:
 
         try:
             yaml_documents_stream = yaml.load_all(  # noqa: S506
-                stream=data,
+                stream=data_stream,
                 Loader=YAMLLDLoader,
             )
 
