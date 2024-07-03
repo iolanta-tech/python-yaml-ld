@@ -6,6 +6,8 @@ from yaml_ld.models import JsonLdRecord
 
 
 class BaseDocumentParser:
+    """Parse documents of various types into LD."""
+
     @abstractmethod
     def __call__(
         self,

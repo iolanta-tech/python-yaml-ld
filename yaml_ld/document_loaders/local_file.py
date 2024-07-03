@@ -8,7 +8,7 @@ from yaml_ld.document_loaders.base import (
     DocumentLoaderOptions,
     PyLDResponse,
 )
-from yaml_ld.errors import NotFound
+from yaml_ld.errors import NotFound, LoadingDocumentFailed
 
 
 class LocalFileDocumentLoader(DocumentLoader):
@@ -18,8 +18,6 @@ class LocalFileDocumentLoader(DocumentLoader):
         source: str | Path,
         options: DocumentLoaderOptions,
     ) -> PyLDResponse:
-        from yaml_ld.errors import LoadingDocumentFailed
-
         path = Path(URL(source).path)
 
         content_type = content_types.by_extension(path.suffix)

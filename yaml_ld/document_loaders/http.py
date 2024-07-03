@@ -9,13 +9,18 @@ from yaml_ld.document_loaders.base import (
     DocumentLoaderOptions,
     PyLDResponse,
 )
+from yaml_ld.errors import LoadingDocumentFailed
 
 
 class HTTPDocumentLoader(DocumentLoader):
+    """Load documents from HTTP sources."""
 
-    def __call__(self, source: str | Path, options: DocumentLoaderOptions) -> PyLDResponse:
-        from yaml_ld.errors import LoadingDocumentFailed
-
+    def __call__(
+        self,
+        source: str | Path,
+        options: DocumentLoaderOptions,
+    ) -> PyLDResponse:
+        """Load documents from HTTP sources."""
         url = URL(source)
 
         content = url.get(stream=True).raw
