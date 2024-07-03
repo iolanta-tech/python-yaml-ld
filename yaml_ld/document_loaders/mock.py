@@ -2,7 +2,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from yaml_ld.document_loaders.base import DocumentLoader, PyLDResponse
+from yaml_ld.document_loaders.base import (
+    DocumentLoader, PyLDResponse,
+    DocumentLoaderOptions,
+)
 
 
 @dataclass
@@ -12,6 +15,6 @@ class MockLoader(DocumentLoader):
     def __call__(
         self,
         source: str | Path,
-        options: dict[str, Any],
+        options: DocumentLoaderOptions,
     ) -> PyLDResponse:
         return self.response

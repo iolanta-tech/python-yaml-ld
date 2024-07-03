@@ -10,7 +10,7 @@ from yaml.scanner import ScannerError
 
 from yaml_ld.document_parsers.base import (
     BaseDocumentParser,
-    DocumentParserOptions,
+    DocumentLoaderOptions,
 )
 from yaml_ld.errors import (
     DocumentIsScalar,
@@ -22,7 +22,7 @@ from yaml_ld.models import JsonLdRecord
 
 
 class YAMLDocumentParser(BaseDocumentParser):
-    def __call__(self, data: io.TextIOBase, source: str, options: DocumentParserOptions) -> JsonLdRecord:
+    def __call__(self, data: io.TextIOBase, source: str, options: DocumentLoaderOptions) -> JsonLdRecord:
 
         from yaml_ld.errors import MappingKeyError
 
@@ -54,7 +54,7 @@ class YAMLDocumentParser(BaseDocumentParser):
             raise
 
         except ScannerError as err:
-            raise LoadingDocumentFailed(path=...) from err
+            raise LoadingDocumentFailed(path=source) from err
 
         except ComposerError as err:
             from yaml_ld.errors import UndefinedAliasFound

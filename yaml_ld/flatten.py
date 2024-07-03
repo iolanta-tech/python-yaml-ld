@@ -24,7 +24,7 @@ class FlattenOptions(BaseOptions, ExtractAllScriptsOptions):
 def flatten(
     document: JsonLdInput,
     ctx: JsonLdRecord | None = None,
-    options: FlattenOptions = FlattenOptions(),
+    options: FlattenOptions = FlattenOptions(),  # type: ignore
 ) -> JsonLdRecord:
     """Flatten a document."""
     with except_json_ld_errors():

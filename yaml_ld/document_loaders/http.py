@@ -4,12 +4,15 @@ from typing import Any
 from urlpath import URL
 
 from yaml_ld.document_loaders import content_types
-from yaml_ld.document_loaders.base import DocumentLoader, PyLDResponse
+from yaml_ld.document_loaders.base import (
+    DocumentLoader, PyLDResponse,
+    DocumentLoaderOptions,
+)
 
 
 class HTTPDocumentLoader(DocumentLoader):
 
-    def __call__(self, source: str | Path, options: dict[str, Any]) -> PyLDResponse:
+    def __call__(self, source: str | Path, options: DocumentLoaderOptions) -> PyLDResponse:
         from yaml_ld.errors import LoadingDocumentFailed
 
         url = URL(source)
@@ -25,7 +28,7 @@ class HTTPDocumentLoader(DocumentLoader):
         if parser is None:
             raise LoadingDocumentFailed(path=source)
 
-        yaml_document = parser(content, source, options)
+        yaml_document = parser(content, str(source), options)
 
         return {
             'document': yaml_document,

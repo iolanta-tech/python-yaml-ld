@@ -1,17 +1,12 @@
 import io
 from abc import abstractmethod
-from typing import Any, TypedDict
+from typing_extensions import TypedDict
 
+from yaml_ld.document_loaders.base import DocumentLoaderOptions
 from yaml_ld.models import JsonLdRecord
-
-
-DocumentParserOptions = TypedDict(
-    'DocumentParserOptions',
-    {}
-)
 
 
 class BaseDocumentParser:
     @abstractmethod
-    def __call__(self, data: io.TextIOBase, source: str, options: DocumentParserOptions) -> JsonLdRecord:
+    def __call__(self, data: io.TextIOBase, source: str, options: DocumentLoaderOptions) -> JsonLdRecord:
         raise NotImplementedError()

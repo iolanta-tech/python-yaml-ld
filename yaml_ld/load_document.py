@@ -10,7 +10,7 @@ def load_document(
     base=None,
     profile=None,
     requestProfile=None,
-    options: BaseOptions = BaseOptions(),
+    options: BaseOptions = BaseOptions(),   # type: ignore
 ):
     return jsonld.load_document(
         url=url,
