@@ -373,9 +373,6 @@ def test_frame(
     test_case: TestCase,
     test_against_ld_library,
 ):
-    if test_case.test == 'basic-manifest#frame-t0001':
-        pytest.skip('FIXME: Strangely failing with a cryptic @embed error.')
-
     try:
         test_against_ld_library(
             test_case=test_case,
