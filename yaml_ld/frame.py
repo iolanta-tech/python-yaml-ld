@@ -6,15 +6,16 @@ from yaml_ld.models import (
     BaseOptions,
     ExtractAllScriptsOptions,
     JsonLdInput,
-    JsonLdRecord,
+    JsonLdRecord, ExpandContextOptions,
 )
 
 
-class FrameOptions(BaseOptions, ExtractAllScriptsOptions):   # type: ignore
+class FrameOptions(   # type: ignore
+    BaseOptions,
+    ExtractAllScriptsOptions,
+    ExpandContextOptions,
+):
     """Options for YAML-LD framing."""
-
-    expand_context: JsonLdRecord | None = None
-    """A context to expand with."""
 
     embed: bool = False
     """

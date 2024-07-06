@@ -18,15 +18,16 @@ from yaml_ld.models import (
     BaseOptions,
     ExtractAllScriptsOptions,
     JsonLdInput,
-    JsonLdRecord,
+    JsonLdRecord, ExpandContextOptions,
 )
 
 
-class ExpandOptions(BaseOptions, ExtractAllScriptsOptions):   # type: ignore
+class ExpandOptions(   # type: ignore
+    BaseOptions,
+    ExtractAllScriptsOptions,
+    ExpandContextOptions,
+):
     """Options for `jsonld.expand()`."""
-
-    expand_context: JsonLdRecord | None = None
-    """A context to expand with."""
 
 
 @contextlib.contextmanager

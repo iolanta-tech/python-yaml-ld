@@ -8,11 +8,15 @@ from yaml_ld.models import (
     BaseOptions,
     ExtractAllScriptsOptions,
     JsonLdInput,
-    JsonLdRecord,
+    JsonLdRecord, ExpandContextOptions,
 )
 
 
-class CompactOptions(BaseOptions, ExtractAllScriptsOptions):   # type: ignore
+class CompactOptions(   # type: ignore
+    BaseOptions,
+    ExtractAllScriptsOptions,
+    ExpandContextOptions,
+):
     """Options to compact a YAML-LD document."""
 
     compact_arrays: bool = True
@@ -20,9 +24,6 @@ class CompactOptions(BaseOptions, ExtractAllScriptsOptions):   # type: ignore
 
     graph: bool = False
     """True to always output a top-level graph."""
-
-    expand_context: JsonLdRecord | None = None
-    """A context to expand with."""
 
     skip_expansion: bool = False
     """True to skip the expansion process, False to include it."""

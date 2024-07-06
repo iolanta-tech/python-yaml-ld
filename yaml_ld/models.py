@@ -44,6 +44,15 @@ class ExtractAllScriptsOptions(BaseModel):    # type: ignore
     """
 
 
+class ExpandContextOptions(BaseModel):    # type: ignore
+    """Options flag to extract all scripts or not."""
+
+    expand_context: JsonLdRecord | str | Path | URL | None = None
+    """A context to expand with."""
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+
 def _default_document_loader():
     from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
     return DEFAULT_DOCUMENT_LOADER
