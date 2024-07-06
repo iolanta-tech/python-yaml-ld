@@ -18,28 +18,20 @@ class RemoteDocument(TypedDict):
     profile: str
 
 
-# https://w3c.github.io/json-ld-api/#dom-jsonldrecord
-JsonLdInput = JsonLdRecord | Sequence[JsonLdRecord] | str | Path | URL | RemoteDocument
+JsonLdInput = (
+    JsonLdRecord | Sequence[JsonLdRecord] | str | Path | URL | RemoteDocument
+)
+"""
+Input for `expand()`, `compact()` and other functions.
+
+[Specification](https://w3c.github.io/json-ld-api/#dom-jsonldrecord)
+"""
 
 
 ExtractAllScripts = Annotated[
     bool,
     'Extract all JSON-LD script elements, as opposed to only the first one.',
 ]
-
-
-class DocumentType(str, Enum):
-    """Document type."""
-
-    YAML = 'yaml'
-    HTML = 'html'
-
-
-class ProcessingMode(str, Enum):  # noqa: WPS600
-    """JSON-LD API version."""
-
-    JSON_LD_1_0 = 'json-ld-1.0'  # noqa: WPS114, WPS115
-    JSON_LD_1_1 = 'json-ld-1.1'  # noqa: WPS114, WPS115
 
 
 class ExtractAllScriptsOptions(BaseModel):    # type: ignore
