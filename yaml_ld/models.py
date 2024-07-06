@@ -18,7 +18,9 @@ class RemoteDocument(TypedDict):
     profile: str
 
 
-JsonLdInput = JsonLdRecord | Sequence[JsonLdRecord] | str | Path | URL | RemoteDocument
+JsonLdInput = (
+    JsonLdRecord | Sequence[JsonLdRecord] | str | Path | URL | RemoteDocument
+)
 """
 Input for `expand()`, `compact()` and other functions.
 
@@ -30,13 +32,6 @@ ExtractAllScripts = Annotated[
     bool,
     'Extract all JSON-LD script elements, as opposed to only the first one.',
 ]
-
-
-class DocumentType(str, Enum):
-    """Document type."""
-
-    YAML = 'yaml'
-    HTML = 'html'
 
 
 class ExtractAllScriptsOptions(BaseModel):    # type: ignore

@@ -41,6 +41,17 @@ wemake-python-styleguide = [
     "-WPS462",
 ]
 
+[tool.flakeheaven.exceptions."yaml_ld/models.py"]
+wemake-python-styleguide = [
+    # Found statement that has no effect
+    # This conflicts with variable docstrings.
+    "-WPS428",
+
+    # Wrong multiline string usage
+    # This conflicts with variable docstrings.
+    "-WPS462",
+]
+
 [tool.flakeheaven.exceptions."**/*.py"]
 wemake-python-styleguide = [
     # Found list comprehension with multiple `if`s
