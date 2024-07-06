@@ -58,3 +58,11 @@ wemake-python-styleguide = [
     # I happen to like those ifs!
     "-WPS307",
 ]
+
+
+[tool.flakeheaven.exceptions."**/*.md"]
+flake8-eradicate = [
+    # Found commented out code
+    # Well that's how Markdown linting works
+    "-E800",
+]
