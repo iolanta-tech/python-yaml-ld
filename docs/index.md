@@ -23,11 +23,17 @@ YAML-LD is a YAML-based serialization for Linked Data, drawing inspiration from 
 
     Expand a document.
 
--   :fontawesome-solid-compress:{ .lg .middle } __[`compact()`](compact/)__
+-   :compression:{ .lg .middle } __[`compact()`](compact/)__
 
     ---
 
     Compact a document.
+
+-   :material-train-car-flatbed:{ .lg .middle } __[`flatten()`](flatten/)__
+
+    ---
+
+    Flatten a document.
 
 -   :material-graph:{ .lg .middle } __[`to_rdf()`](to-rdf/)__
 
