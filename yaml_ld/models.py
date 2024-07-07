@@ -16,8 +16,16 @@ class RemoteDocument(TypedDict):
     profile: str
 
 
+URI = str | URL | Path
+"""
+A Universal Resource Identifier can be represented as a `Path` or as a `URL`.
+
+Or, it can be a `str`, and we will try to automatically identify what that is.
+"""
+
+
 JsonLdInput = (
-    JsonLdRecord | Sequence[JsonLdRecord] | str | Path | URL | RemoteDocument
+    JsonLdRecord | Sequence[JsonLdRecord] | URI | RemoteDocument
 )
 """
 Input for `expand()`, `compact()` and other functions.
@@ -25,7 +33,7 @@ Input for `expand()`, `compact()` and other functions.
 [Specification](https://w3c.github.io/json-ld-api/#dom-jsonldrecord)
 """
 
-JsonLdContext = JsonLdRecord | list[JsonLdRecord | str] | str
+JsonLdContext = JsonLdRecord | list[JsonLdRecord | URI] | URI
 """
 The `JsonLdContext` interface is used to refer to a value that may be a
 `JsonLdRecord`, a sequence of `JsonLdRecord`-s, or a string representing an IRI,
@@ -54,7 +62,7 @@ class ExtractAllScriptsOptions(BaseModel):    # type: ignore
 class ExpandContextOptions(BaseModel):    # type: ignore
     """Options flag to extract all scripts or not."""
 
-    expand_context: JsonLdRecord | str | Path | URL | None = None
+    expand_context: JsonLdRecord | URI | None = None
     """A context to expand with."""
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
@@ -70,7 +78,7 @@ def _default_document_loader():
 class BaseOptions(BaseModel):   # type: ignore
     """Base options shared by all YAML-LD API methods."""
 
-    base: str | Path | None = None
+    base: URI | None = None
     """The base IRI to use."""
 
     document_loader: Annotated[  # type: ignore

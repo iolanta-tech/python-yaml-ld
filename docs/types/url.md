@@ -1,5 +1,5 @@
 ---
-title: urlpath.URL
+title: yarl.URL
 ---
 
-::: urlpath.URL
+::: yarl.URL

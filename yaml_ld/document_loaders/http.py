@@ -10,7 +10,7 @@ from yaml_ld.document_loaders.base import (
     PyLDResponse,
 )
 from yaml_ld.errors import LoadingDocumentFailed
-
+from yaml_ld.models import URI
 
 # Default `requests` timeout. Chosen arbitrarily.
 DEFAULT_TIMEOUT = 30
@@ -21,7 +21,7 @@ class HTTPDocumentLoader(DocumentLoader):
 
     def __call__(
         self,
-        source: str | Path,
+        source: URI,
         options: DocumentLoaderOptions,
     ) -> PyLDResponse:
         """Load documents from HTTP sources."""
