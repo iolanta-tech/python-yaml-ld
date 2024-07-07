@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "python-yaml-ld"
+name = "yaml-ld"
 version = "0.1.0"
 description = "YAML-LD for Python"
 authors = ["Anatoly Scherbakov <altaisoft@gmail.com>"]
