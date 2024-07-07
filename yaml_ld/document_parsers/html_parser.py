@@ -1,10 +1,10 @@
 import io
 from dataclasses import dataclass
-from typing import Callable, Iterable
+from typing import Iterable
 
-import lxml
+import lxml  # noqa: S410
 import yaml
-from pyld.jsonld import JsonLdError, _is_array, parse_url, prepend_base
+from pyld.jsonld import JsonLdError, parse_url, prepend_base
 
 from yaml_ld.document_loaders import content_types
 from yaml_ld.document_loaders.content_types import ParserNotFound
@@ -19,11 +19,14 @@ from yaml_ld.models import JsonLdRecord
 
 @dataclass
 class Script:
+    """HTML <script> tag."""
+
     content_type: str
     content: str
 
 
 class HTMLDocumentParser(BaseDocumentParser):
+    """Parse HTML documents, specifically their <script> tags."""
 
     def _parse_script_content(self, content: str):
         return list(
@@ -33,30 +36,14 @@ class HTMLDocumentParser(BaseDocumentParser):
             ),
         )
 
-    def extract_script_tags(
+    def extract_script_tags(   # noqa: C901
         self,
         input,
         url,
         profile,
         options,
     ) -> Iterable[Script]:
-        """
-        Load one or more script tags from an HTML source.
-        Unescapes and uncomments input, returns the internal representation.
-        Returns base through options
-
-        :param input: the document to parse.
-        :param url: the original URL of the document.
-        :param profile: When the resulting `contentType` is `text/html` or `application/xhtml+xml`,
-            this option determines the profile to use for selecting a JSON-LD script elements.
-        :param requestProfile: One or more IRIs to use in the request as a profile parameter.
-        :param options: the options to use.
-            [base] used for setting returning the base determined by the document.
-            [extractAllScripts] True to extract all JSON-LD script elements
-            from HTML, False to extract just the first.
-
-        :return: the extracted JSON.
-        """
+        """Load one or more script tags from an HTML source."""
         document = lxml.html.fromstring(input)
         # potentially update options[:base]
         html_base = document.xpath('/html/head/base/@href')
@@ -121,10 +108,18 @@ class HTMLDocumentParser(BaseDocumentParser):
         except StopIteration:
             raise ValueError(f'No script tags found for {source}')
 
-    def parsed_documents_stream(self, scripts: Iterable[Script], source: str, options: DocumentLoaderOptions) -> Iterable[JsonLdRecord]:
+    def parsed_documents_stream(
+        self,
+        scripts: Iterable[Script],
+        source: str,
+        options: DocumentLoaderOptions,
+    ) -> Iterable[JsonLdRecord]:
+        """Parse each of the given scripts and emit a stream of LD documents."""
         for script in scripts:
             try:
-                parser = content_types.parser_by_content_type(script.content_type)
+                parser = content_types.parser_by_content_type(
+                    script.content_type,
+                )
             except ParserNotFound:
                 continue
 
