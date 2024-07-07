@@ -1,7 +1,6 @@
 from pathlib import Path
-from typing import Any
 
-import requests  # type: ignore
+import requests
 from yarl import URL
 
 from yaml_ld.document_loaders import content_types
@@ -11,6 +10,10 @@ from yaml_ld.document_loaders.base import (
     PyLDResponse,
 )
 from yaml_ld.errors import LoadingDocumentFailed
+
+
+# Default `requests` timeout. Chosen arbitrarily.
+DEFAULT_TIMEOUT = 30
 
 
 class HTTPDocumentLoader(DocumentLoader):
@@ -24,7 +27,11 @@ class HTTPDocumentLoader(DocumentLoader):
         """Load documents from HTTP sources."""
         url = URL(str(source))
 
-        raw_content = requests.get(url, stream=True).raw
+        raw_content = requests.get(
+            str(url),
+            stream=True,
+            timeout=DEFAULT_TIMEOUT,
+        ).raw
         raw_content.decode_content = True
 
         content_type = content_types.by_extension(url.suffix)

@@ -1,9 +1,7 @@
-from enum import Enum
 from pathlib import Path
 from typing import Annotated, Any, Sequence
 
-from pydantic import BaseModel, ConfigDict, Field
-from pydantic.alias_generators import to_camel
+from pydantic import BaseModel, ConfigDict, Field, alias_generators
 from typing_extensions import TypedDict
 from yarl import URL
 
@@ -83,7 +81,7 @@ class BaseOptions(BaseModel):   # type: ignore
 
     model_config = ConfigDict(
         populate_by_name=True,
-        alias_generator=to_camel,
+        alias_generator=alias_generators.to_camel,
         arbitrary_types_allowed=True,
     )
 

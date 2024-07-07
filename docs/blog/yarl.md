@@ -11,7 +11,7 @@ hide: [toc]
 
 We use `URL` class from `urlpath` library a lot. It automates URL manipulations.
 
-```python title="grep --include '*.py' -R URL yaml_ld | head"
+```bash title="grep --include '*.py' -R URL yaml_ld | head"
 yaml_ld/string_as_url_or_path.py:from urlpath import URL
 yaml_ld/string_as_url_or_path.py:def as_url_or_path(raw: str) -> URL | Path:
 yaml_ld/string_as_url_or_path.py:    """Interpret a raw string as a URL or a local disk path."""

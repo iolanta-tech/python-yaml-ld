@@ -35,7 +35,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 
-[tool.flakeheaven.exceptions."**/*.py"]
+[tool.flakeheaven.exceptions."**.py"]
 wemake-python-styleguide = [
     # Wrong multiline string usage
     # Conflicts with class method docstrings.
@@ -62,15 +62,13 @@ wemake-python-styleguide = [
     "-WPS115",
 ]
 
-[tool.flakeheaven.exceptions."**/*.md"]
+[tool.flakeheaven.exceptions."**.md"]
 flake8-eradicate = [
     # Found commented out code
     # Well that's how Markdown linting works
     "-E800",
 ]
 
-
-[tool.flakeheaven.exceptions."docs/blog/yarl.md"]
 pycodestyle = [
     # SyntaxError: invalid syntax
     "-E999",

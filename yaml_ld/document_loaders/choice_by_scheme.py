@@ -1,10 +1,9 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Iterable
 
 import funcy
 from documented import DocumentedError
-from pydantic import validate_call
 from yarl import URL
 
 from yaml_ld.document_loaders.base import (
