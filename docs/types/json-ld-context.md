@@ -1,5 +1,5 @@
 ---
-title: JsonLdcontext
+title: JsonLdContext
 ---
 
 ::: yaml_ld.models.JsonLdContext

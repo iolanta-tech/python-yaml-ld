@@ -39,6 +39,14 @@ wemake-python-styleguide = [
     # Wrong multiline string usage
     # Conflicts with class method docstrings.
     "-WPS462",
+
+    # Found incorrect multi-line string
+    # Conflicts with field docstrings.
+    "-WPS322",
+
+    # Found statement that has no effect
+    # Conflicts with field docstrings.
+    "-WPS428",
 ]
 
 [tool.flakeheaven.exceptions."yaml_ld/models.py"]
@@ -58,7 +66,6 @@ wemake-python-styleguide = [
     # I happen to like those ifs!
     "-WPS307",
 ]
-
 
 [tool.flakeheaven.exceptions."**/*.md"]
 flake8-eradicate = [

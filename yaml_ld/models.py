@@ -84,3 +84,6 @@ class BaseOptions(BaseModel):   # type: ignore
         alias_generator=to_camel,
         arbitrary_types_allowed=True,
     )
+
+
+DEFAULT_VALIDATE_CALL_CONFIG = ConfigDict(arbitrary_types_allowed=True)
