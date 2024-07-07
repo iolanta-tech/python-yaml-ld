@@ -4,9 +4,10 @@ from pyld import jsonld
 from yaml_ld.expand import except_json_ld_errors
 from yaml_ld.models import (
     BaseOptions,
+    ExpandContextOptions,
     ExtractAllScriptsOptions,
     JsonLdInput,
-    JsonLdRecord, ExpandContextOptions,
+    JsonLdRecord,
 )
 
 
@@ -17,10 +18,10 @@ class FrameOptions(   # type: ignore
 ):
     """Options for YAML-LD framing."""
 
-    embed: bool = False
+    embed: bool = True
     """
     Sets the value object embed flag used in the Framing Algorithm. A boolean
-    value of true sets the flag to @once, while a value of false sets the flag 
+    value of true sets the flag to @once, while a value of false sets the flag
     to @never.
     """
 
