@@ -34,31 +34,28 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 
-[tool.flakeheaven.exceptions."yaml_ld/*.py"]
+[tool.flakeheaven.exceptions."**/*.py"]
 wemake-python-styleguide = [
     # Wrong multiline string usage
     # Conflicts with class method docstrings.
     "-WPS462",
-]
 
-[tool.flakeheaven.exceptions."yaml_ld/models.py"]
-wemake-python-styleguide = [
+    # Found incorrect multi-line string
+    # Conflicts with field docstrings.
+    "-WPS322",
+
     # Found statement that has no effect
-    # This conflicts with variable docstrings.
+    # Conflicts with field docstrings.
     "-WPS428",
 
     # Wrong multiline string usage
     # This conflicts with variable docstrings.
     "-WPS462",
-]
 
-[tool.flakeheaven.exceptions."**/*.py"]
-wemake-python-styleguide = [
     # Found list comprehension with multiple `if`s
     # I happen to like those ifs!
     "-WPS307",
 ]
-
 
 [tool.flakeheaven.exceptions."**/*.md"]
 flake8-eradicate = [

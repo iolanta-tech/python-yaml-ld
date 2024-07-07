@@ -27,6 +27,15 @@ Input for `expand()`, `compact()` and other functions.
 [Specification](https://w3c.github.io/json-ld-api/#dom-jsonldrecord)
 """
 
+JsonLdContext = JsonLdRecord | list[JsonLdRecord | str] | str
+"""
+The `JsonLdContext` interface is used to refer to a value that may be a
+`JsonLdRecord`, a sequence of `JsonLdRecord`-s, or a string representing an IRI,
+which can be dereferenced to retrieve a valid JSON document.
+
+[Specification](https://w3c.github.io/json-ld-api/#dom-jsonldcontext)
+"""
+
 
 ExtractAllScripts = Annotated[
     bool,
@@ -44,8 +53,19 @@ class ExtractAllScriptsOptions(BaseModel):    # type: ignore
     """
 
 
+class ExpandContextOptions(BaseModel):    # type: ignore
+    """Options flag to extract all scripts or not."""
+
+    expand_context: JsonLdRecord | str | Path | URL | None = None
+    """A context to expand with."""
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+
 def _default_document_loader():
-    from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
+    from yaml_ld.document_loaders.default import (   # noqa: WPS433
+        DEFAULT_DOCUMENT_LOADER,
+    )
     return DEFAULT_DOCUMENT_LOADER
 
 
@@ -66,3 +86,6 @@ class BaseOptions(BaseModel):   # type: ignore
         alias_generator=to_camel,
         arbitrary_types_allowed=True,
     )
+
+
+DEFAULT_VALIDATE_CALL_CONFIG = ConfigDict(arbitrary_types_allowed=True)
