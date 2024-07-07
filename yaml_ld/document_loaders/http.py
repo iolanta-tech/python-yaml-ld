@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Any
 
+import requests
 from yarl import URL
 
 from yaml_ld.document_loaders import content_types
@@ -23,7 +24,7 @@ class HTTPDocumentLoader(DocumentLoader):
         """Load documents from HTTP sources."""
         url = URL(source)
 
-        raw_content = url.get(stream=True).raw
+        raw_content = requests.get(url, stream=True).raw
         raw_content.decode_content = True
 
         content_type = content_types.by_extension(url.suffix)
