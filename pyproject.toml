@@ -27,7 +27,7 @@ mkdocs-blogging-plugin = "^2.2.11"
 mkdocstrings-python = "^1.10.5"
 black = "^24.4.2"
 dirty-equals = "^0.7.1.post0"
-iolanta = "^1.0.19"
+iolanta = ">=1.0.24"
 types-requests = "^2.32.0.20240622"
 
 [build-system]

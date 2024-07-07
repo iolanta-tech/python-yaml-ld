@@ -154,6 +154,17 @@ jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
 uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
+name = "boltons"
+version = "24.0.0"
+description = "When they're not builtins, they're boltons."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "boltons-24.0.0-py3-none-any.whl", hash = "sha256:9618695a6ec4f50412e7072e5d78910a00b4111d0b9b549e4a3d60bc321e7807"},
+    {file = "boltons-24.0.0.tar.gz", hash = "sha256:7153feccaea1ff2e1472f68d4b57fadb796a2ee49d29f638f1c9cd8fb5ebd916"},
+]
+
+[[package]]
 name = "bracex"
 version = "2.4"
 description = "Bash style brace expander."
@@ -1031,16 +1042,17 @@ files = [
 
 [[package]]
 name = "iolanta"
-version = "1.0.19"
+version = "1.0.24"
 description = "Semantic Web browser"
 optional = false
-python-versions = ">=3.10,<4.0"
+python-versions = "<4.0,>=3.10"
 files = [
-    {file = "iolanta-1.0.19-py3-none-any.whl", hash = "sha256:e256ddcfeabbda286e32adaeacadbfda5cf99dea78f9546424f9a57bb821a82f"},
-    {file = "iolanta-1.0.19.tar.gz", hash = "sha256:a9830f4403c051538c1199cd79cb44290882a4d201598988192c6ba156823e11"},
+    {file = "iolanta-1.0.24-py3-none-any.whl", hash = "sha256:6b61020f5222a36be7cb4c5e1491b6918a3c5a709ada0564e095fe286cd48858"},
+    {file = "iolanta-1.0.24.tar.gz", hash = "sha256:1b24b155a5fb833210eaa7a0695d2e80c714f1ec45238adcdc8b60ead738a5a4"},
 ]
 
 [package.dependencies]
+boltons = ">=24.0.0,<25.0.0"
 classes = ">=0.4.0,<0.5.0"
 deepmerge = ">=0.1.1,<0.2.0"
 documented = ">=0.1.1,<0.2.0"
@@ -1050,11 +1062,15 @@ more-itertools = ">=9.0.0,<10.0.0"
 owlrl = ">=6.0.2,<7.0.0"
 PyLD = ">=2.0.3,<3.0.0"
 python-frontmatter = ">=0.5.0,<0.6.0"
-rdflib = ">=6.2.0,<7.0.0"
+rdflib = "<8.0"
 requests = ">=2.25.1,<3.0.0"
 rich = ">=13.3.1,<14.0.0"
+textual = ">=0.47.1,<0.48.0"
 typer = ">=0.9.0,<0.10.0"
-urlpath = ">=1.1.7,<2.0.0"
+yarl = ">=1.9.4"
+
+[package.extras]
+all = ["iolanta-tables (>=0.1.7,<0.2.0)"]
 
 [[package]]
 name = "isodate"
@@ -1162,6 +1178,26 @@ files = [
 
 [package.dependencies]
 typing-extensions = ">=4.0,<5.0"
+
+[[package]]
+name = "linkify-it-py"
+version = "2.0.3"
+description = "Links recognition library with FULL unicode support."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "linkify-it-py-2.0.3.tar.gz", hash = "sha256:68cda27e162e9215c17d786649d1da0021a451bdc436ef9e0fa0ba5234b9b048"},
+    {file = "linkify_it_py-2.0.3-py3-none-any.whl", hash = "sha256:6bcbc417b0ac14323382aef5c5192c0075bf8a9d6b41820a2b66371eac6b6d79"},
+]
+
+[package.dependencies]
+uc-micro-py = "*"
+
+[package.extras]
+benchmark = ["pytest", "pytest-benchmark"]
+dev = ["black", "flake8", "isort", "pre-commit", "pyproject-flake8"]
+doc = ["myst-parser", "sphinx", "sphinx-book-theme"]
+test = ["coverage", "pytest", "pytest-cov"]
 
 [[package]]
 name = "lxml"
@@ -1348,6 +1384,8 @@ files = [
 ]
 
 [package.dependencies]
+linkify-it-py = {version = ">=1,<3", optional = true, markers = "extra == \"linkify\""}
+mdit-py-plugins = {version = "*", optional = true, markers = "extra == \"plugins\""}
 mdurl = ">=0.1,<1.0"
 
 [package.extras]
@@ -1458,6 +1496,25 @@ files = [
     {file = "mccabe-0.6.1-py2.py3-none-any.whl", hash = "sha256:ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42"},
     {file = "mccabe-0.6.1.tar.gz", hash = "sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"},
 ]
+
+[[package]]
+name = "mdit-py-plugins"
+version = "0.4.1"
+description = "Collection of plugins for markdown-it-py"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "mdit_py_plugins-0.4.1-py3-none-any.whl", hash = "sha256:1020dfe4e6bfc2c79fb49ae4e3f5b297f5ccd20f010187acc52af2921e27dc6a"},
+    {file = "mdit_py_plugins-0.4.1.tar.gz", hash = "sha256:834b8ac23d1cd60cec703646ffd22ae97b7955a6d596eb1d304be1e251ae499c"},
+]
+
+[package.dependencies]
+markdown-it-py = ">=1.0.0,<4.0.0"
+
+[package.extras]
+code-style = ["pre-commit"]
+rtd = ["myst-parser", "sphinx-book-theme"]
+testing = ["coverage", "pytest", "pytest-cov", "pytest-regressions"]
 
 [[package]]
 name = "mdurl"
@@ -2374,13 +2431,13 @@ pyyaml = "*"
 
 [[package]]
 name = "rdflib"
-version = "6.3.2"
+version = "7.0.0"
 description = "RDFLib is a Python library for working with RDF, a simple yet powerful language for representing information."
 optional = false
-python-versions = ">=3.7,<4.0"
+python-versions = ">=3.8.1,<4.0.0"
 files = [
-    {file = "rdflib-6.3.2-py3-none-any.whl", hash = "sha256:36b4e74a32aa1e4fa7b8719876fb192f19ecd45ff932ea5ebbd2e417a0247e63"},
-    {file = "rdflib-6.3.2.tar.gz", hash = "sha256:72af591ff704f4caacea7ecc0c5a9056b8553e0489dd4f35a9bc52dbd41522e0"},
+    {file = "rdflib-7.0.0-py3-none-any.whl", hash = "sha256:0438920912a642c866a513de6fe8a0001bd86ef975057d6962c79ce4771687cd"},
+    {file = "rdflib-7.0.0.tar.gz", hash = "sha256:9995eb8569428059b8c1affd26b25eac510d64f5043d9ce8c84e0d0036e995ae"},
 ]
 
 [package.dependencies]
@@ -2782,6 +2839,25 @@ docs = ["django", "furo", "sphinx", "sybil (>=6)", "twisted"]
 test = ["django", "mypy", "pytest (>=7.1)", "pytest-cov", "pytest-django", "sybil (>=6)", "twisted"]
 
 [[package]]
+name = "textual"
+version = "0.47.1"
+description = "Modern Text User Interface framework"
+optional = false
+python-versions = ">=3.8,<4.0"
+files = [
+    {file = "textual-0.47.1-py3-none-any.whl", hash = "sha256:da79df2e138f6de51bda84a1ee1460936bb2ecf5527ca2d47b9b59c584323327"},
+    {file = "textual-0.47.1.tar.gz", hash = "sha256:4b82e317884bb1092f693f474c319ceb068b5a0b128b121f1aa53a2d48b4b80c"},
+]
+
+[package.dependencies]
+markdown-it-py = {version = ">=2.1.0", extras = ["linkify", "plugins"]}
+rich = ">=13.3.3"
+typing-extensions = ">=4.4.0,<5.0.0"
+
+[package.extras]
+syntax = ["tree-sitter (>=0.20.1,<0.21.0)", "tree_sitter_languages (>=1.7.0)"]
+
+[[package]]
 name = "tokenize-rt"
 version = "5.2.0"
 description = "A wrapper around the stdlib `tokenize` which roundtrips."
@@ -2883,6 +2959,20 @@ files = [
 ]
 
 [[package]]
+name = "uc-micro-py"
+version = "1.0.3"
+description = "Micro subset of unicode data files for linkify-it-py projects."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "uc-micro-py-1.0.3.tar.gz", hash = "sha256:d321b92cff673ec58027c04015fcaa8bb1e005478643ff4a500882eaab88c48a"},
+    {file = "uc_micro_py-1.0.3-py3-none-any.whl", hash = "sha256:db1dffff340817673d7b466ec86114a9dc0e9d4d9b5ba229d9d60e5c12600cd5"},
+]
+
+[package.extras]
+test = ["coverage", "pytest", "pytest-cov"]
+
+[[package]]
 name = "urllib3"
 version = "2.2.2"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -2898,24 +2988,6 @@ brotli = ["brotli (>=1.0.9)", "brotlicffi (>=0.8.0)"]
 h2 = ["h2 (>=4,<5)"]
 socks = ["pysocks (>=1.5.6,!=1.5.7,<2.0)"]
 zstd = ["zstandard (>=0.18.0)"]
-
-[[package]]
-name = "urlpath"
-version = "1.2.0"
-description = "Object-oriented URL from `urllib.parse` and `pathlib`"
-optional = false
-python-versions = "~=3.4"
-files = [
-    {file = "urlpath-1.2.0-py3-none-any.whl", hash = "sha256:9c175c4ce014e1c25bbc20984e75b2d05597cab915c3569b5e457acff2e692ad"},
-    {file = "urlpath-1.2.0.tar.gz", hash = "sha256:e54c0c82db4894a7217772150bdbc01413794576996e7834f81d67f22359c9d0"},
-]
-
-[package.dependencies]
-requests = "*"
-
-[package.extras]
-json = ["jmespath"]
-test = ["WebOb", "jmespath"]
 
 [[package]]
 name = "watchdog"
@@ -3113,4 +3185,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4.0"
-content-hash = "982ea0a5d035ba5d7f83e88be0009d561f6907b8ac349ae7691c61a6f9c0d538"
+content-hash = "39fe21c1a3e691a6146cab09ba79879fed9e68f44b4a745434eb92457cc397c7"
