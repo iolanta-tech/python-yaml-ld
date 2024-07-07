@@ -18,10 +18,10 @@ class FrameOptions(   # type: ignore
 ):
     """Options for YAML-LD framing."""
 
-    embed: bool = False
+    embed: bool = True
     """
     Sets the value object embed flag used in the Framing Algorithm. A boolean
-    value of true sets the flag to @once, while a value of false sets the flag 
+    value of true sets the flag to @once, while a value of false sets the flag
     to @never.
     """
 
