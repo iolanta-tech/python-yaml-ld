@@ -22,7 +22,7 @@ class HTTPDocumentLoader(DocumentLoader):
         options: DocumentLoaderOptions,
     ) -> PyLDResponse:
         """Load documents from HTTP sources."""
-        url = URL(source)
+        url = URL(str(source))
 
         raw_content = requests.get(url, stream=True).raw
         raw_content.decode_content = True

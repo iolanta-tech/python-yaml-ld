@@ -48,7 +48,7 @@ class ChoiceBySchemeDocumentLoader(DocumentLoader):
         source: str | Path,
         options: DocumentLoaderOptions,
     ) -> PyLDResponse:
-        url = URL(source)
+        url = URL(str(source))
 
         try:
             loader = self.loaders[url.scheme or 'file']
