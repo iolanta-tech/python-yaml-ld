@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from typing import Iterable
 
 import lxml  # noqa: S410
-import yaml
 from pyld.jsonld import JsonLdError, parse_url, prepend_base
 
 from yaml_ld.document_loaders import content_types
@@ -13,7 +12,6 @@ from yaml_ld.document_parsers.base import (
     DocumentLoaderOptions,
 )
 from yaml_ld.errors import DocumentIsScalar
-from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import JsonLdRecord
 
 
@@ -22,19 +20,11 @@ class Script:
     """HTML <script> tag."""
 
     content_type: str
-    content: str
+    content: str   # noqa: WPS110
 
 
 class HTMLDocumentParser(BaseDocumentParser):
     """Parse HTML documents, specifically their <script> tags."""
-
-    def _parse_script_content(self, content: str):
-        return list(
-            yaml.load_all(
-                content,
-                Loader=YAMLLDLoader,
-            ),
-        )
 
     def extract_script_tags(   # noqa: C901
         self,
