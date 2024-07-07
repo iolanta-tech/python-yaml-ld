@@ -66,8 +66,8 @@ class InvalidScriptElement(YAMLLDError):   # type: ignore
 
 
 @dataclass
-class NoYAMLWithinHTML(YAMLLDError):   # type: ignore
-    """No YAML-LD fragments found in an HTML document."""
+class NoLinkedDataFoundInHTML(YAMLLDError):   # type: ignore
+    """No Linked Data fragments found in an HTML document."""
 
     code: str = 'loading document failed'
 

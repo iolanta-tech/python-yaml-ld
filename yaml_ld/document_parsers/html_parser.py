@@ -13,7 +13,7 @@ from yaml_ld.document_parsers.base import (
     BaseDocumentParser,
     DocumentLoaderOptions,
 )
-from yaml_ld.errors import DocumentIsScalar
+from yaml_ld.errors import DocumentIsScalar, NoLinkedDataFoundInHTML
 from yaml_ld.models import JsonLdRecord
 
 
@@ -54,7 +54,7 @@ class HTMLDocumentParser(BaseDocumentParser):
         try:
             return next(iter(documents))
         except StopIteration:
-            raise ValueError(f'No script tags found for {source}')
+            raise NoLinkedDataFoundInHTML()
 
     def extract_script_tags(   # noqa: C901, WPS210
         self,
