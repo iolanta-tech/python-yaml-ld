@@ -3,8 +3,8 @@ from pathlib import Path
 import more_itertools
 import pytest
 import yaml
-from yarl import URL
 from yaml.parser import ParserError
+from yarl import URL
 
 from tests.common import tests_root
 from yaml_ld.string_as_url_or_path import as_url_or_path
@@ -18,7 +18,8 @@ def test_closing_html_comment_in_yaml():
         more_itertools.consume(
             yaml.load_all(
                 source_path.read_text(),
-                Loader=yaml.SafeLoader),
+                Loader=yaml.SafeLoader,
+            ),
         )
 
 
