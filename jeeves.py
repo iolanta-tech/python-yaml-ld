@@ -1,18 +1,15 @@
 import json
 import os
-import zipfile
-from enum import Enum
-from io import BytesIO, StringIO
+from enum import StrEnum
+from io import StringIO
 from pathlib import Path
 from typing import TextIO
-from xml.etree import ElementTree
+from xml.etree import ElementTree  # noqa: S405
 
 import funcy
 import sh
 import typer
-from dominate.tags import code, details, summary, table, tbody, td, thead, tr
-from sh import ErrorReturnCode, git, pytest, tee
-from urlpath import URL
+from yarl import URL
 
 gh = sh.gh.bake(_env={**os.environ, 'NO_COLOR': '1'})
 
@@ -29,10 +26,12 @@ COMMENT_TEMPLATE = '''
 
 def update_submodule():
     """Update the `specification` submodule from GitHub."""
-    git.submodule.update('--remote', '--init', '--recursive')
+    sh.git.submodule.update('--remote', '--init', '--recursive')
 
 
-class TestStatus(str, Enum):
+class TestStatus(StrEnum):
+    """Status of a unit test."""
+
     PASSED = 'passed'
     FAILED = 'failure'
     SKIPPED = 'skipped'
@@ -63,7 +62,7 @@ def _parse_pytest_xml(xml_data: TextIO):
 def test_with_artifacts():
     """Run pytest and save the results to artifacts directory."""
     try:
-        pytest.bake(
+        sh.pytest.bake(
             color='no',
             junitxml=pytest_xml,
             cov_report='term-missing:skip-covered',
@@ -71,13 +70,13 @@ def test_with_artifacts():
         ).tests(
             _out=artifacts / 'coverage.txt',
         )
-    except ErrorReturnCode as err:
-        print(err)
-        print(err.stdout)
-        print(err.stderr)
+    except sh.ErrorReturnCode as err:
+        typer.echo(err)
+        typer.echo(err.stdout)
+        typer.echo(err.stderr)
 
 
-def ci():
+def ci():   # noqa: C901, WPS210, WPS213, WPS231
     """Run CI."""
     # Download artifact from a previous run
     previous_run = funcy.first(
@@ -150,7 +149,7 @@ def ci():
 
     try:
         post_new_comment('--edit-last')
-    except ErrorReturnCode as err:
+    except sh.ErrorReturnCode as err:
         error_text = err.stderr.decode()
         if 'no comments found for current user' in error_text:
             post_new_comment()

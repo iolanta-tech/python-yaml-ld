@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from urlpath import URL
+from yarl import URL
 
 from yaml_ld.document_loaders import content_types
 from yaml_ld.document_loaders.base import (
@@ -20,7 +20,7 @@ class LocalFileDocumentLoader(DocumentLoader):
         options: DocumentLoaderOptions,
     ) -> PyLDResponse:
         """Load documents from a local file system."""
-        path = Path(URL(source).path)
+        path = Path(URL(str(source)).path)
 
         content_type = content_types.by_extension(path.suffix)
         if content_type is None:

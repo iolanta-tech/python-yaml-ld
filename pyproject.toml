@@ -14,10 +14,10 @@ python = ">=3.10,<4.0"
 PyLD = ">=2.0.4"
 pydantic = ">=2.7.4"
 pyyaml = ">=6.0.1"
-urlpath = ">=1.2.0"
+yarl = ">=1.9.4"
 
 [tool.poetry.group.dev.dependencies]
-jeeves-yeti-pyproject = { version = "^0.2.20", markers = "python_version >= '3.10'" }
+jeeves-yeti-pyproject = { version = ">=0.2.33", markers = "python_version >= '3.10'" }
 types-pyyaml = "^6.0.12.11"
 rdflib-pyld-compat = "^0.1.0"
 lambdas = "^0.2.0"
@@ -27,14 +27,15 @@ mkdocs-blogging-plugin = "^2.2.11"
 mkdocstrings-python = "^1.10.5"
 black = "^24.4.2"
 dirty-equals = "^0.7.1.post0"
-iolanta = "^1.0.19"
+iolanta = ">=1.0.24"
+types-requests = "^2.32.0.20240622"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 
-[tool.flakeheaven.exceptions."**/*.py"]
+[tool.flakeheaven.exceptions."**.py"]
 wemake-python-styleguide = [
     # Wrong multiline string usage
     # Conflicts with class method docstrings.
@@ -55,11 +56,20 @@ wemake-python-styleguide = [
     # Found list comprehension with multiple `if`s
     # I happen to like those ifs!
     "-WPS307",
+
+    # Found upper-case constant in a class
+    # I use these for enums
+    "-WPS115",
 ]
 
-[tool.flakeheaven.exceptions."**/*.md"]
+[tool.flakeheaven.exceptions."**.md"]
 flake8-eradicate = [
     # Found commented out code
     # Well that's how Markdown linting works
     "-E800",
+]
+
+pycodestyle = [
+    # SyntaxError: invalid syntax
+    "-E999",
 ]

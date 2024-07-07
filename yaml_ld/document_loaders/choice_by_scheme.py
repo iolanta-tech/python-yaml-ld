@@ -1,11 +1,10 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Iterable
 
 import funcy
 from documented import DocumentedError
-from pydantic import validate_call
-from urlpath import URL
+from yarl import URL
 
 from yaml_ld.document_loaders.base import (
     DocumentLoader,
@@ -48,7 +47,7 @@ class ChoiceBySchemeDocumentLoader(DocumentLoader):
         source: str | Path,
         options: DocumentLoaderOptions,
     ) -> PyLDResponse:
-        url = URL(source)
+        url = URL(str(source))
 
         try:
             loader = self.loaders[url.scheme or 'file']

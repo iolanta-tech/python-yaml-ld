@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from urlpath import URL
+from yarl import URL
 
 
 def as_url_or_path(raw: str) -> URL | Path:

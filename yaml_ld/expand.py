@@ -4,7 +4,7 @@ from pathlib import Path
 
 from pydantic import validate_call
 from pyld import jsonld
-from urlpath import URL
+from yarl import URL
 
 from yaml_ld.errors import (
     CycleDetected,
