@@ -3,8 +3,8 @@
 <!--
 ![Build Status](https://github.com/iolanta-tech/python-yaml-ld/actions/workflows/main.yml/badge.svg)
 ![License](https://img.shields.io/github/license/iolanta-tech/python-yaml-ld.svg)
-![Version](https://img.shields.io/pypi/v/python-yaml-ld.svg)
-![Downloads](https://img.shields.io/pypi/dm/python-yaml-ld.svg)
+![Version](https://img.shields.io/pypi/v/yaml-ld.svg)
+![Downloads](https://img.shields.io/pypi/dm/yaml-ld.svg)
 -->
 
 ![](docs/logos/python-yaml-ld.png)
@@ -15,36 +15,28 @@ A Python implementation for handling YAML-LD documents.
 
 YAML-LD is a YAML-based serialization for Linked Data, drawing inspiration from [JSON-LD](https://json-ld.org/). It aims to bring the ease of YAML along with the structured linked data principles of JSON-LD. The [YAML-LD specification](https://json-ld.github.io/yaml-ld/spec/) provides detailed information on the structure and usage of YAML-LD.
 
+## For whom is this library?
+
+For Python developers who are interested in parsing and transforming YAML-LD data.
+
 ## Installation
 
 ```shell
-pip install python-yaml-ld
+pip install yaml-ld
 ```
 
 ## Functions
 
-### `yaml_ld.expand`
+* [`yaml_ld.expand()`](https://python-yaml-ld.iolanta.tech/expand/)
+* [`yaml_ld.compact()`](https://python-yaml-ld.iolanta.tech/compact/)
+* [`yaml_ld.flatten()`](https://python-yaml-ld.iolanta.tech/flatten/)
+* [`yaml_ld.frame()`](https://python-yaml-ld.iolanta.tech/frame/)
+* [`yaml_ld.to_rdf()`](https://python-yaml-ld.iolanta.tech/to-rdf/)
+* [`yaml_ld.from_rdf()`](https://python-yaml-ld.iolanta.tech/from-rdf/)
 
-Expands a given YAML-LD document into a standardized, expanded form following the [JSON-LD Expansion algorithm](https://www.w3.org/TR/json-ld11-api/#expansion).
+See [Docs](https://python-yaml-ld.iolanta.tech) for more details.
 
-- **Parameters**:
-  - `document` (str | bytes | Document): The YAML-LD document to expand.
-  - `base` (str | None): The base IRI to use.
-  - `context` (Document | None): A context to expand with.
-  - `extract_all_scripts` (bool): True to extract all JSON-LD script elements from HTML, False to extract just the first.
-  - `mode` (ProcessingMode): The JSON-LD processing mode (defaults to JSON-LD 1.1).
-  - `document_loader` (DocumentLoader | None): The document loader to use.
-
-### `yaml_ld.to_rdf`
-
-Converts the YAML-LD document to RDF (quads) form, enabling interoperability with other RDF tools and systems.
-
-- **Parameters**:
-  - `document` (str | bytes | Document): The YAML-LD document to convert.
-  - `base` (str | None): The base IRI to use.
-  - `document_loader` (DocumentLoader | None): The document loader to use.
-
-## Development
+## Contributing
 
 * Clone the repository
 * Set up a Python virtual environment
