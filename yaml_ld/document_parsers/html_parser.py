@@ -7,6 +7,7 @@ import yaml
 from pyld.jsonld import JsonLdError, _is_array, parse_url, prepend_base
 
 from yaml_ld.document_loaders import content_types
+from yaml_ld.document_loaders.content_types import ParserNotFound
 from yaml_ld.document_parsers.base import (
     BaseDocumentParser,
     DocumentLoaderOptions,
@@ -122,8 +123,9 @@ class HTMLDocumentParser(BaseDocumentParser):
 
     def parsed_documents_stream(self, scripts: Iterable[Script], source: str, options: DocumentLoaderOptions) -> Iterable[JsonLdRecord]:
         for script in scripts:
-            parser = content_types.parser_by_content_type(script.content_type)
-            if parser is None:
+            try:
+                parser = content_types.parser_by_content_type(script.content_type)
+            except ParserNotFound:
                 continue
 
             stream = io.StringIO(script.content)
