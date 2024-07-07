@@ -47,13 +47,13 @@ class HTMLDocumentParser(BaseDocumentParser):
         url_elements = parse_url(url)
         if url_elements.fragment:
             # FIXME: CGI decode
-            id = url_elements.fragment
-            element = document.xpath('//script[@id="%s"]' % id)
+            fragment_id = url_elements.fragment
+            element = document.xpath('//script[@id="%s"]' % fragment_id)
             if not element:
                 raise JsonLdError(
                     'No script tag found for id.',
                     'jsonld.LoadDocumentError',
-                    {'id': id}, code='loading document failed',
+                    {'id': fragment_id}, code='loading document failed',
                 )
 
             yield Script(
