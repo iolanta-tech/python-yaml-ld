@@ -11,6 +11,7 @@ from yaml_ld.document_loaders.base import (
     DocumentLoaderOptions,
     PyLDResponse,
 )
+from yaml_ld.models import URI
 
 
 @dataclass
@@ -44,9 +45,10 @@ class ChoiceBySchemeDocumentLoader(DocumentLoader):
 
     def __call__(
         self,
-        source: str | Path,
+        source: URI,
         options: DocumentLoaderOptions,
     ) -> PyLDResponse:
+        """Choose by scheme."""
         url = URL(str(source))
 
         try:

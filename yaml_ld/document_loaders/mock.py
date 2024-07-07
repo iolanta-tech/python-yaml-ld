@@ -6,6 +6,7 @@ from yaml_ld.document_loaders.base import (
     DocumentLoaderOptions,
     PyLDResponse,
 )
+from yaml_ld.models import URI
 
 
 @dataclass
@@ -14,7 +15,8 @@ class MockLoader(DocumentLoader):
 
     def __call__(
         self,
-        source: str | Path,
+        source: URI,
         options: DocumentLoaderOptions,
     ) -> PyLDResponse:
+        """Return the prepared response."""
         return self.response

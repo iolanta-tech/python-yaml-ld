@@ -9,6 +9,7 @@ from yaml_ld.document_loaders.base import (
     PyLDResponse,
 )
 from yaml_ld.errors import LoadingDocumentFailed, NotFound
+from yaml_ld.models import URI
 
 
 class LocalFileDocumentLoader(DocumentLoader):
@@ -16,7 +17,7 @@ class LocalFileDocumentLoader(DocumentLoader):
 
     def __call__(
         self,
-        source: str | Path,
+        source: URI,
         options: DocumentLoaderOptions,
     ) -> PyLDResponse:
         """Load documents from a local file system."""
