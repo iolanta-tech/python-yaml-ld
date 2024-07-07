@@ -1,16 +1,25 @@
 import io
-from typing import Any
+from dataclasses import dataclass
+from typing import Callable, Iterable
 
+import lxml
 import yaml
+from pyld.jsonld import JsonLdError, _is_array, parse_url, prepend_base
 
+from yaml_ld.document_loaders import content_types
 from yaml_ld.document_parsers.base import (
     BaseDocumentParser,
     DocumentLoaderOptions,
 )
 from yaml_ld.errors import DocumentIsScalar
-from yaml_ld.load_html import load_html
 from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import JsonLdRecord
+
+
+@dataclass
+class Script:
+    content_type: str
+    content: str
 
 
 class HTMLDocumentParser(BaseDocumentParser):
@@ -23,6 +32,66 @@ class HTMLDocumentParser(BaseDocumentParser):
             ),
         )
 
+    def extract_script_tags(
+        self,
+        input,
+        url,
+        profile,
+        options,
+    ) -> Iterable[Script]:
+        """
+        Load one or more script tags from an HTML source.
+        Unescapes and uncomments input, returns the internal representation.
+        Returns base through options
+
+        :param input: the document to parse.
+        :param url: the original URL of the document.
+        :param profile: When the resulting `contentType` is `text/html` or `application/xhtml+xml`,
+            this option determines the profile to use for selecting a JSON-LD script elements.
+        :param requestProfile: One or more IRIs to use in the request as a profile parameter.
+        :param options: the options to use.
+            [base] used for setting returning the base determined by the document.
+            [extractAllScripts] True to extract all JSON-LD script elements
+            from HTML, False to extract just the first.
+
+        :return: the extracted JSON.
+        """
+        document = lxml.html.fromstring(input)
+        # potentially update options[:base]
+        html_base = document.xpath('/html/head/base/@href')
+        if html_base:
+            # use either specified base, or document location
+            effective_base = options.get('base', url)
+            if effective_base:
+                html_base = prepend_base(effective_base, html_base[0])
+            options['base'] = html_base
+
+        url_elements = parse_url(url)
+        if url_elements.fragment:
+            # FIXME: CGI decode
+            id = url_elements.fragment
+            element = document.xpath('//script[@id="%s"]' % id)
+            if not element:
+                raise JsonLdError(
+                    'No script tag found for id.',
+                    'jsonld.LoadDocumentError',
+                    {'id': id}, code='loading document failed',
+                )
+
+            yield Script(
+                content_type=element[0].xpath('@type')[0],
+                content=element[0].text_content(),
+            )
+
+        elements = document.xpath('//script')
+
+        if options.get('extractAllScripts'):
+            for element in elements:
+                yield Script(
+                    content_type=element.xpath('@type')[0],
+                    content=element.text_content(),
+                )
+
     def __call__(
         self,
         data_stream: io.TextIOBase,
@@ -30,16 +99,42 @@ class HTMLDocumentParser(BaseDocumentParser):
         options: DocumentLoaderOptions,
     ) -> JsonLdRecord | list[JsonLdRecord]:
         """Parse HTML with LD in <script> tags."""
-        loaded_html = load_html(
+        scripts = self.extract_script_tags(
             input=data_stream.read(),
             url=source,
             profile=None,
             options=options,
-            content_type='application/ld+yaml',
-            parse_script_content=self._parse_script_content,
         )
 
-        if isinstance(loaded_html, str):
-            raise DocumentIsScalar(loaded_html)
+        documents = self.parsed_documents_stream(
+            scripts=scripts,
+            source=source,
+            options=options,
+        )
 
-        return loaded_html
+        if options.get('extractAllScripts'):
+            return list(documents)
+
+        try:
+            return next(iter(documents))
+        except StopIteration:
+            raise ValueError(f'No script tags found for {source}')
+
+    def parsed_documents_stream(self, scripts: Iterable[Script], source: str, options: DocumentLoaderOptions) -> Iterable[JsonLdRecord]:
+        for script in scripts:
+            parser = content_types.parser_by_content_type(script.content_type)
+            if parser is None:
+                continue
+
+            stream = io.StringIO(script.content)
+            document_or_array = parser(stream, source, options)
+
+            match document_or_array:
+                case list() as array:
+                    yield from array
+
+                case dict() as mapping:
+                    yield mapping
+
+                case scalar:
+                    raise DocumentIsScalar(scalar)
