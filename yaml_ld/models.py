@@ -63,7 +63,7 @@ class ExpandContextOptions(BaseModel):    # type: ignore
 
 
 def _default_document_loader():
-    from yaml_ld.document_loaders.default import (   # noqa: WPS433
+    from yaml_ld.document_loaders.default import (  # noqa: WPS433
         DEFAULT_DOCUMENT_LOADER,
     )
     return DEFAULT_DOCUMENT_LOADER

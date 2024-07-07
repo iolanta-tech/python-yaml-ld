@@ -15,10 +15,12 @@ from yaml_ld.errors import (
     PyLDError,
 )
 from yaml_ld.models import (
+    DEFAULT_VALIDATE_CALL_CONFIG,
     BaseOptions,
+    ExpandContextOptions,
     ExtractAllScriptsOptions,
     JsonLdInput,
-    JsonLdRecord, ExpandContextOptions, DEFAULT_VALIDATE_CALL_CONFIG,
+    JsonLdRecord,
 )
 
 

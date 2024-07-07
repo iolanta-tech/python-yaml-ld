@@ -4,9 +4,10 @@ from pyld import jsonld
 from yaml_ld.expand import except_json_ld_errors
 from yaml_ld.models import (
     BaseOptions,
+    ExpandContextOptions,
     ExtractAllScriptsOptions,
     JsonLdInput,
-    JsonLdRecord, ExpandContextOptions,
+    JsonLdRecord,
 )
 
 
