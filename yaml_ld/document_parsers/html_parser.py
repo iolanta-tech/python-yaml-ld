@@ -5,8 +5,10 @@ from typing import Iterable
 import lxml  # noqa: S410
 from pyld.jsonld import JsonLdError, parse_url, prepend_base
 
-from yaml_ld.document_loaders import content_types
-from yaml_ld.document_loaders.content_types import ParserNotFound
+from yaml_ld.document_loaders.content_types import (
+    ParserNotFound,
+    parser_by_content_type,
+)
 from yaml_ld.document_parsers.base import (
     BaseDocumentParser,
     DocumentLoaderOptions,
@@ -25,50 +27,6 @@ class Script:
 
 class HTMLDocumentParser(BaseDocumentParser):
     """Parse HTML documents, specifically their <script> tags."""
-
-    def extract_script_tags(   # noqa: C901
-        self,
-        html_content: str,
-        url,
-        profile,
-        options,
-    ) -> Iterable[Script]:
-        """Load one or more script tags from an HTML source."""
-        document = lxml.html.fromstring(html_content)
-        # potentially update options[:base]
-        html_base = document.xpath('/html/head/base/@href')
-        if html_base:
-            # use either specified base, or document location
-            effective_base = options.get('base', url)
-            if effective_base:
-                html_base = prepend_base(effective_base, html_base[0])
-            options['base'] = html_base
-
-        url_elements = parse_url(url)
-        if url_elements.fragment:
-            # FIXME: CGI decode
-            fragment_id = url_elements.fragment
-            element = document.xpath('//script[@id="%s"]' % fragment_id)
-            if not element:
-                raise JsonLdError(
-                    'No script tag found for id.',
-                    'jsonld.LoadDocumentError',
-                    {'id': fragment_id}, code='loading document failed',
-                )
-
-            yield Script(
-                content_type=element[0].xpath('@type')[0],
-                content=element[0].text_content(),
-            )
-
-        elements = document.xpath('//script')
-
-        if options.get('extractAllScripts'):
-            for element in elements:
-                yield Script(
-                    content_type=element.xpath('@type')[0],
-                    content=element.text_content(),
-                )
 
     def __call__(
         self,
@@ -98,6 +56,53 @@ class HTMLDocumentParser(BaseDocumentParser):
         except StopIteration:
             raise ValueError(f'No script tags found for {source}')
 
+    def extract_script_tags(   # noqa: C901, WPS210
+        self,
+        html_content: str,
+        url,
+        profile,
+        options,
+    ) -> Iterable[Script]:
+        """Load one or more script tags from an HTML source."""
+        document = lxml.html.fromstring(html_content)
+        # potentially update options[:base]
+        html_base = document.xpath('/html/head/base/@href')
+        if html_base:
+            # use either specified base, or document location
+            effective_base = options.get('base', url)
+            if effective_base:
+                html_base = prepend_base(effective_base, html_base[0])
+            options['base'] = html_base
+
+        url_elements = parse_url(url)
+        if url_elements.fragment:
+            # FIXME: CGI decode
+            fragment_id = url_elements.fragment
+            singular_element = document.xpath(
+                '//script[@id="%s"]' % fragment_id,
+            )
+            if not singular_element:
+                raise JsonLdError(
+                    'No script tag found for id.',
+                    'jsonld.LoadDocumentError',
+                    {'id': fragment_id},
+                    code='loading document failed',
+                )
+
+            yield Script(
+                content_type=singular_element[0].xpath('@type')[0],
+                content=singular_element[0].text_content(),
+            )
+
+        elements = document.xpath('//script')
+
+        if options.get('extractAllScripts'):
+            for element in elements:   # noqa: WPS526
+                yield Script(
+                    content_type=element.xpath('@type')[0],
+                    content=element.text_content(),
+                )
+
     def parsed_documents_stream(
         self,
         scripts: Iterable[Script],
@@ -107,7 +112,7 @@ class HTMLDocumentParser(BaseDocumentParser):
         """Parse each of the given scripts and emit a stream of LD documents."""
         for script in scripts:
             try:
-                parser = content_types.parser_by_content_type(
+                parser = parser_by_content_type(
                     script.content_type,
                 )
             except ParserNotFound:
