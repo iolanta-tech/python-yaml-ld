@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from types import MappingProxyType
 
 from documented import DocumentedError
 
@@ -19,13 +20,13 @@ def by_extension(extension: str) -> str | None:
     }.get(extension)
 
 
-PARSER_BY_CONTENT_TYPE = {
+PARSER_BY_CONTENT_TYPE = MappingProxyType({
     'application/json': YAMLDocumentParser,
     'application/ld+json': YAMLDocumentParser,
     'application/yaml': YAMLDocumentParser,
     'application/ld+yaml': YAMLDocumentParser,
     'text/html': HTMLDocumentParser,
-}
+})
 
 
 @dataclass
