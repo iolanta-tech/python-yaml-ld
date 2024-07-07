@@ -1,11 +1,11 @@
 ---
-title: urlpath → … as URL manipulation library
+title: urlpath → yarl as URL manipulation library
 date: 2024-07-07
 tags: [decision]
 hide: [toc]
 ---
 
-# `urlpath` → `…` as URL manipulation library
+# `urlpath` → `yarl` as URL manipulation library
 
 ## Context
 
@@ -57,3 +57,7 @@ But, [last PyPI release](https://pypi.org/project/urlpath/) of `urlpath` has bee
         </tr>
     </tbody>
 </table>
+
+## Decision
+
+Use `yarl` as a library that's current and regularly updated.
