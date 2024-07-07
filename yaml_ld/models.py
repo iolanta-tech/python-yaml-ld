@@ -29,7 +29,7 @@ Input for `expand()`, `compact()` and other functions.
 
 JsonLdContext = JsonLdRecord | list[JsonLdRecord | str] | str
 """
-The `JsonLdContext` interface is used to refer to a value that may be a 
+The `JsonLdContext` interface is used to refer to a value that may be a
 `JsonLdRecord`, a sequence of `JsonLdRecord`-s, or a string representing an IRI,
 which can be dereferenced to retrieve a valid JSON document.
 
@@ -63,7 +63,9 @@ class ExpandContextOptions(BaseModel):    # type: ignore
 
 
 def _default_document_loader():
-    from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
+    from yaml_ld.document_loaders.default import (   # noqa: WPS433
+        DEFAULT_DOCUMENT_LOADER,
+    )
     return DEFAULT_DOCUMENT_LOADER
 
 

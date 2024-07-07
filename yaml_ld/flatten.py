@@ -7,6 +7,7 @@ from yaml_ld.models import (
     ExtractAllScriptsOptions,
     JsonLdInput,
     JsonLdRecord, ExpandContextOptions, JsonLdContext,
+    DEFAULT_VALIDATE_CALL_CONFIG,
 )
 
 
@@ -21,11 +22,14 @@ class FlattenOptions(   # type: ignore
     """Compact arrays to single values when appropriate?"""
 
 
-@validate_call(config=dict(arbitrary_types_allowed=True))
+DEFAULT_FLATTEN_OPTIONS = FlattenOptions()   # type: ignore
+
+
+@validate_call(config=DEFAULT_VALIDATE_CALL_CONFIG)
 def flatten(
     document: JsonLdInput,
     ctx: JsonLdContext | None = None,
-    options: FlattenOptions = FlattenOptions(),  # type: ignore
+    options: FlattenOptions = DEFAULT_FLATTEN_OPTIONS,
 ) -> JsonLdRecord:
     """Flatten a document."""
     with except_json_ld_errors():
