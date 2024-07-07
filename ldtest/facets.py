@@ -4,7 +4,7 @@ from typing import Iterable
 
 from iolanta.facets.facet import Facet
 from rdflib import Literal, Namespace, URIRef
-from urlpath import URL
+from yarl import URL
 
 import yaml_ld
 from ldtest.models import TestCase

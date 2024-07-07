@@ -5,7 +5,7 @@ from typing import Any, Iterable
 import funcy
 from documented import DocumentedError
 from pydantic import validate_call
-from urlpath import URL
+from yarl import URL
 
 from yaml_ld.document_loaders.base import (
     DocumentLoader,

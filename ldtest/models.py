@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import funcy
-from urlpath import URL
+from yarl import URL
 
 from yaml_ld.compact import CompactOptions
 from yaml_ld.expand import ExpandOptions

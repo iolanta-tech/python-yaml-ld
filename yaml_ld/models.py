@@ -5,7 +5,7 @@ from typing import Annotated, Any, Sequence
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 from typing_extensions import TypedDict
-from urlpath import URL
+from yarl import URL
 
 JsonLdRecord = dict[str, Any]  # type: ignore
 

@@ -3,7 +3,7 @@ from pathlib import Path
 import more_itertools
 import pytest
 import yaml
-from urlpath import URL
+from yarl import URL
 from yaml.parser import ParserError
 
 from tests.common import tests_root

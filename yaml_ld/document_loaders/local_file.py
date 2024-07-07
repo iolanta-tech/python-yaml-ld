@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from urlpath import URL
+from yarl import URL
 
 from yaml_ld.document_loaders import content_types
 from yaml_ld.document_loaders.base import (

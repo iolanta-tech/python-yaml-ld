@@ -12,7 +12,7 @@ import sh
 import typer
 from dominate.tags import code, details, summary, table, tbody, td, thead, tr
 from sh import ErrorReturnCode, git, pytest, tee
-from urlpath import URL
+from yarl import URL
 
 gh = sh.gh.bake(_env={**os.environ, 'NO_COLOR': '1'})
 
