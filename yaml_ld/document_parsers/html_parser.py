@@ -28,13 +28,13 @@ class HTMLDocumentParser(BaseDocumentParser):
 
     def extract_script_tags(   # noqa: C901
         self,
-        input,
+        html_content: str,
         url,
         profile,
         options,
     ) -> Iterable[Script]:
         """Load one or more script tags from an HTML source."""
-        document = lxml.html.fromstring(input)
+        document = lxml.html.fromstring(html_content)
         # potentially update options[:base]
         html_base = document.xpath('/html/head/base/@href')
         if html_base:
@@ -78,7 +78,7 @@ class HTMLDocumentParser(BaseDocumentParser):
     ) -> JsonLdRecord | list[JsonLdRecord]:
         """Parse HTML with LD in <script> tags."""
         scripts = self.extract_script_tags(
-            input=data_stream.read(),
+            html_content=data_stream.read(),
             url=source,
             profile=None,
             options=options,
