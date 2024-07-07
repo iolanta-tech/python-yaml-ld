@@ -6,7 +6,7 @@ from yaml_ld.models import (
     BaseOptions,
     ExtractAllScriptsOptions,
     JsonLdInput,
-    JsonLdRecord, ExpandContextOptions,
+    JsonLdRecord, ExpandContextOptions, JsonLdContext,
 )
 
 
@@ -24,7 +24,7 @@ class FlattenOptions(   # type: ignore
 @validate_call(config=dict(arbitrary_types_allowed=True))
 def flatten(
     document: JsonLdInput,
-    ctx: JsonLdRecord | None = None,
+    ctx: JsonLdContext | None = None,
     options: FlattenOptions = FlattenOptions(),  # type: ignore
 ) -> JsonLdRecord:
     """Flatten a document."""

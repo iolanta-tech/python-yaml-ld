@@ -8,7 +8,7 @@ from yaml_ld.models import (
     BaseOptions,
     ExtractAllScriptsOptions,
     JsonLdInput,
-    JsonLdRecord, ExpandContextOptions,
+    JsonLdRecord, ExpandContextOptions, JsonLdContext,
 )
 
 
@@ -32,7 +32,7 @@ class CompactOptions(   # type: ignore
 @validate_call(config=dict(arbitrary_types_allowed=True))
 def compact(  # noqa: WPS211
     document: JsonLdInput,
-    ctx: Annotated[JsonLdRecord | None, 'Context to compact with.'],
+    ctx: Annotated[JsonLdContext | None, 'Context to compact with.'],
     options: CompactOptions = CompactOptions(),  # type: ignore
 ) -> JsonLdRecord | list[JsonLdRecord]:
     """Compact a JSON-LD document."""
