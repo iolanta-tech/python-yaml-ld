@@ -27,7 +27,7 @@ def parser_by_content_type_map():
     FIXME: Make this dynamic; perhaps a plugin entry point even.
     """
     # This prevents a cyclic import problem.
-    from yaml_ld.document_parsers.html_parser import (    # noqa: WPS433
+    from yaml_ld.document_parsers.html_parser import (  # noqa: WPS433
         HTMLDocumentParser,
     )
 

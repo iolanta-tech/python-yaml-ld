@@ -95,13 +95,11 @@ class HTMLDocumentParser(BaseDocumentParser):
             )
 
         elements = document.xpath('//script')
-
-        if options.get('extractAllScripts'):
-            for element in elements:   # noqa: WPS526
-                yield Script(
-                    content_type=element.xpath('@type')[0],
-                    content=element.text_content(),
-                )
+        for element in elements:   # noqa: WPS526
+            yield Script(
+                content_type=element.xpath('@type')[0],
+                content=element.text_content(),
+            )
 
     def parsed_documents_stream(
         self,
