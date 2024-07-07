@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Any
 
-import requests
+import requests    # type: ignore
 from yarl import URL
 
 from yaml_ld.document_loaders import content_types
