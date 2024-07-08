@@ -27,16 +27,18 @@ class HTTPDocumentLoader(DocumentLoader):
         """Load documents from HTTP sources."""
         url = URL(str(source))
 
-        raw_content = requests.get(
-            str(url),
-            stream=True,
-            timeout=DEFAULT_TIMEOUT,
-        ).raw
+        response = requests.get(str(url), stream=True, timeout=DEFAULT_TIMEOUT)
+        raw_content = response.raw
         raw_content.decode_content = True
 
-        content_type = content_types.by_extension(url.suffix)
+        content_type = response.headers.get('Content-Type')
+
         if content_type is None:
-            raise ValueError(f'What content type is extension {url.suffix}?')
+            content_type = content_types.by_extension(url.suffix)
+            if content_type is None:
+                raise ValueError(
+                    f'What content type is extension {url.suffix}?',
+                )
 
         parser = content_types.parser_by_content_type(content_type)
         if parser is None:

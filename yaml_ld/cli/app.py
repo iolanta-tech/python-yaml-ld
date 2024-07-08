@@ -155,6 +155,31 @@ def expand(
 
 @cli.command()
 @funcy.post_processing(console.print)
+def get(
+    input_: Annotated[
+        MaybeStr,
+        Argument(help='Path or URL. Omit to read from standard input.'),
+    ] = None,
+    base: Annotated[MaybeStr, Option(help='Base URL.')] = None,
+    output_format: Annotated[
+        OutputFormat,
+        Option(help='Format to output the data at.'),
+    ] = OutputFormat.JSON,
+):
+    """Load and display a ⋆-LD document."""
+    response = yaml_ld.load_document(
+        decode_input(input_),
+        base=base,
+    )['document']
+
+    return pretty_print(
+        document=response,
+        output_format=output_format,
+    )
+
+
+@cli.command()
+@funcy.post_processing(console.print)
 def compact(   # noqa: WPS211
     ctx: Annotated[
         str,
