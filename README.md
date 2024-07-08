@@ -9,7 +9,7 @@
 
 ![](docs/logos/python-yaml-ld.png)
 
-A Python implementation for handling YAML-LD documents.
+A Python implementation for handling YAML-LD documents. Basically, a wrapper on top of [digitalbazaar/pyld](https://github.com/digitalbazaar/pyld).
 
 ## What is YAML-LD?
 
