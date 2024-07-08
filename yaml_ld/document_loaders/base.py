@@ -3,7 +3,7 @@ from pathlib import Path
 
 from typing_extensions import TypedDict
 
-from yaml_ld.models import JsonLdRecord, URI
+from yaml_ld.models import URI, JsonLdRecord
 
 PyLDResponse = TypedDict(
     'PyLDResponse', {

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "yaml-ld"
-version = "0.1.1"
+version = "0.1.2"
 description = "YAML-LD for Python"
 authors = ["Anatoly Scherbakov <altaisoft@gmail.com>"]
 license = "MIT"
@@ -8,6 +8,9 @@ readme = "README.md"
 packages = [
  { include = "yaml_ld" }
 ]
+
+[tool.poetry.scripts]
+pyld = "yaml_ld.cli:app"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
@@ -27,7 +30,7 @@ mkdocs-blogging-plugin = "^2.2.11"
 mkdocstrings-python = "^1.10.5"
 black = "^24.4.2"
 dirty-equals = "^0.7.1.post0"
-iolanta = ">=1.0.24"
+iolanta = ">=1.0.25"
 types-requests = "^2.32.0.20240622"
 
 [build-system]
@@ -60,6 +63,10 @@ wemake-python-styleguide = [
     # Found upper-case constant in a class
     # I use these for enums
     "-WPS115",
+
+    # Found implicit string concatenation
+    # I happen to like that
+    "-WPS326",
 ]
 
 [tool.flakeheaven.exceptions."**.md"]
