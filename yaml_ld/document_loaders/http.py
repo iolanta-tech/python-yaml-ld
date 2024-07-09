@@ -50,5 +50,5 @@ class HTTPDocumentLoader(DocumentLoader):
             'document': yaml_document,
             'documentUrl': str(source),
             'contextUrl': None,
-            'contentType': 'application/ld+yaml',
+            'contentType': content_type,
         }
