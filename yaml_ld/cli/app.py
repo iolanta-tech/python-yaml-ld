@@ -103,11 +103,10 @@ def pretty_print(
 
     serialized_document = serializer(document)
 
-    return (
-        Syntax(
-            serialized_document,
-            lexer=output_format.value,
-        )
+    return Syntax(
+        serialized_document,
+        lexer=output_format.value,
+        background_color='default',
     )
 
 
@@ -131,7 +130,7 @@ def expand(
                 'embedded in HTML.'
             ),
         ),
-    ] = True,
+    ] = False,
     expand_context: Annotated[
         MaybeStr,
         Option(help='Context to expand with.'),
