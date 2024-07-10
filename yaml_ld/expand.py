@@ -6,6 +6,7 @@ from pydantic import validate_call
 from pyld import jsonld
 from yarl import URL
 
+from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
 from yaml_ld.errors import (
     CycleDetected,
     InvalidJSONLiteral,
@@ -16,11 +17,13 @@ from yaml_ld.errors import (
 )
 from yaml_ld.models import (
     DEFAULT_VALIDATE_CALL_CONFIG,
+    JsonLdInput,
+    JsonLdRecord,
+)
+from yaml_ld.options import (
     BaseOptions,
     ExpandContextOptions,
     ExtractAllScriptsOptions,
-    JsonLdInput,
-    JsonLdRecord,
 )
 
 
@@ -32,7 +35,7 @@ class ExpandOptions(   # type: ignore
     """Options for `jsonld.expand()`."""
 
 
-DEFAULT_EXPAND_OPTIONS = ExpandOptions()   # type: ignore
+DEFAULT_EXPAND_OPTIONS = ExpandOptions()
 
 
 def except_json_ld_error(err: jsonld.JsonLdError):
@@ -79,11 +82,13 @@ def expand(   # noqa: C901, WPS211
     options: ExpandOptions = DEFAULT_EXPAND_OPTIONS,
 ) -> list[JsonLdRecord]:
     """Expand a YAML-LD document."""
+    dict_options = options.model_dump(by_alias=True, exclude_none=True)
+    dict_options.setdefault('documentLoader', DEFAULT_DOCUMENT_LOADER)
+
     with except_json_ld_errors():
         return jsonld.expand(
-            input_=str(document) if isinstance(document, (URL, Path)) else document,
-            options=options.model_dump(
-                by_alias=True,
-                exclude_none=True,
-            ),
+            input_=str(document) if (
+                isinstance(document, (URL, Path))
+            ) else document,
+            options=dict_options,
         )

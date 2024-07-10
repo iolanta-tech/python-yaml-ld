@@ -1,15 +1,17 @@
 from pydantic import validate_call
 from pyld import jsonld
 
+from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
 from yaml_ld.expand import except_json_ld_errors
-from yaml_ld.models import BaseOptions, ExtractAllScriptsOptions, JsonLdInput
+from yaml_ld.models import JsonLdInput, DEFAULT_VALIDATE_CALL_CONFIG
+from yaml_ld.options import BaseOptions, ExtractAllScriptsOptions
 from yaml_ld.rdf import Dataset
 
 
 class ToRDFOptions(BaseOptions, ExtractAllScriptsOptions):   # type: ignore
     """Options for converting YAML-LD to RDF."""
 
-    format: str = 'application/n-quads'
+    format: str | None = None
     """The format to use to output a string: 'application/n-quads'
     for N-Quads."""
 
@@ -20,17 +22,20 @@ class ToRDFOptions(BaseOptions, ExtractAllScriptsOptions):   # type: ignore
     """Only 'i18n-datatype' supported."""
 
 
-@validate_call(config=dict(arbitrary_types_allowed=True))
+DEFAULT_TO_RDF_OPTIONS = ToRDFOptions()
+
+
+@validate_call(config=DEFAULT_VALIDATE_CALL_CONFIG)
 def to_rdf(
     document: JsonLdInput,
-    options: ToRDFOptions = ToRDFOptions(),  # type: ignore
+    options: ToRDFOptions = DEFAULT_TO_RDF_OPTIONS,
 ) -> Dataset:
     """Convert a YAML-LD document to RDF."""
+    dict_options = options.model_dump(by_alias=True, exclude_none=True)
+    dict_options.setdefault('documentLoader', DEFAULT_DOCUMENT_LOADER)
+
     with except_json_ld_errors():
         return jsonld.to_rdf(
             document,
-            options=options.model_dump(
-                by_alias=True,
-                exclude_defaults=True,
-            ),
+            options=dict_options,
         )

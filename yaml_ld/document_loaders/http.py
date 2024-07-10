@@ -1,9 +1,8 @@
 import io
-from functools import cached_property
+from dataclasses import dataclass, field
 
-import platformdirs
 from requests import Session
-from requests_cache import CachedHTTPResponse, CachedSession
+from requests_cache import CachedHTTPResponse
 from yarl import URL
 
 from yaml_ld.document_loaders import content_types
@@ -19,8 +18,11 @@ from yaml_ld.models import URI
 DEFAULT_TIMEOUT = 30
 
 
+@dataclass
 class HTTPDocumentLoader(DocumentLoader):
     """Load documents from HTTP sources."""
+
+    session: Session = field(default_factory=Session)
 
     def __call__(    # noqa: WPS210
         self,
@@ -65,23 +67,3 @@ class HTTPDocumentLoader(DocumentLoader):
             'contextUrl': None,
             'contentType': content_type,
         }
-
-    @cached_property
-    def session(self) -> Session:
-        """HTTP session."""
-        return Session()
-
-
-class HTTPCachedDocumentLoader(HTTPDocumentLoader):
-    """HTTP Loader with cache on the filesystem."""
-
-    @cached_property
-    def session(self) -> Session:
-        """Cached HTTP session."""
-        return CachedSession(
-            backend='filesystem',
-            cache_name=platformdirs.user_cache_dir(
-                appname='python-yaml-ld',
-                ensure_exists=True,
-            ),
-        )

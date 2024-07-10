@@ -139,7 +139,7 @@ def expand(
     """Expand a ⋆-LD document."""
     response = yaml_ld.expand(
         document=decode_input(input_),
-        options=ExpandOptions(   # type: ignore
+        options=ExpandOptions(
             base=base,
             extract_all_scripts=extract_all_scripts,
             expand_context=expand_context,
@@ -211,7 +211,7 @@ def compact(   # noqa: WPS211
     response = yaml_ld.compact(
         document=decode_input(input_),
         ctx=decode_input(ctx),
-        options=CompactOptions(   # type: ignore
+        options=CompactOptions(
             base=base,
             extract_all_scripts=extract_all_scripts,
             expand_context=expand_context,
@@ -258,7 +258,7 @@ def flatten(    # noqa: WPS211
     response = yaml_ld.flatten(
         document=decode_input(input_),
         ctx=decode_input(ctx),
-        options=FlattenOptions(   # type: ignore
+        options=FlattenOptions(
             base=base,
             extract_all_scripts=extract_all_scripts,
             expand_context=expand_context,
@@ -296,7 +296,7 @@ def to_rdf(
     """Convert a ⋆-LD document → RDF."""
     response = yaml_ld.to_rdf(
         document=decode_input(input_),
-        options=ToRDFOptions(   # type: ignore
+        options=ToRDFOptions(
             base=base,
             extract_all_scripts=extract_all_scripts,
         ),
@@ -322,8 +322,8 @@ def from_rdf(
 ):
     """Convert an RDF document → ⋆-LD form."""
     response = yaml_ld.from_rdf(
-        document=decode_input(input_),
-        options=FromRDFOptions(),   # type: ignore
+        dataset=str(decode_input(input_)),
+        options=FromRDFOptions(),
     )
 
     return pretty_print(

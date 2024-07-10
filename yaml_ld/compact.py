@@ -3,15 +3,18 @@ from typing import Annotated
 from pydantic import validate_call
 from pyld import jsonld
 
+from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
 from yaml_ld.expand import except_json_ld_errors
 from yaml_ld.models import (
     DEFAULT_VALIDATE_CALL_CONFIG,
-    BaseOptions,
-    ExpandContextOptions,
-    ExtractAllScriptsOptions,
     JsonLdContext,
     JsonLdInput,
     JsonLdRecord,
+)
+from yaml_ld.options import (
+    BaseOptions,
+    ExpandContextOptions,
+    ExtractAllScriptsOptions,
 )
 
 
@@ -32,7 +35,7 @@ class CompactOptions(   # type: ignore
     """True to skip the expansion process, False to include it."""
 
 
-DEFAULT_COMPACT_OPTIONS = CompactOptions()   # type: ignore
+DEFAULT_COMPACT_OPTIONS = CompactOptions()
 
 
 @validate_call(config=DEFAULT_VALIDATE_CALL_CONFIG)
@@ -42,9 +45,12 @@ def compact(  # noqa: WPS211
     options: CompactOptions = DEFAULT_COMPACT_OPTIONS,
 ) -> JsonLdRecord | list[JsonLdRecord]:
     """Compact a JSON-LD document."""
+    dict_options = options.model_dump(by_alias=True, exclude_none=True)
+    dict_options.setdefault('documentLoader', DEFAULT_DOCUMENT_LOADER)
+
     with except_json_ld_errors():
         return jsonld.compact(
             input_=str(document),
             ctx=ctx,
-            options=options.model_dump(by_alias=True),
+            options=dict_options,
         )
