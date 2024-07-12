@@ -31,7 +31,7 @@ class LocalFileDocumentLoader(DocumentLoader):
             raise LoadingDocumentFailed(path=path)
 
         try:
-            with path.open(mode='b') as data_stream:
+            with path.open(mode='rb') as data_stream:
                 yaml_document = parser(
                     data_stream=data_stream,   # type: ignore
                     source=str(source),

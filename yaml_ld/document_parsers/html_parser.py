@@ -2,6 +2,7 @@ import io
 from dataclasses import dataclass
 from typing import Iterable
 
+import funcy
 import lxml  # noqa: S410
 from pyld.jsonld import JsonLdError, parse_url, prepend_base
 
@@ -35,8 +36,9 @@ class HTMLDocumentParser(BaseDocumentParser):
         options: DocumentLoaderOptions,
     ) -> JsonLdRecord | list[JsonLdRecord]:
         """Parse HTML with LD in <script> tags."""
+        html_content = data_stream.read()
         scripts = self.extract_script_tags(
-            html_content=data_stream.read(),
+            html_content=html_content,
             url=source,
             profile=None,
             options=options,
@@ -54,7 +56,7 @@ class HTMLDocumentParser(BaseDocumentParser):
         try:
             return next(iter(documents))
         except StopIteration:
-            raise NoLinkedDataFoundInHTML()
+            raise NoLinkedDataFoundInHTML(html=html_content)
 
     def extract_script_tags(   # noqa: C901, WPS210
         self,
@@ -96,10 +98,11 @@ class HTMLDocumentParser(BaseDocumentParser):
 
         elements = document.xpath('//script')
         for element in elements:   # noqa: WPS526
-            yield Script(
-                content_type=element.xpath('@type')[0],
-                content=element.text_content(),
-            )
+            if content_type := funcy.first(element.xpath('@type')):
+                yield Script(
+                    content_type=content_type,
+                    content=element.text_content(),
+                )
 
     def parsed_documents_stream(
         self,
