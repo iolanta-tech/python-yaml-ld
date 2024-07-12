@@ -8,12 +8,14 @@ from yarl import URL
 JsonLdRecord = dict[str, Any]  # type: ignore
 
 
-class RemoteDocument(TypedDict):
+class RemoteDocument(TypedDict, total=False):
+    """Specification of the remote document."""
+
     contentType: str
-    contextUrl: str
-    document: Any
+    contextUrl: str | None
+    document: JsonLdRecord | list[JsonLdRecord]
     documentUrl: str
-    profile: str
+    profile: str | None
 
 
 URI = str | URL | Path

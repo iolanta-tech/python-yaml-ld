@@ -4,19 +4,20 @@ from pathlib import Path
 from yaml_ld.document_loaders.base import (
     DocumentLoader,
     DocumentLoaderOptions,
-    PyLDResponse,
 )
-from yaml_ld.models import URI
+from yaml_ld.models import URI, RemoteDocument
 
 
 @dataclass
 class MockLoader(DocumentLoader):
-    response: PyLDResponse
+    """Mock loader returning the response specified as argument."""
+
+    response: RemoteDocument
 
     def __call__(
         self,
         source: URI,
         options: DocumentLoaderOptions,
-    ) -> PyLDResponse:
+    ) -> RemoteDocument:
         """Return the prepared response."""
         return self.response
