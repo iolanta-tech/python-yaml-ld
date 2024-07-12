@@ -49,6 +49,8 @@ class ParserNotFound(DocumentedError):   # type: ignore
 
 def parser_by_content_type(content_type: str) -> BaseDocumentParser:
     """Find a parser based on content type."""
+    content_type = content_type.removesuffix('; charset=UTF-8')
+
     try:
         return parser_by_content_type_map()[content_type]()
     except KeyError:
