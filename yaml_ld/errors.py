@@ -80,6 +80,7 @@ class NoLinkedDataFoundInHTML(YAMLLDError):   # type: ignore
 
     @property
     def html_text(self):
+        """Format HTML text for printing."""
         return self.html.decode()
 
 

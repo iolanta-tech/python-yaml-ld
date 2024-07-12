@@ -18,7 +18,8 @@ from yaml_ld.models import URI, RemoteDocument
 DEFAULT_TIMEOUT = 30
 
 LINK_PATTERN = re.compile(
-    r'<(?P<relative_link>[^>]+)>; rel="alternate"; type="(?P<content_type>[^"]+)"'
+    '<(?P<relative_link>[^>]+)>; rel="alternate"; '
+    'type="(?P<content_type>[^"]+)"',
 )
 
 
@@ -84,7 +85,9 @@ class HTTPDocumentLoader(DocumentLoader):
         options: DocumentLoaderOptions,
     ) -> RemoteDocument | None:
         """Follow Link header."""
-        from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
+        from yaml_ld.document_loaders.default import (   # noqa: WPS433
+            DEFAULT_DOCUMENT_LOADER,
+        )
 
         response = re.match(LINK_PATTERN, link)
         if response:
