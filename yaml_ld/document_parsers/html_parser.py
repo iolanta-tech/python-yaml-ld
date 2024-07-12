@@ -30,7 +30,7 @@ class HTMLDocumentParser(BaseDocumentParser):
 
     def __call__(
         self,
-        data_stream: io.TextIOBase,
+        data_stream: io.BytesIO,
         source: str,
         options: DocumentLoaderOptions,
     ) -> JsonLdRecord | list[JsonLdRecord]:
@@ -58,13 +58,13 @@ class HTMLDocumentParser(BaseDocumentParser):
 
     def extract_script_tags(   # noqa: C901, WPS210
         self,
-        html_content: str,
+        html_content: bytes,
         url,
         profile,
         options,
     ) -> Iterable[Script]:
         """Load one or more script tags from an HTML source."""
-        document = lxml.html.fromstring(html_content)
+        document = lxml.html.fromstring(html_content.decode())
         # potentially update options[:base]
         html_base = document.xpath('/html/head/base/@href')
         if html_base:
@@ -116,8 +116,12 @@ class HTMLDocumentParser(BaseDocumentParser):
             except ParserNotFound:
                 continue
 
-            stream = io.StringIO(script.content)
-            document_or_array = parser(stream, source, options)
+            stream = io.BytesIO(script.content.encode())
+            document_or_array = parser(
+                data_stream=stream,
+                source=source,
+                options=options,
+            )
 
             match document_or_array:
                 case list() as array:

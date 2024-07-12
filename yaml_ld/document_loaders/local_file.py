@@ -31,8 +31,8 @@ class LocalFileDocumentLoader(DocumentLoader):
             raise LoadingDocumentFailed(path=path)
 
         try:
-            with path.open() as f:
-                yaml_document = parser(f, str(source), options)
+            with path.open(mode='b') as f:
+                yaml_document = parser(f, str(source), options)   # type: ignore
         except FileNotFoundError as file_not_found:
             raise NotFound(path) from file_not_found
 

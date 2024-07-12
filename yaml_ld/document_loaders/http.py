@@ -1,6 +1,8 @@
 import io
+import re
 from dataclasses import dataclass, field
 
+from pyld.jsonld import prepend_base
 from requests import Session
 from yarl import URL
 
@@ -14,6 +16,10 @@ from yaml_ld.models import URI, RemoteDocument
 
 # Default `requests` timeout. Chosen arbitrarily.
 DEFAULT_TIMEOUT = 30
+
+LINK_PATTERN = re.compile(
+    r'<(?P<relative_link>[^>]+)>; rel="alternate"; type="(?P<content_type>[^"]+)"'
+)
 
 
 @dataclass
@@ -35,6 +41,16 @@ class HTTPDocumentLoader(DocumentLoader):
             timeout=DEFAULT_TIMEOUT,
         )
 
+        if link := response.headers.get('Link'):
+            follow_result = self.follow_link_header(
+                source=source,
+                link=link,
+                options=options,
+            )
+
+            if follow_result:
+                return follow_result
+
         content_type = response.headers.get('Content-Type')
 
         if content_type is None:
@@ -49,7 +65,7 @@ class HTTPDocumentLoader(DocumentLoader):
             raise LoadingDocumentFailed(path=source)
 
         yaml_document = parser(
-            data_stream=io.StringIO(response.text),
+            data_stream=io.BytesIO(response.content),
             source=str(source),
             options=options,
         )
@@ -60,3 +76,23 @@ class HTTPDocumentLoader(DocumentLoader):
             'contextUrl': None,
             'contentType': content_type,
         }
+
+    def follow_link_header(
+        self,
+        source: URI,
+        link: str,
+        options: DocumentLoaderOptions,
+    ) -> RemoteDocument | None:
+        """Follow Link header."""
+        from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
+
+        response = re.match(LINK_PATTERN, link)
+        if response:
+            relative_url, content_type = response.groups()
+            url = prepend_base(str(source), relative_url)
+            return DEFAULT_DOCUMENT_LOADER(
+                source=url,
+                options=options,
+            )
+
+        return None

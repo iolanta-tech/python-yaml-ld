@@ -11,7 +11,7 @@ class BaseDocumentParser:
     @abstractmethod
     def __call__(
         self,
-        data_stream: io.TextIOBase,
+        data_stream: io.BytesIO,
         source: str,
         options: DocumentLoaderOptions,
     ) -> JsonLdRecord | list[JsonLdRecord]:

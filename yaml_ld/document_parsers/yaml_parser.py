@@ -34,7 +34,7 @@ class YAMLDocumentParser(BaseDocumentParser):
 
     def __call__(   # noqa: WPS238, WPS231, WPS225, C901
         self,
-        data_stream: io.TextIOBase,
+        data_stream: io.BytesIO,
         source: str,
         options: DocumentLoaderOptions,
     ) -> JsonLdRecord | list[JsonLdRecord]:

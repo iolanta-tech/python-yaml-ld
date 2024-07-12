@@ -67,9 +67,20 @@ class InvalidScriptElement(YAMLLDError):   # type: ignore
 
 @dataclass
 class NoLinkedDataFoundInHTML(YAMLLDError):   # type: ignore
-    """No Linked Data fragments found in an HTML document."""
+    """
+    No Linked Data fragments found in an HTML document.
 
+    ```html
+    {self.html_text}
+    ```
+    """
+
+    html: bytes
     code: str = 'loading document failed'
+
+    @property
+    def html_text(self):
+        return self.html.decode()
 
 
 @dataclass
