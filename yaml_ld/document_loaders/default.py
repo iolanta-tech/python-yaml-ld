@@ -7,13 +7,17 @@ from yaml_ld.document_loaders.choice_by_scheme import (
 from yaml_ld.document_loaders.http import HTTPDocumentLoader
 from yaml_ld.document_loaders.local_file import LocalFileDocumentLoader
 
+
+CACHE_DIRECTORY = platformdirs.user_cache_dir(
+    appname='python-yaml-ld',
+    ensure_exists=True,
+)
+
+
 http_loader = HTTPDocumentLoader(
     session=CachedSession(
         backend='filesystem',
-        cache_name=platformdirs.user_cache_dir(
-            appname='python-yaml-ld',
-            ensure_exists=True,
-        ),
+        cache_name=CACHE_DIRECTORY,
     ),
 )
 

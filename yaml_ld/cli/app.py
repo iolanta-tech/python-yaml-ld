@@ -1,6 +1,7 @@
 import functools
 import json
 import logging
+import shutil
 import sys
 from dataclasses import dataclass
 from enum import StrEnum
@@ -19,6 +20,7 @@ from yarl import URL
 
 import yaml_ld
 from yaml_ld.compact import CompactOptions
+from yaml_ld.document_loaders.default import CACHE_DIRECTORY
 from yaml_ld.expand import ExpandOptions
 from yaml_ld.flatten import FlattenOptions
 from yaml_ld.from_rdf import FromRDFOptions
@@ -330,6 +332,17 @@ def from_rdf(
         document=response,
         output_format=output_format,
     )
+
+
+cache = Typer(help='Cache management.', no_args_is_help=True)
+cli.add_typer(cache, name='cache')
+
+
+@cache.command()
+def clear():
+    """Clear cache."""
+    shutil.rmtree(CACHE_DIRECTORY)
+    console.print('Cache cleared.', style='green')
 
 
 @dataclass

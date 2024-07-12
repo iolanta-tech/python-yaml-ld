@@ -2,7 +2,6 @@ import io
 from dataclasses import dataclass, field
 
 from requests import Session
-from requests_cache import CachedHTTPResponse
 from yarl import URL
 
 from yaml_ld.document_loaders import content_types
@@ -34,17 +33,8 @@ class HTTPDocumentLoader(DocumentLoader):
 
         response = self.session.get(
             str(url),
-            stream=True,
             timeout=DEFAULT_TIMEOUT,
         )
-
-        # This is a hack to support cached responses.
-        # Unfortunately, `CachedHTTPResponse.raw.read()` returns empty bytes
-        # sequence.
-        raw_content = io.BytesIO(response.content) if (
-            isinstance(response.raw, CachedHTTPResponse)
-        ) else response.raw
-        raw_content.decode_content = True
 
         content_type = response.headers.get('Content-Type')
 
@@ -59,7 +49,11 @@ class HTTPDocumentLoader(DocumentLoader):
         if parser is None:
             raise LoadingDocumentFailed(path=source)
 
-        yaml_document = parser(raw_content, str(source), options)
+        yaml_document = parser(
+            data_stream=io.StringIO(response.text),
+            source=str(source),
+            options=options,
+        )
 
         return {
             'document': yaml_document,
