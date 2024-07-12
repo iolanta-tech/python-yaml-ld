@@ -1,18 +1,8 @@
 from abc import ABC, abstractmethod
-from pathlib import Path
 
 from typing_extensions import TypedDict
 
-from yaml_ld.models import URI, JsonLdRecord
-
-PyLDResponse = TypedDict(
-    'PyLDResponse', {
-        'contentType': str,
-        'contextUrl': str | None,   # noqa: WPS465
-        'documentUrl': str,
-        'document': JsonLdRecord | list[JsonLdRecord],
-    },
-)
+from yaml_ld.models import URI, RemoteDocument
 
 DocumentLoaderOptions = TypedDict(
     'DocumentLoaderOptions',
@@ -28,6 +18,6 @@ class DocumentLoader(ABC):
         self,
         source: URI,
         options: DocumentLoaderOptions,
-    ) -> PyLDResponse:
+    ) -> RemoteDocument:
         """Load a document."""
         raise NotImplementedError()

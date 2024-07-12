@@ -9,9 +9,8 @@ from yarl import URL
 from yaml_ld.document_loaders.base import (
     DocumentLoader,
     DocumentLoaderOptions,
-    PyLDResponse,
 )
-from yaml_ld.models import URI
+from yaml_ld.models import URI, RemoteDocument
 
 
 @dataclass
@@ -47,7 +46,7 @@ class ChoiceBySchemeDocumentLoader(DocumentLoader):
         self,
         source: URI,
         options: DocumentLoaderOptions,
-    ) -> PyLDResponse:
+    ) -> RemoteDocument:
         """Choose by scheme."""
         url = URL(str(source))
 

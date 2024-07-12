@@ -6,10 +6,9 @@ from yaml_ld.document_loaders import content_types
 from yaml_ld.document_loaders.base import (
     DocumentLoader,
     DocumentLoaderOptions,
-    PyLDResponse,
 )
 from yaml_ld.errors import LoadingDocumentFailed, NotFound
-from yaml_ld.models import URI
+from yaml_ld.models import URI, RemoteDocument
 
 
 class LocalFileDocumentLoader(DocumentLoader):
@@ -19,7 +18,7 @@ class LocalFileDocumentLoader(DocumentLoader):
         self,
         source: URI,
         options: DocumentLoaderOptions,
-    ) -> PyLDResponse:
+    ) -> RemoteDocument:
         """Load documents from a local file system."""
         path = Path(URL(str(source)).path)
 
