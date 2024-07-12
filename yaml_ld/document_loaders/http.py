@@ -1,7 +1,9 @@
 import io
 import re
 from dataclasses import dataclass, field
+from typing import Iterable, cast
 
+import funcy
 from pyld.jsonld import prepend_base
 from requests import Session
 from yarl import URL
@@ -21,6 +23,55 @@ LINK_PATTERN = re.compile(
     '<(?P<relative_link>[^>]+)>; rel="alternate"; '
     'type="(?P<content_type>[^"]+)"',
 )
+
+
+@dataclass
+class LinkHeader:
+    """Reference from HTTP Link header."""
+
+    url: str
+    rel: str
+    content_type: str
+    attributes: dict[str, str]
+
+
+@funcy.post_processing(dict)
+def _parse_link_attributes(
+    raw_attributes: list[str],
+) -> Iterable[tuple[str, str]]:
+    for pair in raw_attributes:
+        match_result = re.match(
+            '(?P<attribute_name>[^=]+)="(?P<attribute_value>[^"]+)"',
+            pair,
+        )
+
+        if match_result:
+            yield cast(tuple[str, str], match_result.groups())
+        else:
+            raise ValueError(f'Cannot parse: {pair}')
+
+
+def parse_raw_link_header(   # noqa: WPS210
+    page_url: str,
+    link_header: str,
+) -> Iterable[LinkHeader]:
+    """Parse Link header into a structure."""
+    links = link_header.split(', ')
+
+    for link in links:
+        bracketed_url, *raw_attributes = link.split('; ')
+        relative_url = bracketed_url.removeprefix('<').removesuffix('>')
+
+        absolute_url = prepend_base(page_url, relative_url)
+        attributes: dict[str, str] = _parse_link_attributes(raw_attributes)
+
+        if content_type := attributes.pop('type', None):
+            yield LinkHeader(
+                url=absolute_url,
+                rel=attributes.pop('rel'),
+                content_type=content_type,
+                attributes=attributes,
+            )
 
 
 @dataclass
@@ -45,7 +96,7 @@ class HTTPDocumentLoader(DocumentLoader):
         if link := response.headers.get('Link'):
             follow_result = self.follow_link_header(
                 source=source,
-                link=link,
+                link_header=link,
                 options=options,
             )
 
@@ -81,20 +132,33 @@ class HTTPDocumentLoader(DocumentLoader):
     def follow_link_header(
         self,
         source: URI,
-        link: str,
+        link_header: str,
         options: DocumentLoaderOptions,
     ) -> RemoteDocument | None:
         """Follow Link header."""
+        links = parse_raw_link_header(
+            page_url=str(source),
+            link_header=link_header,
+        )
+
+        links = [
+            link
+            for link in links
+            if link.rel == 'alternate'
+        ]
+
         from yaml_ld.document_loaders.default import (   # noqa: WPS433
             DEFAULT_DOCUMENT_LOADER,
         )
 
-        response = re.match(LINK_PATTERN, link)
-        if response:
-            relative_url, content_type = response.groups()
-            url = prepend_base(str(source), relative_url)
+        for link in links:
+            try:
+                content_types.parser_by_content_type(link.content_type)
+            except content_types.ParserNotFound:
+                continue
+
             return DEFAULT_DOCUMENT_LOADER(
-                source=url,
+                source=link.url,
                 options=options,
             )
 
