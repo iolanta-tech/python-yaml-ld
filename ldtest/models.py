@@ -24,8 +24,8 @@ class TestCase:
     input: Path | URL
     result: Path | str | Exception   # noqa: WPS110
     req: str
-    ctx: JsonLdRecord | None = None
-    frame: JsonLdRecord | None = None
+    ctx: JsonLdRecord | list[JsonLdRecord] | None = None
+    frame: JsonLdRecord | list[JsonLdRecord] | None = None
     extract_all_scripts: bool = False
     base: str | None = None
     redirect_to: str | None = None

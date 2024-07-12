@@ -1,13 +1,16 @@
 from pydantic import validate_call
 from pyld import jsonld
 
+from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
 from yaml_ld.expand import except_json_ld_errors
 from yaml_ld.models import (
+    JsonLdInput, JsonLdRecord,
+    DEFAULT_VALIDATE_CALL_CONFIG,
+)
+from yaml_ld.options import (
     BaseOptions,
     ExpandContextOptions,
     ExtractAllScriptsOptions,
-    JsonLdInput,
-    JsonLdRecord,
 )
 
 
@@ -41,16 +44,22 @@ class FrameOptions(   # type: ignore
     """Instead of framing a merged graph, frame only the default graph."""
 
 
-@validate_call(config=dict(arbitrary_types_allowed=True))
+DEFAULT_FRAME_OPTIONS = FrameOptions()
+
+
+@validate_call(config=DEFAULT_VALIDATE_CALL_CONFIG)
 def frame(
     document: JsonLdInput,
-    frame: JsonLdRecord,
-    options: FrameOptions = FrameOptions(),   # type: ignore
+    frame: JsonLdRecord,   # noqa: WPS442
+    options: FrameOptions = DEFAULT_FRAME_OPTIONS,
 ) -> JsonLdRecord:
     """Frame a YAML-LD document."""
+    dict_options = options.model_dump(by_alias=True, exclude_none=True)
+    dict_options.setdefault('documentLoader', DEFAULT_DOCUMENT_LOADER)
+
     with except_json_ld_errors():
         return jsonld.frame(
             input_=str(document),
             frame=frame,
-            options=options.model_dump(by_alias=True),
+            options=dict_options,
         )

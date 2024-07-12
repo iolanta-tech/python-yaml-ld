@@ -1,6 +1,7 @@
 import functools
 import json
 import logging
+import shutil
 import sys
 from dataclasses import dataclass
 from enum import StrEnum
@@ -19,6 +20,7 @@ from yarl import URL
 
 import yaml_ld
 from yaml_ld.compact import CompactOptions
+from yaml_ld.document_loaders.default import CACHE_DIRECTORY
 from yaml_ld.expand import ExpandOptions
 from yaml_ld.flatten import FlattenOptions
 from yaml_ld.from_rdf import FromRDFOptions
@@ -103,11 +105,10 @@ def pretty_print(
 
     serialized_document = serializer(document)
 
-    return (
-        Syntax(
-            serialized_document,
-            lexer=output_format.value,
-        )
+    return Syntax(
+        serialized_document,
+        lexer=output_format.value,
+        background_color='default',
     )
 
 
@@ -131,7 +132,7 @@ def expand(
                 'embedded in HTML.'
             ),
         ),
-    ] = True,
+    ] = False,
     expand_context: Annotated[
         MaybeStr,
         Option(help='Context to expand with.'),
@@ -140,7 +141,7 @@ def expand(
     """Expand a ⋆-LD document."""
     response = yaml_ld.expand(
         document=decode_input(input_),
-        options=ExpandOptions(   # type: ignore
+        options=ExpandOptions(
             base=base,
             extract_all_scripts=extract_all_scripts,
             expand_context=expand_context,
@@ -212,7 +213,7 @@ def compact(   # noqa: WPS211
     response = yaml_ld.compact(
         document=decode_input(input_),
         ctx=decode_input(ctx),
-        options=CompactOptions(   # type: ignore
+        options=CompactOptions(
             base=base,
             extract_all_scripts=extract_all_scripts,
             expand_context=expand_context,
@@ -259,7 +260,7 @@ def flatten(    # noqa: WPS211
     response = yaml_ld.flatten(
         document=decode_input(input_),
         ctx=decode_input(ctx),
-        options=FlattenOptions(   # type: ignore
+        options=FlattenOptions(
             base=base,
             extract_all_scripts=extract_all_scripts,
             expand_context=expand_context,
@@ -297,7 +298,7 @@ def to_rdf(
     """Convert a ⋆-LD document → RDF."""
     response = yaml_ld.to_rdf(
         document=decode_input(input_),
-        options=ToRDFOptions(   # type: ignore
+        options=ToRDFOptions(
             base=base,
             extract_all_scripts=extract_all_scripts,
         ),
@@ -323,14 +324,25 @@ def from_rdf(
 ):
     """Convert an RDF document → ⋆-LD form."""
     response = yaml_ld.from_rdf(
-        document=decode_input(input_),
-        options=FromRDFOptions(),   # type: ignore
+        dataset=str(decode_input(input_)),
+        options=FromRDFOptions(),
     )
 
     return pretty_print(
         document=response,
         output_format=output_format,
     )
+
+
+cache = Typer(help='Cache management.', no_args_is_help=True)
+cli.add_typer(cache, name='cache')
+
+
+@cache.command()
+def clear():
+    """Clear cache."""
+    shutil.rmtree(CACHE_DIRECTORY)
+    console.print('Cache cleared.', style='green')
 
 
 @dataclass
