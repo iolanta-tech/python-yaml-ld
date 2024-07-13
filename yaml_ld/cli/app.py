@@ -182,13 +182,13 @@ def get(
 @cli.command()
 @funcy.post_processing(console.print)
 def compact(   # noqa: WPS211
-    ctx: Annotated[
-        str,
-        Option(help='Context to compact with.'),
-    ],
     input_: Annotated[
         MaybeStr,
         Argument(help='Path or URL. Omit to read from standard input.'),
+    ] = None,
+    ctx: Annotated[
+        MaybeStr,
+        Option(help='Context to compact with.'),
     ] = None,
     output_format: Annotated[
         OutputFormat,
@@ -212,7 +212,7 @@ def compact(   # noqa: WPS211
     """Compact a ⋆-LD document."""
     response = yaml_ld.compact(
         document=decode_input(input_),
-        ctx=decode_input(ctx),
+        ctx=ctx or {},
         options=CompactOptions(
             base=base,
             extract_all_scripts=extract_all_scripts,
