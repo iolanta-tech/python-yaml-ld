@@ -41,16 +41,22 @@ DEFAULT_COMPACT_OPTIONS = CompactOptions()
 @validate_call(config=DEFAULT_VALIDATE_CALL_CONFIG)
 def compact(  # noqa: WPS211
     document: JsonLdInput,
-    ctx: Annotated[JsonLdContext | None, 'Context to compact with.'],
+    ctx: Annotated[JsonLdContext | None, 'Context to compact with.'] = None,
     options: CompactOptions = DEFAULT_COMPACT_OPTIONS,
 ) -> JsonLdRecord | list[JsonLdRecord]:
-    """Compact a JSON-LD document."""
+    """
+    Compact a [⋆-LD](/blog/any-ld/) document.
+
+    Replace full IRIs with shorter terms and compact IRIs using a context,
+    making the document more human-readable while preserving its original
+    structure and semantics.
+    """
     dict_options = options.model_dump(by_alias=True, exclude_none=True)
     dict_options.setdefault('documentLoader', DEFAULT_DOCUMENT_LOADER)
 
     with except_json_ld_errors():
         return jsonld.compact(
             input_=str(document),
-            ctx=ctx,
+            ctx=ctx or {},
             options=dict_options,
         )
