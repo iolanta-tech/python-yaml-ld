@@ -66,7 +66,7 @@ class HTMLDocumentParser(BaseDocumentParser):
         options,
     ) -> Iterable[Script]:
         """Load one or more script tags from an HTML source."""
-        document = lxml.html.fromstring(html_content.decode())
+        document = lxml.html.fromstring(html_content)
         # potentially update options[:base]
         html_base = document.xpath('/html/head/base/@href')
         if html_base:

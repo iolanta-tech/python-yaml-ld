@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from documented import DocumentedError
 
 from yaml_ld.document_parsers.base import BaseDocumentParser
+from yaml_ld.document_parsers.rdf_xml_parser import RDFXMLParser
 from yaml_ld.document_parsers.yaml_parser import YAMLDocumentParser
 
 
@@ -37,6 +38,7 @@ def parser_by_content_type_map():
         'application/yaml': YAMLDocumentParser,
         'application/ld+yaml': YAMLDocumentParser,
         'text/html': HTMLDocumentParser,
+        'application/rdf+xml': RDFXMLParser,
     }
 
 

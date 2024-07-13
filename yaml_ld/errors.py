@@ -1,6 +1,9 @@
+import textwrap
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Iterable
 
+import funcy
 from documented import DocumentedError
 
 from yaml_ld.models import JsonLdRecord
@@ -78,10 +81,31 @@ class NoLinkedDataFoundInHTML(YAMLLDError):   # type: ignore
     html: bytes
     code: str = 'loading document failed'
 
+    def _preview_lines(self, html_text: str) -> Iterable[str]:
+        lines = iter(html_text.splitlines())
+        preview_count = 10
+
+        yield from funcy.take(preview_count, lines)
+
+        tail = list(lines)
+        if not tail:
+            return
+
+        if len(tail) >= preview_count:
+            yield '…'
+
+        yield from tail[-preview_count:]
+
     @property
     def html_text(self):
         """Format HTML text for printing."""
-        return self.html.decode()
+        max_line_length = 80
+        return '\n'.join(
+            textwrap.shorten(line, max_line_length)
+            for line in self._preview_lines(
+                self.html.decode(),
+            )
+        )
 
 
 @dataclass
