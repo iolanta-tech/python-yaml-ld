@@ -1,5 +1,6 @@
 ---
 title: Base
+specified-by: https://w3c.github.io/json-ld-api/#dom-loaddocumentcallback
 hide: [toc]
 ---
 
