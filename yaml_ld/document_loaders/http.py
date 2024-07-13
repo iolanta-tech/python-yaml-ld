@@ -53,6 +53,7 @@ def maybe_follow_one_of_link_headers(
     content_type: str | None,
     options: DocumentLoaderOptions,
 ):
+    """Resolve the URL found in the given link headers (or not)."""
     from yaml_ld.document_loaders.default import (  # noqa: WPS433
         DEFAULT_DOCUMENT_LOADER,
     )
@@ -63,7 +64,7 @@ def maybe_follow_one_of_link_headers(
         except content_types.ParserNotFound:
             continue
 
-        if not _is_content_type_more_preferable(
+        if not _is_content_type_more_preferable(   # noqa: WPS337
             left=link.content_type,
             right=content_type,
         ):

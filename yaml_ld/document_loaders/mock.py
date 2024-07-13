@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from pathlib import Path
 
 from yaml_ld.document_loaders.base import DocumentLoader, DocumentLoaderOptions
 from yaml_ld.models import URI, RemoteDocument
