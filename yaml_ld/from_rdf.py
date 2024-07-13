@@ -3,7 +3,7 @@ from pyld import jsonld
 
 from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
 from yaml_ld.expand import except_json_ld_errors
-from yaml_ld.models import JsonLdRecord, DEFAULT_VALIDATE_CALL_CONFIG
+from yaml_ld.models import DEFAULT_VALIDATE_CALL_CONFIG, JsonLdRecord
 from yaml_ld.options import BaseOptions
 
 

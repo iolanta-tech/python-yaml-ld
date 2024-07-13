@@ -4,11 +4,16 @@ from typing import Iterable
 
 import funcy
 import lxml  # noqa: S410
+from bs4 import BeautifulSoup
 from pyld.jsonld import JsonLdError, parse_url, prepend_base
 
 from yaml_ld.document_loaders.content_types import (
     ParserNotFound,
     parser_by_content_type,
+)
+from yaml_ld.document_loaders.http import (
+    LinkHeader,
+    maybe_follow_one_of_link_headers,
 )
 from yaml_ld.document_parsers.base import (
     BaseDocumentParser,
@@ -37,6 +42,17 @@ class HTMLDocumentParser(BaseDocumentParser):
     ) -> JsonLdRecord | list[JsonLdRecord]:
         """Parse HTML with LD in <script> tags."""
         html_content = data_stream.read()
+        links = self.extract_link_tags(html_content)
+
+        linked_document = maybe_follow_one_of_link_headers(
+            links=links,
+            content_type='text/html',
+            options=options,
+        )
+
+        if linked_document:
+            return linked_document
+
         scripts = self.extract_script_tags(
             html_content=html_content,
             url=source,
@@ -66,7 +82,7 @@ class HTMLDocumentParser(BaseDocumentParser):
         options,
     ) -> Iterable[Script]:
         """Load one or more script tags from an HTML source."""
-        document = lxml.html.fromstring(html_content.decode())
+        document = lxml.html.fromstring(html_content)
         # potentially update options[:base]
         html_base = document.xpath('/html/head/base/@href')
         if html_base:
@@ -135,3 +151,19 @@ class HTMLDocumentParser(BaseDocumentParser):
 
                 case scalar:
                     raise DocumentIsScalar(scalar)
+
+    @funcy.post_processing(list)
+    def extract_link_tags(self, html_content: str) -> Iterable[LinkHeader]:
+        """Extract <link> tags."""
+        soup = BeautifulSoup(html_content, features='lxml')
+        links = soup.find_all('link', attrs={'rel': 'alternate'})
+        for link in links:
+            content_type = link.get('type')
+
+            if content_type:
+                yield LinkHeader(
+                    url=link['href'],
+                    rel=funcy.first(link['rel']),
+                    content_type=content_type,
+                    attributes={},
+                )

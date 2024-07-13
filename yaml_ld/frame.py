@@ -4,8 +4,9 @@ from pyld import jsonld
 from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
 from yaml_ld.expand import except_json_ld_errors
 from yaml_ld.models import (
-    JsonLdInput, JsonLdRecord,
     DEFAULT_VALIDATE_CALL_CONFIG,
+    JsonLdInput,
+    JsonLdRecord,
 )
 from yaml_ld.options import (
     BaseOptions,
