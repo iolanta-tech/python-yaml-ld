@@ -78,7 +78,13 @@ flake8-eradicate = [
     "-E800",
 ]
 
-pycodestyle = [
-    # SyntaxError: invalid syntax
-    "-E999",
+wemake-python-styleguide = ["-*"]
+flake8-bugbear = ["-*"]
+flake8-quotes = ["-*"]
+pycodestyle = ["-*"]
+
+[tool.flakeheaven.exceptions."docs/examples/*py"]
+wemake-python-styleguide = [
+    # Found wrong function call: print
+    "-WPS421",
 ]
