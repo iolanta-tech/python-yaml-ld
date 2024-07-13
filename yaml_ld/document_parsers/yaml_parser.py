@@ -39,8 +39,19 @@ class YAMLDocumentParser(BaseDocumentParser):
         options: DocumentLoaderOptions,
     ) -> JsonLdRecord | list[JsonLdRecord]:
         """Parse YAML document stream into LD."""
+        # FIXME This is super ugly:
+        #   because:
+        #     $: |
+        #       We have to decode the incoming stream and fail if it is not UTF8
+        #   therefore:
+        #     $: We load whole content in memory
+        try:
+            decoded_stream = io.StringIO(data_stream.read().decode())
+        except UnicodeDecodeError as unicode_decode_error:
+            raise InvalidEncoding() from unicode_decode_error
+
         yaml_documents_stream = yaml.load_all(  # noqa: S506
-            stream=data_stream,
+            stream=decoded_stream,
             Loader=YAMLLDLoader,
         )
 
