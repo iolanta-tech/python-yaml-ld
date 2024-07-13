@@ -6,10 +6,7 @@ import funcy
 from documented import DocumentedError
 from yarl import URL
 
-from yaml_ld.document_loaders.base import (
-    DocumentLoader,
-    DocumentLoaderOptions,
-)
+from yaml_ld.document_loaders.base import DocumentLoader, DocumentLoaderOptions
 from yaml_ld.models import URI, RemoteDocument
 
 

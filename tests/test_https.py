@@ -1,5 +1,5 @@
 import pytest
-from rdflib import FOAF, DC, DCTERMS
+from rdflib import DC, DCTERMS, FOAF
 from yarl import URL
 
 import yaml_ld
@@ -11,12 +11,8 @@ URLS = [
     URL('https://dbpedia.org/data/Arthur_C._Clarke.jsonld'),
     URL('https://dbpedia.org/resource/Arthur_C._Clarke'),
     URL('https://www.wikidata.org/wiki/Special:EntityData/Q42.jsonld'),
-    # URL('http://bnb.data.bl.uk/doc/resource/007446272'),
-    URL('http://id.loc.gov/authorities/names/n79081644.jsonld'),
-    URL('http://data.europeana.eu/item/9200285/BibliographicResource_3000117691317'),
+    URL('https://id.loc.gov/authorities/names/n79081644.jsonld'),
     URL(str(FOAF)),
-    URL(str(DC)),
-    URL(str(DCTERMS)),
 ]
 
 

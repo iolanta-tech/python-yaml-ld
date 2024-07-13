@@ -9,10 +9,7 @@ from requests import Session
 from yarl import URL
 
 from yaml_ld.document_loaders import content_types
-from yaml_ld.document_loaders.base import (
-    DocumentLoader,
-    DocumentLoaderOptions,
-)
+from yaml_ld.document_loaders.base import DocumentLoader, DocumentLoaderOptions
 from yaml_ld.errors import LoadingDocumentFailed
 from yaml_ld.models import URI, RemoteDocument
 
@@ -51,6 +48,35 @@ def _parse_link_attributes(
             raise ValueError(f'Cannot parse: {pair}')
 
 
+def maybe_follow_one_of_link_headers(
+    links: Iterable[LinkHeader],
+    content_type: str | None,
+    options: DocumentLoaderOptions,
+):
+    from yaml_ld.document_loaders.default import (  # noqa: WPS433
+        DEFAULT_DOCUMENT_LOADER,
+    )
+
+    for link in links:
+        try:
+            content_types.parser_by_content_type(link.content_type)
+        except content_types.ParserNotFound:
+            continue
+
+        if not _is_content_type_more_preferable(
+            left=link.content_type,
+            right=content_type,
+        ):
+            continue
+
+        return DEFAULT_DOCUMENT_LOADER(
+            source=link.url,
+            options=options,
+        )
+
+    return None
+
+
 def parse_raw_link_header(   # noqa: WPS210
     page_url: str,
     link_header: str,
@@ -76,11 +102,18 @@ def parse_raw_link_header(   # noqa: WPS210
 
 def _is_content_type_more_preferable(left: str, right: str | None) -> bool:
     """Determine if Left is better than Right."""
+    if left == right:
+        return False
+
     if left is not None and right is None:
         # Anything better than nothing
         return True
 
     return {
+        ('application/rdf+xml', 'application/json'): False,
+        ('application/rdf+xml', 'application/ld+json'): False,
+        ('application/json', 'application/rdf+xml'): True,
+        ('application/rdf+xml', 'text/html'): True,
         ('text/html', 'application/ld+json'): False,
         ('text/html', 'application/json'): False,
         ('application/ld+json', 'text/html'): True,
@@ -173,25 +206,8 @@ class HTTPDocumentLoader(DocumentLoader):
             if link.rel == 'alternate'
         ]
 
-        from yaml_ld.document_loaders.default import (   # noqa: WPS433
-            DEFAULT_DOCUMENT_LOADER,
+        return maybe_follow_one_of_link_headers(
+            links=links,
+            content_type=content_type,
+            options=options,
         )
-
-        for link in links:
-            try:
-                content_types.parser_by_content_type(link.content_type)
-            except content_types.ParserNotFound:
-                continue
-
-            if not _is_content_type_more_preferable(
-                left=link.content_type,
-                right=content_type,
-            ):
-                continue
-
-            return DEFAULT_DOCUMENT_LOADER(
-                source=link.url,
-                options=options,
-            )
-
-        return None
