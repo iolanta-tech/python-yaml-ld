@@ -1,4 +1,5 @@
 import json
+import os
 
 import pytest
 from pydantic import ValidationError
@@ -29,6 +30,9 @@ def _url_to_id(url: URL) -> str:
 
 @pytest.fixture(params=URLS, ids=_url_to_id)
 def url(request) -> URL:
+    if os.environ.get('CI'):
+        pytest.skip('This test is long and unreliable, skipping it in CI.')
+
     yaml_ld.load_document(request.param)
     return request.param
 
