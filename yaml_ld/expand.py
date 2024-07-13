@@ -81,7 +81,12 @@ def expand(   # noqa: C901, WPS211
     document: JsonLdInput,
     options: ExpandOptions = DEFAULT_EXPAND_OPTIONS,
 ) -> list[JsonLdRecord]:
-    """Expand a YAML-LD document."""
+    """
+    Expand a [⋆-LD](/blog/any-ld/) document.
+
+    Converts all compact IRIs, keywords, and terms into their absolute IRI
+    representations.
+    """
     dict_options = options.model_dump(by_alias=True, exclude_none=True)
     dict_options.setdefault('documentLoader', DEFAULT_DOCUMENT_LOADER)
 
