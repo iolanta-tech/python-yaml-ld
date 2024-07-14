@@ -8,8 +8,8 @@
 
 $id: https://dbpedia.org/page/Pythagorean_theorem
 prov:Entity:
-  $id: variable:c
   =:
-    +:
+    - +:
       - ²: variable:a
       - ²: variable:b
+    - ²: variable:c
