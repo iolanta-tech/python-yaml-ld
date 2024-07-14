@@ -1,5 +1,5 @@
 ---
-title: Use ⋆-LD to denote any JSON-LD derived standard
+title: Use ＊-LD to denote any JSON-LD derived standard
 tags: [decision]
 ---
 
@@ -15,4 +15,4 @@ Thus, it would be unfair to say that [`expand()`](/expand/) can only work on JSO
 
 ## Decision
 
-Use ⋆-LD (pronounced: *Any-LD*) notation to describe all JSON-LD inspired standards/formats.
+Use ＊-LD (pronounced: *Any-LD*) notation to describe all JSON-LD inspired standards/formats.

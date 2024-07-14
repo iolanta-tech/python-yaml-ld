@@ -45,7 +45,7 @@ def compact(  # noqa: WPS211
     options: CompactOptions = DEFAULT_COMPACT_OPTIONS,
 ) -> JsonLdRecord | list[JsonLdRecord]:
     """
-    Compact a [⋆-LD](/blog/any-ld/) document.
+    Compact a [＊-LD](/blog/any-ld/) document.
 
     Replace full IRIs with shorter terms and compact IRIs using a context,
     making the document more human-readable while preserving its original

@@ -37,7 +37,7 @@ def flatten(
     options: FlattenOptions = DEFAULT_FLATTEN_OPTIONS,
 ) -> JsonLdRecord:
     """
-    Flatten a [⋆-LD](/blog/any-ld/) document.
+    Flatten a [＊-LD](/blog/any-ld/) document.
 
     Outputs a single array containing all nodes, making no assumptions about
     their relationships, to simplify data processing and ensure all referenced
