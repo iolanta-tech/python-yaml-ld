@@ -30,8 +30,8 @@ from yaml_ld.to_rdf import ToRDFOptions
 cli = Typer(
     no_args_is_help=True,
     help=(
-        'Command line tool to operate on ⋆-LD data, '
-        'where ⋆ stands for JSON or YAML.'
+        'Command line tool to operate on ＊-LD data, '
+        'where ＊ stands for JSON or YAML.'
     ),
 )
 console = Console()
@@ -138,7 +138,7 @@ def expand(
         Option(help='Context to expand with.'),
     ] = None,
 ):
-    """Expand a ⋆-LD document."""
+    """Expand a ＊-LD document."""
     response = yaml_ld.expand(
         document=decode_input(input_),
         options=ExpandOptions(
@@ -167,7 +167,7 @@ def get(
         Option(help='Format to output the data at.'),
     ] = OutputFormat.JSON,
 ):
-    """Load and display a ⋆-LD document."""
+    """Load and display a ＊-LD document."""
     response = yaml_ld.load_document(
         decode_input(input_),
         base=base,
@@ -209,7 +209,7 @@ def compact(   # noqa: WPS211
         Option(help='Context to expand with.'),
     ] = None,
 ):
-    """Compact a ⋆-LD document."""
+    """Compact a ＊-LD document."""
     response = yaml_ld.compact(
         document=decode_input(input_),
         ctx=ctx or {},
@@ -256,7 +256,7 @@ def flatten(    # noqa: WPS211
         Option(help='Context to expand with.'),
     ] = None,
 ):
-    """Flatten a ⋆-LD document."""
+    """Flatten a ＊-LD document."""
     response = yaml_ld.flatten(
         document=decode_input(input_),
         ctx=decode_input(ctx),
@@ -295,7 +295,7 @@ def to_rdf(
         ),
     ] = True,
 ):
-    """Convert a ⋆-LD document → RDF."""
+    """Convert a ＊-LD document → RDF."""
     response = yaml_ld.to_rdf(
         document=decode_input(input_),
         options=ToRDFOptions(
@@ -322,7 +322,7 @@ def from_rdf(
         Option(help='Format to output the data at.'),
     ] = OutputFormat.JSON,
 ):
-    """Convert an RDF document → ⋆-LD form."""
+    """Convert an RDF document → ＊-LD form."""
     response = yaml_ld.from_rdf(
         dataset=str(decode_input(input_)),
         options=FromRDFOptions(),

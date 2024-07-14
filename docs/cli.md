@@ -10,7 +10,7 @@ $ pyld
                                                                                               
  Usage: pyld [OPTIONS] COMMAND [ARGS]...                                                      
                                                                                               
- Command line tool to operate on ⋆-LD data, where ⋆ stands for JSON or YAML.                  
+ Command line tool to operate on ＊-LD data, where ＊ stands for JSON or YAML.                  
                                                                                               
 ╭─ Options ──────────────────────────────────────────────────────────────────────────────────╮
 │ --log-level                 [debug|info|error]  Logging level. [default: error]            │
@@ -20,10 +20,10 @@ $ pyld
 │ --help                                          Show this message and exit.                │
 ╰────────────────────────────────────────────────────────────────────────────────────────────╯
 ╭─ Commands ─────────────────────────────────────────────────────────────────────────────────╮
-│ compact    Compact a ⋆-LD document.                                                        │
-│ expand     Expand a ⋆-LD document.                                                         │
-│ flatten    Flatten a ⋆-LD document.                                                        │
-│ from-rdf   Convert an RDF document → ⋆-LD form.                                            │
-│ to-rdf     Convert a ⋆-LD document → RDF.                                                  │
+│ compact    Compact a ＊-LD document.                                                        │
+│ expand     Expand a ＊-LD document.                                                         │
+│ flatten    Flatten a ＊-LD document.                                                        │
+│ from-rdf   Convert an RDF document → ＊-LD form.                                            │
+│ to-rdf     Convert a ＊-LD document → RDF.                                                  │
 ╰────────────────────────────────────────────────────────────────────────────────────────────╯
 ```

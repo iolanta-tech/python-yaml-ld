@@ -82,7 +82,7 @@ def expand(   # noqa: C901, WPS211
     options: ExpandOptions = DEFAULT_EXPAND_OPTIONS,
 ) -> list[JsonLdRecord]:
     """
-    Expand a [⋆-LD](/blog/any-ld/) document.
+    Expand a [＊-LD](/blog/any-ld/) document.
 
     Converts all compact IRIs, keywords, and terms into their absolute IRI
     representations.
