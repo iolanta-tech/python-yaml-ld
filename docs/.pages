@@ -1,5 +1,6 @@
 nav:
   - index.md
+  - load_document(): load-document.md
   - expand(): expand
   - compact(): compact
   - flatten(): flatten

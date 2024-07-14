@@ -16,7 +16,11 @@ def load_document(
     requestProfile=None,
     options: BaseOptions = DEFAULT_BASE_OPTIONS,
 ) -> RemoteDocument:
-    """Load document from the given source."""
+    """
+    Load an [＊-LD](blog/any-ld/) document.
+
+    The document can be retrieved from local filesystem or from the Web.
+    """
     dict_options = options.model_dump(by_alias=True, exclude_none=True)
     dict_options.setdefault('documentLoader', DEFAULT_DOCUMENT_LOADER)
 
