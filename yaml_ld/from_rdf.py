@@ -8,7 +8,7 @@ from yaml_ld.options import BaseOptions
 
 
 class FromRDFOptions(BaseOptions):   # type: ignore
-    """Options for converting RDF to YAML-LD."""
+    """Options for converting RDF to ＊-LD."""
 
     format: str = 'application/n-quads'
     """The format if input is a string: 'application/n-quads' for N-Quads."""
@@ -28,7 +28,7 @@ def from_rdf(
     dataset: str,
     options: FromRDFOptions = DEFAULT_FROM_RDF_OPTIONS,
 ) -> JsonLdRecord:
-    """Convert a RDF dataset to a YAML-LD document."""
+    """Convert a RDF dataset to a [＊-LD](/blog/any-ld/) document."""
     dict_options = options.model_dump(by_alias=True, exclude_none=True)
     dict_options.setdefault('documentLoader', DEFAULT_DOCUMENT_LOADER)
 

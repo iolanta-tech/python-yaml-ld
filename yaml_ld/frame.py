@@ -54,7 +54,7 @@ def frame(
     frame: JsonLdRecord,   # noqa: WPS442
     options: FrameOptions = DEFAULT_FRAME_OPTIONS,
 ) -> JsonLdRecord:
-    """Frame a YAML-LD document."""
+    """Frame a [＊-LD](/blog/any-ld/) document."""
     dict_options = options.model_dump(by_alias=True, exclude_none=True)
     dict_options.setdefault('documentLoader', DEFAULT_DOCUMENT_LOADER)
 
