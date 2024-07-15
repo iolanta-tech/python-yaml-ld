@@ -35,8 +35,8 @@ YAML-LD is a YAML-based serialization for Linked Data, drawing inspiration from 
 
     <div class="grid cards" markdown>
     {% for description in functions %}
-    {% if functions.cli %}
-    -     :{{ description.icon }}:{ .lg .middle } __[`pyld {{ description.command_name }}`]({{ description.command_url }})__
+    {% if description.cli is not none %}
+    -     :{{ description.icon }}:{ .lg .middle } __[`pyld {{ description.command_name }}`](cli/{{ description.command_url }})__
 
           ---
           {{ description.function_docstring }}

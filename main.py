@@ -1,4 +1,5 @@
 """MkDocs macros for the documentation site."""
+import os
 import functools
 from dataclasses import dataclass
 from pathlib import Path
@@ -9,6 +10,13 @@ from mkdocs_macros.plugin import MacrosPlugin
 
 import yaml_ld
 from yaml_ld import cli   # noqa: WPS458
+
+
+TERMINAL_TEMPLATE = """
+```{language} title="↦ <code>{title}</code>"
+{output}
+```
+"""
 
 STDERR_TEMPLATE = """
 !!! danger "Error"
@@ -131,6 +139,27 @@ def formatted_stderr(stderr: Optional[str]) -> str:
     return STDERR_TEMPLATE.format(stderr=stderr)
 
 
+def terminal(
+    command: str,
+    title: Optional[str] = None,
+    cwd: Optional[str] = None,
+    language: str | None = None,
+):
+    """Run command and print its output."""
+    execute = sh.bash.bake('-c', _env={**os.environ}, _tty_out=False)
+
+    if cwd:
+        execute = execute.bake(_cwd=cwd)
+
+    output = execute(command)
+
+    return TERMINAL_TEMPLATE.format(
+        output=output,
+        title=title or command,
+        language=language or '',
+    )
+
+
 def define_env(env: MacrosPlugin):
     """Register macros."""
     env.macro(
@@ -139,6 +168,11 @@ def define_env(env: MacrosPlugin):
             docs_dir=Path(env.conf['docs_dir']),
         ),
         name='run_python_script',
+    )
+
+    env.macro(
+        terminal,
+        name='terminal',
     )
 
     env.variables['functions'] = [

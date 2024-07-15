@@ -29,7 +29,7 @@ DEFAULT_TO_RDF_OPTIONS = ToRDFOptions()
 def to_rdf(
     document: JsonLdInput,
     options: ToRDFOptions = DEFAULT_TO_RDF_OPTIONS,
-) -> Dataset:
+) -> Dataset | str:
     """Convert a [＊-LD](/blog/any-ld/) document to RDF."""
     dict_options = options.model_dump(by_alias=True, exclude_none=True)
     dict_options.setdefault('documentLoader', DEFAULT_DOCUMENT_LOADER)

@@ -9,5 +9,5 @@ nav:
   - ...
   - frame(): frame
   - types
-  - CLI: cli.md
+  - CLI: cli
   - blog
