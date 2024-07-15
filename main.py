@@ -183,7 +183,7 @@ def define_env(env: MacrosPlugin):
         FunctionDescription(
             function=yaml_ld.load_document,
             cli=cli.get,
-            icon='fontawesome-solid-explosion',
+            icon='material-download',
         ),
         FunctionDescription(
             function=yaml_ld.expand,
