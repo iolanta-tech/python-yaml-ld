@@ -1,10 +1,22 @@
 """MkDocs macros for the documentation site."""
+import os
 import functools
+from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Any
 
 import sh
 from mkdocs_macros.plugin import MacrosPlugin
+
+import yaml_ld
+from yaml_ld import cli   # noqa: WPS458
+
+
+TERMINAL_TEMPLATE = """
+```{language} title="↦ <code>{title}</code>"
+{output}
+```
+"""
 
 STDERR_TEMPLATE = """
 !!! danger "Error"
@@ -30,6 +42,40 @@ JEEVES_TEMPLATE = """
 
 {stderr}
 """
+
+
+@dataclass
+class FunctionDescription:
+    """Description of a python-yaml-ld operation."""
+
+    function: Any   # type: ignore
+    cli: Any   # type: ignore
+    icon: str
+
+    @property
+    def function_name(self) -> str:
+        """Function name."""
+        return self.function.__name__
+
+    @property
+    def function_docstring(self) -> str:
+        """Function description."""
+        return self.function.__doc__.strip().splitlines()[0]
+
+    @property
+    def function_url(self) -> str:
+        """Function doc page."""
+        return self.function_name.replace('_', '-')
+
+    @property
+    def command_name(self) -> str:
+        """CLI command name."""
+        return self.cli.__name__.replace('_', '-')
+
+    @property
+    def command_url(self) -> str:
+        """URL for command page."""
+        return self.command_name
 
 
 def format_annotations(annotations: List[str]) -> str:
@@ -93,6 +139,27 @@ def formatted_stderr(stderr: Optional[str]) -> str:
     return STDERR_TEMPLATE.format(stderr=stderr)
 
 
+def terminal(
+    command: str,
+    title: Optional[str] = None,
+    cwd: Optional[str] = None,
+    language: str | None = None,
+):
+    """Run command and print its output."""
+    execute = sh.bash.bake('-c', _env={**os.environ}, _tty_out=False)
+
+    if cwd:
+        execute = execute.bake(_cwd=cwd)
+
+    output = execute(command)
+
+    return TERMINAL_TEMPLATE.format(
+        output=output,
+        title=title or command,
+        language=language or '',
+    )
+
+
 def define_env(env: MacrosPlugin):
     """Register macros."""
     env.macro(
@@ -102,3 +169,46 @@ def define_env(env: MacrosPlugin):
         ),
         name='run_python_script',
     )
+
+    env.macro(
+        terminal,
+        name='terminal',
+    )
+
+    env.variables['functions'] = [
+        FunctionDescription(
+            function=yaml_ld.load_document,
+            cli=cli.get,
+            icon='fontawesome-solid-explosion',
+        ),
+        FunctionDescription(
+            function=yaml_ld.expand,
+            cli=cli.expand,
+            icon='fontawesome-solid-explosion',
+        ),
+        FunctionDescription(
+            function=yaml_ld.compact,
+            cli=cli.compact,
+            icon='compression',
+        ),
+        FunctionDescription(
+            function=yaml_ld.flatten,
+            cli=cli.flatten,
+            icon='material-train-car-flatbed',
+        ),
+        FunctionDescription(
+            function=yaml_ld.to_rdf,
+            cli=cli.to_rdf,
+            icon='material-graph',
+        ),
+        FunctionDescription(
+            function=yaml_ld.from_rdf,
+            cli=cli.from_rdf,
+            icon='material-graph',
+        ),
+        FunctionDescription(
+            function=yaml_ld.frame,
+            cli=None,
+            icon='material-image-frame',
+        ),
+    ]

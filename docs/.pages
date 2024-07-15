@@ -1,5 +1,6 @@
 nav:
   - index.md
+  - load_document(): load-document.md
   - expand(): expand
   - compact(): compact
   - flatten(): flatten
@@ -8,5 +9,5 @@ nav:
   - ...
   - frame(): frame
   - types
-  - CLI: cli.md
+  - CLI: cli
   - blog

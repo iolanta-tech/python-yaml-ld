@@ -230,9 +230,9 @@ def compact(   # noqa: WPS211
 @funcy.post_processing(console.print)
 def flatten(    # noqa: WPS211
     ctx: Annotated[
-        str,
+        MaybeStr,
         Option(help='Context to compact with.'),
-    ],
+    ] = None,
     input_: Annotated[
         MaybeStr,
         Argument(help='Path or URL. Omit to read from standard input.'),
@@ -259,7 +259,7 @@ def flatten(    # noqa: WPS211
     """Flatten a ＊-LD document."""
     response = yaml_ld.flatten(
         document=decode_input(input_),
-        ctx=decode_input(ctx),
+        ctx=ctx,
         options=FlattenOptions(
             base=base,
             extract_all_scripts=extract_all_scripts,
@@ -296,17 +296,13 @@ def to_rdf(
     ] = True,
 ):
     """Convert a ＊-LD document → RDF."""
-    response = yaml_ld.to_rdf(
+    return yaml_ld.to_rdf(
         document=decode_input(input_),
         options=ToRDFOptions(
             base=base,
+            format='application/n-quads',
             extract_all_scripts=extract_all_scripts,
         ),
-    )
-
-    return pretty_print(
-        document=response,
-        output_format=output_format,
     )
 
 

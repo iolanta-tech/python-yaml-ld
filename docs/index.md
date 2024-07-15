@@ -16,45 +16,30 @@ A Python implementation for handling YAML-LD documents.
 
 YAML-LD is a YAML-based serialization for Linked Data, drawing inspiration from [JSON-LD](https://json-ld.org/). It aims to bring the ease of YAML along with the structured linked data principles of JSON-LD. The [YAML-LD specification](https://json-ld.github.io/yaml-ld/spec/) provides detailed information on the structure and usage of YAML-LD.
 
-## Functions exposed by `python-yaml-ld`
+## What does `python-yaml-ld` provide?
 
-<div class="grid cards" markdown>
+=== "Python API"
+    `import yaml_ld` provides you with the following functions to operate on [＊-LD](/blog/any-ld/) documents:
 
--   :fontawesome-solid-explosion:{ .lg .middle } __[`expand()`](expand/)__
+    <div class="grid cards" markdown>
+    {% for description in functions %}
+    -     :{{ description.icon }}:{ .lg .middle } __[`{{ description.function_name }}()`]({{ description.function_url }})__
 
-    ---
+          ---
+          {{ description.function_docstring }}
+    {% endfor %}
+    </div>
 
-    Expand a document.
+=== "`pyld` CLI"
+    `pip install yaml-ld` makes `pyld` executable available, which exposes the functionality of `pyld` library with additions provided by `python-yaml-ld`.
 
--   :compression:{ .lg .middle } __[`compact()`](compact/)__
+    <div class="grid cards" markdown>
+    {% for description in functions %}
+    {% if description.cli is not none %}
+    -     :{{ description.icon }}:{ .lg .middle } __[`pyld {{ description.command_name }}`](cli/{{ description.command_url }})__
 
-    ---
-
-    Compact a document.
-
--   :material-train-car-flatbed:{ .lg .middle } __[`flatten()`](flatten/)__
-
-    ---
-
-    Flatten a document.
-
--   :material-graph:{ .lg .middle } __[`to_rdf()`](to-rdf/)__
-
-    ---
-
-    Convert YAML-LD to RDF.
-
--   :material-graph:{ .lg .middle } __[`from_rdf()`](from-rdf/)__
-
-    ---
-
-    Convert RDF to YAML-LD.
-
-
--   :material-image-frame:{ .lg .middle } __[`frame()`](frame/)__
-
-    ---
-
-    Frame.
-
-</div>
+          ---
+          {{ description.function_docstring }}
+    {% endif %}
+    {% endfor %}
+    </div>
