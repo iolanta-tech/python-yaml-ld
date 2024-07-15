@@ -149,7 +149,7 @@ def terminal(
     execute = sh.bash.bake(
         '-c',
         _env={**os.environ, 'NO_COLOR': '1'},
-        _tty_out=False,
+        _tty=False,
     )
 
     if cwd:
