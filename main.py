@@ -146,7 +146,11 @@ def terminal(
     language: str | None = None,
 ):
     """Run command and print its output."""
-    execute = sh.bash.bake('-c', _env={**os.environ}, _tty_out=False)
+    execute = sh.bash.bake(
+        '-c',
+        _env={**os.environ},
+        _tty_out=False,
+    )
 
     if cwd:
         execute = execute.bake(_cwd=cwd)
