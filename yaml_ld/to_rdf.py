@@ -9,7 +9,7 @@ from yaml_ld.rdf import Dataset
 
 
 class ToRDFOptions(BaseOptions, ExtractAllScriptsOptions):   # type: ignore
-    """Options for converting YAML-LD to RDF."""
+    """Options for converting ＊-LD to RDF."""
 
     format: str | None = None
     """The format to use to output a string: 'application/n-quads'
