@@ -11,7 +11,6 @@ from ldtest.models import TestCase
 from tests.errors import FailureToFail
 from yaml_ld.errors import YAMLLDError
 
-
 URLS = (
     URL('https://prefix.cc/context.jsonld'),
     URL('https://schema.org'),

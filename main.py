@@ -1,16 +1,15 @@
 """MkDocs macros for the documentation site."""
-import os
 import functools
+import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional, Any
+from typing import Any, List, Optional
 
 import sh
 from mkdocs_macros.plugin import MacrosPlugin
 
 import yaml_ld
-from yaml_ld import cli   # noqa: WPS458
-
+from yaml_ld import cli  # noqa: WPS458
 
 TERMINAL_TEMPLATE = """
 ```{language} title="↦ <code>{title}</code>"
