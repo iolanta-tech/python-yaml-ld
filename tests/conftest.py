@@ -15,6 +15,7 @@ from yaml_ld.errors import YAMLLDError
 URLS = (
     URL('https://prefix.cc/context.jsonld'),
     URL('https://schema.org'),
+    URL('https://schema.org/Person'),
     URL('https://dbpedia.org/data/Arthur_C._Clarke.json'),
     URL('https://dbpedia.org/data/Arthur_C._Clarke.jsonld'),
     URL('https://dbpedia.org/resource/Arthur_C._Clarke'),
