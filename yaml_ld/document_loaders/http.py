@@ -5,12 +5,12 @@ from typing import Iterable, cast
 
 import funcy
 from pyld.jsonld import prepend_base
-from requests import Session
+from requests import HTTPError, Session
 from yarl import URL
 
 from yaml_ld.document_loaders import content_types
 from yaml_ld.document_loaders.base import DocumentLoader, DocumentLoaderOptions
-from yaml_ld.errors import LoadingDocumentFailed
+from yaml_ld.errors import LoadingDocumentFailed, NotFound
 from yaml_ld.models import URI, RemoteDocument
 
 # Default `requests` timeout. Chosen arbitrarily.
@@ -141,6 +141,15 @@ class HTTPDocumentLoader(DocumentLoader):
             str(url),
             timeout=DEFAULT_TIMEOUT,
         )
+
+        try:
+            response.raise_for_status()
+        except HTTPError as http_error:
+            match http_error.response.status_code:
+                case 404:   # noqa: WPS432
+                    raise NotFound(path=str(http_error.request.url))
+
+            raise
 
         content_type = response.headers.get('Content-Type')
 
