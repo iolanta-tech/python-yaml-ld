@@ -62,13 +62,15 @@ def except_json_ld_error(err: jsonld.JsonLdError):
 
 
 @contextlib.contextmanager
-def except_json_ld_errors():   # noqa: WPS238
+def except_json_ld_errors():   # noqa: WPS238, C901
     """Convert pyld errors to typed YAML-LD exceptions."""
     try:  # noqa: WPS225
         yield
     except TypeError as err:
-        raise ValueError(f'is this a mapping key error at all, or not? {err}')
-        raise MappingKeyError() from err  # noqa: WPS427
+        if 'not supported between instances of ' in str(err):
+            raise MappingKeyError() from err
+
+        raise
     except RecursionError as err:
         raise CycleDetected() from err
     except JSONDecodeError as err:
