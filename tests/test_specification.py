@@ -3,15 +3,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
-import rdflib
 from documented import DocumentedError
-from pydantic import ValidationError
 from pyld import jsonld
-from pyld.jsonld import JsonLdError
 from rdflib import Graph, Namespace
-from rdflib_pyld_compat.convert import (  # noqa: WPS450
-    _rdflib_graph_from_pyld_dataset,
-)
+from rdflib.term import Literal, Node
 from rich.columns import Columns
 from rich.console import Console
 from rich.syntax import Syntax
@@ -52,8 +47,8 @@ class NotIsomorphic(DocumentedError):   # type: ignore
     """
 
     document: bytes
-    actual_graph: rdflib.Graph
-    expected_graph: rdflib.Graph
+    actual_graph: Graph
+    expected_graph: Graph
 
     @property
     def formatted_actual_graph(self):
@@ -70,7 +65,7 @@ class NotIsomorphic(DocumentedError):   # type: ignore
         """Format document."""
         return self.document.decode('utf-8')
 
-    def _format_graph(self, graph: rdflib.Graph) -> str:
+    def _format_graph(self, graph: Graph) -> str:
         return '\n'.join(  # noqa: WPS307
             f'{formatted_subject} -{formatted_predicate}-> {formatted_obj}'
             for subject, predicate, objectum in graph
@@ -79,9 +74,9 @@ class NotIsomorphic(DocumentedError):   # type: ignore
             if (formatted_obj := self._format_term(objectum))
         )
 
-    def _format_term(self, term: rdflib.term.Node) -> str:
+    def _format_term(self, term: Node) -> str:
         match term:
-            case rdflib.term.Literal():
+            case Literal():
                 if term.datatype:
                     return f'{term}#{term.datatype}'
 
@@ -118,18 +113,8 @@ def to_rdf():  # noqa: C901, WPS231
             **test_case.kwargs,
         )
 
-        raw_expected_quads = test_case.raw_expected_document
-
-        actual_triples = actual_dataset['@default']
-        actual_graph: Graph = _rdflib_graph_from_pyld_dataset(actual_triples)
-        expected_graph = Graph().parse(data=raw_expected_quads, format='nquads')
-
-        if not actual_graph.isomorphic(expected_graph):
-            raise NotIsomorphic(
-                document=test_case.raw_document,
-                actual_graph=actual_graph,
-                expected_graph=expected_graph,
-            )
+        expected_dataset = test_case.raw_expected_document
+        assert actual_dataset == expected_dataset
 
     return _test
 
@@ -139,19 +124,22 @@ def to_rdf():  # noqa: C901, WPS231
     load_tests(tests.ToRDFTest),
     ids=_get_id,
 )
-def test_to_rdf(test_case: TestCase, to_rdf):
+def test_to_rdf(test_case: TestCase, to_rdf):   # noqa: WPS442
+    exceptions = (
+        FailureToFail, ValueError, AssertionError, YAMLLDError, AttributeError,
+    )
     try:
         to_rdf(
             test_case=test_case,
             to_rdf_callable=yaml_ld.to_rdf,
         )
-    except (NotIsomorphic, FailureToFail):
+    except exceptions:
         try:   # noqa: WPS505
             to_rdf(
                 test_case=test_case,
                 to_rdf_callable=jsonld.to_rdf,
             )
-        except (NotIsomorphic, FailureToFail):
+        except exceptions:
             pytest.skip('This test fails for pyld as well as for yaml-ld.')
         else:
             raise
@@ -347,7 +335,7 @@ def test_frame(
                 test_case=test_case,
                 expand=jsonld.frame,
             )
-        except (AssertionError, FailureToFail, JsonLdError):
+        except (AssertionError, FailureToFail, jsonld.JsonLdError):
             pytest.skip('This test fails for pyld as well as for yaml-ld.')
         else:
             raise
