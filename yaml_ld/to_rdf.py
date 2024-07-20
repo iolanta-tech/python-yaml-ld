@@ -36,6 +36,7 @@ def to_rdf(
     """Convert a [＊-LD](/blog/any-ld/) document to RDF."""
     dict_options = options.model_dump(by_alias=True, exclude_none=True)
     dict_options.setdefault('documentLoader', DEFAULT_DOCUMENT_LOADER)
+    dict_options['extractAllScripts'] = True
 
     with except_json_ld_errors():
         return jsonld.to_rdf(
