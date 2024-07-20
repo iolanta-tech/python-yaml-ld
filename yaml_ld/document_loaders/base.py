@@ -8,6 +8,7 @@ DocumentLoaderOptions = TypedDict(
     'DocumentLoaderOptions',
     {
         'extractAllScripts': bool,
+        'headers': dict[str, str],
     },
 )
 
