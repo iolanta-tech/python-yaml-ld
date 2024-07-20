@@ -20,4 +20,6 @@ def test_flatten(url: URL):
 
 def test_to_rdf(url: URL):
     """Try converting a remote document to RDF."""
-    yaml_ld.to_rdf(url)
+    rdf = yaml_ld.to_rdf(url)
+    assert isinstance(rdf, dict)
+    assert rdf['@default']

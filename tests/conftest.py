@@ -33,7 +33,8 @@ def url(request) -> URL:
     if os.environ.get('CI'):
         pytest.skip('This test is long and unreliable, skipping it in CI.')
 
-    yaml_ld.load_document(request.param)
+    document = yaml_ld.load_document(request.param)
+    assert document
     return request.param
 
 

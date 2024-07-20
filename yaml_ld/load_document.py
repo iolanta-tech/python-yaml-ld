@@ -45,7 +45,7 @@ def load_document(
     dict_options.setdefault('headers', headers)
 
     return jsonld.load_document(
-        url=url,
+        url=str(url),
         options=dict_options,
         base=base,
         profile=profile,

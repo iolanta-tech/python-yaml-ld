@@ -3,7 +3,11 @@ from pyld import jsonld
 
 from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
 from yaml_ld.expand import except_json_ld_errors
-from yaml_ld.models import DEFAULT_VALIDATE_CALL_CONFIG, JsonLdInput
+from yaml_ld.models import (
+    DEFAULT_VALIDATE_CALL_CONFIG,
+    JsonLdInput,
+    ensure_string_or_document,
+)
 from yaml_ld.options import BaseOptions, ExtractAllScriptsOptions
 from yaml_ld.rdf import Dataset
 
@@ -33,9 +37,10 @@ def to_rdf(
     """Convert a [＊-LD](/blog/any-ld/) document to RDF."""
     dict_options = options.model_dump(by_alias=True, exclude_none=True)
     dict_options.setdefault('documentLoader', DEFAULT_DOCUMENT_LOADER)
+    dict_options['extractAllScripts'] = True
 
     with except_json_ld_errors():
         return jsonld.to_rdf(
-            document,
+            input_=ensure_string_or_document(document),
             options=dict_options,
         )

@@ -10,6 +10,7 @@ from yaml_ld.models import (
     JsonLdContext,
     JsonLdInput,
     JsonLdRecord,
+    ensure_string_or_document,
 )
 from yaml_ld.options import (
     BaseOptions,
@@ -56,7 +57,7 @@ def compact(  # noqa: WPS211
 
     with except_json_ld_errors():
         return jsonld.compact(
-            input_=str(document),
+            input_=ensure_string_or_document(document),
             ctx=ctx or {},
             options=dict_options,
         )

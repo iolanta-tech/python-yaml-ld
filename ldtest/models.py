@@ -83,6 +83,7 @@ class TestCase:
             extract_all_scripts=self.extract_all_scripts,
             expand_context=self.ctx,
             compact_arrays=self.compact_arrays,
+            format='application/n-quads',
         ).model_dump(
             by_alias=True,
             exclude_defaults=True,

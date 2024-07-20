@@ -19,6 +19,7 @@ from yaml_ld.models import (
     DEFAULT_VALIDATE_CALL_CONFIG,
     JsonLdInput,
     JsonLdRecord,
+    ensure_string_or_document,
 )
 from yaml_ld.options import (
     BaseOptions,
@@ -62,12 +63,15 @@ def except_json_ld_error(err: jsonld.JsonLdError):
 
 
 @contextlib.contextmanager
-def except_json_ld_errors():
+def except_json_ld_errors():   # noqa: WPS238, C901
     """Convert pyld errors to typed YAML-LD exceptions."""
-    try:
+    try:  # noqa: WPS225
         yield
     except TypeError as err:
-        raise MappingKeyError() from err
+        if 'not supported between instances of ' in str(err):
+            raise MappingKeyError() from err
+
+        raise
     except RecursionError as err:
         raise CycleDetected() from err
     except JSONDecodeError as err:
@@ -92,8 +96,6 @@ def expand(   # noqa: C901, WPS211
 
     with except_json_ld_errors():
         return jsonld.expand(
-            input_=str(document) if (
-                isinstance(document, (URL, Path))
-            ) else document,
+            input_=ensure_string_or_document(document),
             options=dict_options,
         )
