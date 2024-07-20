@@ -130,7 +130,8 @@ class HTMLDocumentParser(BaseDocumentParser):
         for script in scripts:
             try:
                 parser = parser_by_content_type(
-                    script.content_type,
+                    content_type=script.content_type,
+                    uri=source,
                 )
             except ParserNotFound:
                 continue

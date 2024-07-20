@@ -23,7 +23,10 @@ class LocalFileDocumentLoader(DocumentLoader):
         if content_type is None:
             raise ValueError(f'What content type is extension {path.suffix}?')
 
-        parser = content_types.parser_by_content_type(content_type)
+        parser = content_types.parser_by_content_type(
+            content_type=content_type,
+            uri=str(path),
+        )
         if parser is None:
             raise LoadingDocumentFailed(path=path)
 

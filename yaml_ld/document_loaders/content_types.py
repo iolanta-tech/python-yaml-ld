@@ -44,16 +44,24 @@ def parser_by_content_type_map():
 
 @dataclass
 class ParserNotFound(DocumentedError):   # type: ignore
-    """Cannot find a parser for `{self.content_type}` content type."""
+    """
+    Cannot find a parser for `{self.content_type}` content type.
+
+    Document: {self.uri}
+    """
 
     content_type: str
+    uri: str
 
 
-def parser_by_content_type(content_type: str) -> BaseDocumentParser:
+def parser_by_content_type(
+    content_type: str,
+    uri: str,
+) -> BaseDocumentParser:
     """Find a parser based on content type."""
     content_type = content_type.removesuffix('; charset=UTF-8')
 
     try:
         return parser_by_content_type_map()[content_type]()
     except KeyError:
-        raise ParserNotFound(content_type)
+        raise ParserNotFound(content_type=content_type, uri=uri)
