@@ -60,7 +60,10 @@ def maybe_follow_one_of_link_headers(
 
     for link in links:
         try:
-            content_types.parser_by_content_type(link.content_type)
+            content_types.parser_by_content_type(
+                content_type=link.content_type,
+                uri=link.url,
+            )
         except content_types.ParserNotFound:
             continue
 
@@ -180,7 +183,10 @@ class HTTPDocumentLoader(DocumentLoader):
                 f'What content type is extension `{url.suffix}`?',
             )
 
-        parser = content_types.parser_by_content_type(content_type)
+        parser = content_types.parser_by_content_type(
+            content_type=content_type,
+            uri=str(source),
+        )
         if parser is None:
             raise LoadingDocumentFailed(path=source)
 
