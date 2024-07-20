@@ -1,5 +1,8 @@
+from pathlib import Path
+
 from pydantic import validate_call
 from pyld import jsonld
+from yarl import URL
 
 from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
 from yaml_ld.expand import except_json_ld_errors
@@ -36,6 +39,6 @@ def to_rdf(
 
     with except_json_ld_errors():
         return jsonld.to_rdf(
-            document,
+            str(document) if isinstance(document, (URL, Path)) else document,
             options=dict_options,
         )

@@ -138,10 +138,11 @@ class HTTPDocumentLoader(DocumentLoader):
         options: DocumentLoaderOptions,
     ) -> RemoteDocument:
         """Load documents from HTTP sources."""
-        url = URL(str(source))
+        string_source = str(source)
+        url = URL(string_source)
 
         response = self.session.get(
-            str(url),
+            string_source,
             headers=options.get('headers'),
             timeout=DEFAULT_TIMEOUT,
         )
@@ -186,20 +187,20 @@ class HTTPDocumentLoader(DocumentLoader):
 
         parser = content_types.parser_by_content_type(
             content_type=content_type,
-            uri=str(source),
+            uri=string_source,
         )
         if parser is None:
             raise LoadingDocumentFailed(path=source)
 
         yaml_document = parser(
             data_stream=io.BytesIO(response.content),
-            source=str(source),
+            source=string_source,
             options=options,
         )
 
         return {
             'document': yaml_document,
-            'documentUrl': str(source),
+            'documentUrl': string_source,
             'contextUrl': None,
             'contentType': content_type,
         }
