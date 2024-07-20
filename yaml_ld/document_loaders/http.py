@@ -142,6 +142,7 @@ class HTTPDocumentLoader(DocumentLoader):
 
         response = self.session.get(
             str(url),
+            headers=options.get('headers'),
             timeout=DEFAULT_TIMEOUT,
         )
 
