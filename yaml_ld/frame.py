@@ -7,6 +7,7 @@ from yaml_ld.models import (
     DEFAULT_VALIDATE_CALL_CONFIG,
     JsonLdInput,
     JsonLdRecord,
+    ensure_string_or_document,
 )
 from yaml_ld.options import (
     BaseOptions,
@@ -60,7 +61,7 @@ def frame(
 
     with except_json_ld_errors():
         return jsonld.frame(
-            input_=str(document),
+            input_=ensure_string_or_document(document),
             frame=frame,
             options=dict_options,
         )

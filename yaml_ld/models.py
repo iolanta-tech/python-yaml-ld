@@ -52,3 +52,13 @@ DEFAULT_VALIDATE_CALL_CONFIG = ConfigDict(
 
 class Undefined:
     """Undefined."""
+
+
+def ensure_string_or_document(
+    input_: JsonLdInput,
+) -> JsonLdRecord | Sequence[JsonLdRecord] | str | RemoteDocument:
+    """Prepare `input_` for `pyld` functions."""
+    if isinstance(input_, (URL, Path)):
+        return str(input_)
+
+    return input_
