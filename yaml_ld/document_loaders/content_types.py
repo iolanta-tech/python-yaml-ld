@@ -8,7 +8,25 @@ from yaml_ld.document_parsers.rdf_xml_parser import RDFXMLParser
 from yaml_ld.document_parsers.yaml_parser import YAMLDocumentParser
 
 
+# FIXME
+#   - I've copied it over from pyld;
+#   - It is hard-coded, I think I should handle it dynamically depending on
+#     whatever parsers are available.
+DEFAULT_ACCEPT_HEADER = ', '.join([
+    'application/ld+json',
+    'application/rdf+xml;q=0.8',
+    'application/json;q=0.5',
+    'text/html;q=0.8',
+    'application/xhtml+xml;q=0.8',
+])
+
+
 def by_extension(extension: str) -> str | None:
+    """
+    Determine a content type by file extension.
+
+    FIXME this is hard coded, we have to generalize.
+    """
     return {
         '.json': 'application/json',
         '.jsonld': 'application/ld+json',
