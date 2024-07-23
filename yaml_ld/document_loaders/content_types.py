@@ -59,7 +59,11 @@ def parser_by_content_type(
     uri: str,
 ) -> BaseDocumentParser:
     """Find a parser based on content type."""
-    content_type = content_type.removesuffix('; charset=UTF-8')
+    # Here, we ignore suffixes like:
+    # - `charset=utf8`
+    # - `qs=0.9`
+    # - …
+    content_type, *_parameters = content_type.split('; ', maxsplit=1)
 
     try:
         return parser_by_content_type_map()[content_type]()
