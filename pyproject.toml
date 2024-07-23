@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "yaml-ld"
-version = "1.0.6"
+version = "1.0.7"
 description = "YAML-LD for Python"
 authors = ["Anatoly Scherbakov <altaisoft@gmail.com>"]
 license = "MIT"

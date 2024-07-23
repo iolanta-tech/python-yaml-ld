@@ -20,6 +20,7 @@ URLS = (
     URL('https://dbpedia.org/resource/Arthur_C._Clarke'),
     URL('https://www.wikidata.org/wiki/Special:EntityData/Q42.jsonld'),
     URL('https://id.loc.gov/authorities/names/n79081644.jsonld'),
+    URL('https://www.w3.org/2000/10/swap/pim/contact#Person'),
     URL(str(FOAF)),
 )
 

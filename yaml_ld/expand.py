@@ -1,11 +1,10 @@
 import contextlib
 from json import JSONDecodeError
-from pathlib import Path
 
 from pydantic import validate_call
 from pyld import jsonld
-from yarl import URL
 
+from yaml_ld.document_loaders.content_types import DEFAULT_ACCEPT_HEADER
 from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
 from yaml_ld.errors import (
     CycleDetected,
@@ -93,6 +92,7 @@ def expand(   # noqa: C901, WPS211
     """
     dict_options = options.model_dump(by_alias=True, exclude_none=True)
     dict_options.setdefault('documentLoader', DEFAULT_DOCUMENT_LOADER)
+    dict_options.setdefault('headers', {'Accept': DEFAULT_ACCEPT_HEADER})
 
     with except_json_ld_errors():
         return jsonld.expand(
