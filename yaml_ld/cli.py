@@ -98,7 +98,7 @@ def pretty_print(
 ) -> Syntax:
     """Serialize an LD document."""
     serializer = {
-        OutputFormat.JSON: functools.partial(json.dumps, indent=2),
+        OutputFormat.JSON: functools.partial(json.dumps, indent=2, default=str),
         OutputFormat.YAML: functools.partial(yaml.dump, Dumper=yaml.SafeDumper),
         RDFFormat.NQUADS: funcy.identity,
     }[output_format]
