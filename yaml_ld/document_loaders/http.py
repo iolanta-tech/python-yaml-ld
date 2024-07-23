@@ -153,8 +153,6 @@ class HTTPDocumentLoader(DocumentLoader):
             match http_error.response.status_code:
                 case 404:   # noqa: WPS432
                     raise NotFound(path=str(http_error.request.url))
-                case 406:   # noqa: WPS432
-                    raise ValueError(source, options['headers']['Accept'])
 
             raise
 
