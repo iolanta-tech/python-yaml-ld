@@ -34,7 +34,7 @@ jobs:
 
       - name: Test
         shell: bash
-        run: poetry run j ci
+        run: poetry run j --log-level info ci
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
