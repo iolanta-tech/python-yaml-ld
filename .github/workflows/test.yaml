@@ -40,12 +40,14 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
 
       - name: Pytest coverage comment
+        if: github.actor != 'dependabot[bot]'
         uses: MishaKav/pytest-coverage-comment@main
         with:
           pytest-coverage-path: tests/artifacts/coverage.txt
           junitxml-path: tests/artifacts/pytest.xml
 
       - name: Post Test Report
+        if: github.actor != 'dependabot[bot]'
         uses: dorny/test-reporter@v1
         with:
           name: pytest
