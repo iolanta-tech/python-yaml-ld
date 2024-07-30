@@ -1,15 +1,20 @@
 import json
 import os
-from enum import StrEnum
+from enum import Enum, StrEnum, auto
 from io import StringIO
 from pathlib import Path
 from typing import TextIO
 from xml.etree import ElementTree  # noqa: S405
 
 import funcy
+import rich
 import sh
 import typer
 from yarl import URL
+
+COMMENTING_NOT_ALLOWED = (
+    'GraphQL: Resource not accessible by integration (addComment)'
+)
 
 gh = sh.gh.bake(_env={**os.environ, 'NO_COLOR': '1'})
 
@@ -76,6 +81,29 @@ def test_with_artifacts():
         typer.echo(err.stderr)
 
 
+class PostComment(Enum):
+    """Status of a comment post attempt."""
+
+    POSTED = auto()
+    NO_EXISTING_COMMENTS = auto()
+    NOT_ALLOWED = auto()
+
+
+def _post(command):
+    try:
+        command()
+    except sh.ErrorReturnCode as err:
+        error_text = err.stderr.decode()
+        if 'no comments found for current user' in error_text:
+            return PostComment.NO_EXISTING_COMMENTS
+
+        elif COMMENTING_NOT_ALLOWED in error_text:
+            rich.print(f'Cannot post a comment: {error_text}')
+            return PostComment.NOT_ALLOWED
+
+        raise
+
+
 def ci():   # noqa: C901, WPS210, WPS213, WPS231
     """Run CI."""
     # Download artifact from a previous run
@@ -140,29 +168,16 @@ def ci():   # noqa: C901, WPS210, WPS213, WPS231
         body='\n\n'.join(comment_body_parts),
     )
 
-    post_new_comment = gh.pr.comment.bake(_in=comment)
+    post_comment = gh.pr.comment.bake(_in=comment)
 
     if pr_number := os.environ.get('PR_NUMBER'):
-        post_new_comment = post_new_comment.bake(pr_number)
+        post_comment = post_comment.bake(pr_number)
 
-    post_new_comment = post_new_comment.bake(body_file='-')
+    post_comment = post_comment.bake(body_file='-')
 
-    try:
-        post_new_comment('--edit-last')
-    except sh.ErrorReturnCode as err:
-        error_text = err.stderr.decode()
-        if 'no comments found for current user' in error_text:
-            post_new_comment()
-
-        elif (
-            'GraphQL: Resource not accessible by integration (addComment)'
-            in error_text
-        ):
-            print(f'Cannot post a comment: {error_text}')
-            return
-
-        else:
-            raise
+    recent_comment_edit = _post(post_comment.bake('--edit-last'))
+    if recent_comment_edit == PostComment.NO_EXISTING_COMMENTS:
+        _post(post_comment)
 
     if newly_failed:
         raise typer.Exit(1)

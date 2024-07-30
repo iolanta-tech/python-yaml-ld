@@ -7,7 +7,6 @@ from yaml_ld.document_parsers.base import BaseDocumentParser
 from yaml_ld.document_parsers.rdf_xml_parser import RDFXMLParser
 from yaml_ld.document_parsers.yaml_parser import YAMLDocumentParser
 
-
 # FIXME
 #   - I've copied it over from pyld;
 #   - It is hard-coded, I think I should handle it dynamically depending on
