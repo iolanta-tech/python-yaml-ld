@@ -175,7 +175,8 @@ def ci():   # noqa: C901, WPS210, WPS213, WPS231
 
     post_comment = post_comment.bake(body_file='-')
 
-    if _post(post_comment('--edit-last')) == PostComment.NO_EXISTING_COMMENTS:
+    recent_comment_edit = _post(post_comment.bake('--edit-last'))
+    if recent_comment_edit == PostComment.NO_EXISTING_COMMENTS:
         _post(post_comment)
 
     if newly_failed:
