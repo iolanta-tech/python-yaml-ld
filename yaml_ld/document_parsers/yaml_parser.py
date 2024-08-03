@@ -4,6 +4,7 @@ import yaml
 from yaml.composer import ComposerError
 from yaml.constructor import ConstructorError
 from yaml.parser import ParserError
+from yaml.reader import ReaderError
 from yaml.scanner import ScannerError
 
 from yaml_ld.document_parsers.base import (
@@ -63,8 +64,8 @@ class YAMLDocumentParser(BaseDocumentParser):
                 ),
             )
 
-        except UnicodeDecodeError as unicode_decode_error:
-            raise InvalidEncoding() from unicode_decode_error
+        except (UnicodeDecodeError, ReaderError) as reader_error:
+            raise InvalidEncoding() from reader_error
 
         except ConstructorError as err:
             if err.problem == 'found unhashable key':
