@@ -10,7 +10,10 @@ from yarl import URL
 
 from yaml_ld.document_loaders import content_types
 from yaml_ld.document_loaders.base import DocumentLoader, DocumentLoaderOptions
-from yaml_ld.errors import LoadingDocumentFailed, NotFound
+from yaml_ld.errors import (
+    LoadingDocumentFailed, NotFound,
+    ContentTypeNotDetermined,
+)
 from yaml_ld.models import URI, RemoteDocument
 
 # Default `requests` timeout. Chosen arbitrarily.
@@ -180,9 +183,13 @@ class HTTPDocumentLoader(DocumentLoader):
             if follow_result:
                 return follow_result
 
+        if content_type is None and response.text.startswith('<rdf:RDF'):
+            content_type = 'application/rdf+xml'
+
         if content_type is None:
-            raise ValueError(
-                f'What content type is extension `{url.suffix}`?',
+            raise ContentTypeNotDetermined(
+                source=source,
+                content=response.text,
             )
 
         parser = content_types.parser_by_content_type(

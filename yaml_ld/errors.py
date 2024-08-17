@@ -1,9 +1,11 @@
 import textwrap
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Iterable
 
 import funcy
 from documented import DocumentedError
+from yarl import URL
 
 from yaml_ld.models import JsonLdRecord
 
@@ -159,3 +161,26 @@ class LoadingRemoteContextFailed(YAMLLDError):   # type: ignore
     reason: str
 
     code: str = 'loading remote context failed'
+
+
+@dataclass
+class ContentTypeNotDetermined(YAMLLDError):   # type: ignore
+    """
+    Content type is not determined.
+
+    Source: {self.source}
+    Glimpse of content:
+
+    ```
+    {self.head}
+    ```
+    """
+
+    source: str | URL | Path
+    content: str   # noqa: WPS110
+    head_length: int = 128
+
+    @property
+    def head(self) -> str:
+        """Show a piece of the document content."""
+        return textwrap.shorten(self.content, self.head_length)
