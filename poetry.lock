@@ -601,17 +601,14 @@ files = [
 
 [[package]]
 name = "dirty-equals"
-version = "0.7.1.post0"
+version = "0.8.0"
 description = "Doing dirty (but extremely useful) things with equals."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "dirty_equals-0.7.1.post0-py3-none-any.whl", hash = "sha256:7fb9217ea7cd04c0e95ace3bc717e2ee5532b8990518533483e53b5a43903c88"},
-    {file = "dirty_equals-0.7.1.post0.tar.gz", hash = "sha256:78ff80578a46163831ecb3255cf30d03d1dc2fbca8e67f820105691a1bc556dc"},
+    {file = "dirty_equals-0.8.0-py3-none-any.whl", hash = "sha256:0ef998ba3c395e03cf5eb3cd1c13c26a9a992efa18c0d59c22ba27344519cee1"},
+    {file = "dirty_equals-0.8.0.tar.gz", hash = "sha256:798db3b9481b9a5024c0e520946507676ed2f0c65317d3e95bdce1a01657cf60"},
 ]
-
-[package.dependencies]
-pytz = ">=2021.3"
 
 [package.extras]
 pydantic = ["pydantic (>=2.4.2)"]
@@ -2403,17 +2400,6 @@ PyYAML = "*"
 six = "*"
 
 [[package]]
-name = "pytz"
-version = "2024.1"
-description = "World timezone definitions, modern and historical"
-optional = false
-python-versions = "*"
-files = [
-    {file = "pytz-2024.1-py2.py3-none-any.whl", hash = "sha256:328171f4e3623139da4983451950b28e95ac706e13f3f2630a879749e7a8b319"},
-    {file = "pytz-2024.1.tar.gz", hash = "sha256:2a29735ea9c18baf14b448846bde5a48030ed267578472d8955cd0e7443a9812"},
-]
-
-[[package]]
 name = "pyyaml"
 version = "6.0.2"
 description = "YAML parser and emitter for Python"
@@ -3307,4 +3293,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4.0"
-content-hash = "abb1fd8225eef914725bb837bdff951a19fc2401b38827b3f834a0a4afde87de"
+content-hash = "46d0267ed9f07e30744f7c3c443fd37017a69c574857c9203c99024428a7bcd5"
