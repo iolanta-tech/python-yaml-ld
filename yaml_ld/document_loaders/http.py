@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import Iterable, cast
 
 import funcy
+from annotated_types import EllipsisType
 from pyld.jsonld import prepend_base
 from requests import HTTPError, Session
 from yarl import URL
@@ -11,8 +12,9 @@ from yarl import URL
 from yaml_ld.document_loaders import content_types
 from yaml_ld.document_loaders.base import DocumentLoader, DocumentLoaderOptions
 from yaml_ld.errors import (
-    LoadingDocumentFailed, NotFound,
     ContentTypeNotDetermined,
+    LoadingDocumentFailed,
+    NotFound,
 )
 from yaml_ld.models import URI, RemoteDocument
 
@@ -22,6 +24,10 @@ DEFAULT_TIMEOUT = 30
 LINK_PATTERN = re.compile(
     '<(?P<relative_link>[^>]+)>; rel="alternate"; '
     'type="(?P<content_type>[^"]+)"',
+)
+
+CONTENT_TYPE_PREFERENCE_ORDERING = (
+    'application/ld+json',
 )
 
 
@@ -61,26 +67,46 @@ def maybe_follow_one_of_link_headers(
         DEFAULT_DOCUMENT_LOADER,
     )
 
-    for link in links:
+    link_by_content_type: dict[str, LinkHeader | EllipsisType] = {
+        content_type: ...,  # type: ignore
+        **{link.content_type: link for link in links},
+    }
+
+    ordered_links = [
+        # First, let's list the Link headers that we are most interested in.
+        *[
+            link
+            for preferred_content_type   # noqa: WPS361
+            in CONTENT_TYPE_PREFERENCE_ORDERING
+            if (link := link_by_content_type.pop(preferred_content_type, None))
+        ],
+
+        # Now, the rest of the headers. We did not explicitly mentioned them
+        # above but maybe one of them is still okay.
+        *list(link_by_content_type.values()),
+    ]
+
+    for potential_link in ordered_links:
+        if potential_link is ...:
+            # It seems that the main page, which brought us the headers, is
+            # more interesting to us than any of the headers themselves.
+            return None
+
         try:
             content_types.parser_by_content_type(
-                content_type=link.content_type,
-                uri=link.url,
+                content_type=potential_link.content_type,
+                uri=potential_link.url,
             )
+
         except content_types.ParserNotFound:
             continue
 
-        if not _is_content_type_more_preferable(   # noqa: WPS337
-            left=link.content_type,
-            right=content_type,
-        ):
-            continue
-
         return DEFAULT_DOCUMENT_LOADER(
-            source=link.url,
+            source=potential_link.url,
             options=options,
         )
 
+    # None of the links was interesting enough.
     return None
 
 
@@ -89,7 +115,7 @@ def parse_raw_link_header(   # noqa: WPS210
     link_header: str,
 ) -> Iterable[LinkHeader]:
     """Parse Link header into a structure."""
-    links = link_header.split(', ')
+    links = re.split(', ?', link_header)
 
     for link in links:
         bracketed_url, *raw_attributes = link.split('; ')
