@@ -1,4 +1,5 @@
 import io
+import logging
 import re
 from dataclasses import dataclass, field
 from typing import Iterable, cast
@@ -30,6 +31,8 @@ CONTENT_TYPE_PREFERENCE_ORDERING = (
     'application/ld+json',
 )
 
+logger = logging.getLogger(__name__)
+
 
 @dataclass
 class LinkHeader:
@@ -54,7 +57,7 @@ def _parse_link_attributes(
         if match_result:
             yield cast(tuple[str, str], match_result.groups())
         else:
-            raise ValueError(f'Cannot parse: {pair}')
+            logger.warning(f'Cannot parse: {pair}')
 
 
 def maybe_follow_one_of_link_headers(
