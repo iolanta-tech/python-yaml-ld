@@ -1166,13 +1166,13 @@ all = ["sh (>=2.0.4)"]
 
 [[package]]
 name = "jeeves-yeti-pyproject"
-version = "0.2.33"
+version = "0.2.41"
 description = "Opinionated Jeeves plugin for Python projects."
 optional = false
 python-versions = "<4.0,>=3.10"
 files = [
-    {file = "jeeves_yeti_pyproject-0.2.33-py3-none-any.whl", hash = "sha256:1ad184d6f5d061a692779a31c3bb39f3bbefb291c9df5f2950cada6030bbae6d"},
-    {file = "jeeves_yeti_pyproject-0.2.33.tar.gz", hash = "sha256:6b580210ff24a64240d9c0b1d5fc16bfc9180655df0dd06a5fc8e49d497a7f72"},
+    {file = "jeeves_yeti_pyproject-0.2.41-py3-none-any.whl", hash = "sha256:75a95db24f65d40800f80c1babac8ed36ee9a60c5f81f2609b8e377240ef144c"},
+    {file = "jeeves_yeti_pyproject-0.2.41.tar.gz", hash = "sha256:36b1bc9c63d5f6dddd6414fc8116cd54cac40e6b1944120a19bcf0337386540d"},
 ]
 
 [package.dependencies]
@@ -1183,6 +1183,7 @@ mkdocs = ">=1.4.2"
 mkdocs-macros-plugin = ">=0.7.0"
 mkdocs-material = ">=9.0.3"
 mypy = "<2.0"
+pydantic = ">=2.9.2,<3.0.0"
 pytest = ">=7.4.2"
 pytest-cov = ">=4.1.0"
 pytest-randomly = ">=3.8"
@@ -1190,6 +1191,7 @@ rich = ">=13.3.1"
 safety = ">=1.10"
 tomlkit = ">=0.11.6"
 wemake-python-styleguide = ">=0.17.0"
+yarl = ">=1.17.0,<2.0.0"
 
 [[package]]
 name = "jinja2"
