@@ -53,6 +53,7 @@ def parser_by_content_type_map():
         'application/json': YAMLDocumentParser,
         'application/ld+json': YAMLDocumentParser,
         'application/yaml': YAMLDocumentParser,
+        'application/x-yaml': YAMLDocumentParser,
         'application/ld+yaml': YAMLDocumentParser,
         'text/html': HTMLDocumentParser,
         'application/rdf+xml': RDFXMLParser,
