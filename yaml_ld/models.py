@@ -27,7 +27,7 @@ Or, it can be a `str`, and we will try to automatically identify what that is.
 
 
 JsonLdInput = (
-    JsonLdRecord | Sequence[JsonLdRecord] | URI | RemoteDocument
+    JsonLdRecord | Sequence[JsonLdRecord] | URI
 )
 """
 Input for `expand()`, `compact()` and other functions.
