@@ -95,6 +95,9 @@ def expand(   # noqa: C901, WPS211
     dict_options.setdefault('headers', {'Accept': DEFAULT_ACCEPT_HEADER})
 
     with except_json_ld_errors():
+        jsonld._resolved_context_cache = jsonld.LRUCache(   # noqa: WPS437
+            maxsize=jsonld.RESOLVED_CONTEXT_CACHE_MAX_SIZE,
+        )
         return jsonld.expand(
             input_=ensure_string_or_document(document),
             options=dict_options,
