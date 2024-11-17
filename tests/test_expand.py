@@ -60,3 +60,28 @@ def test_https():
             '@id': 'https://json-ld.github.io/yaml-ld/tests/basic-manifest',
         }),
     ]
+
+
+def test_expand_iolanta_index():
+    assert yaml_ld.expand(
+        {
+            '@context': {
+                '@import': (
+                    'https://json-ld.org/contexts/dollar-convenience.jsonld'
+                ),
+                'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                'iolanta': 'https://iolanta.tech/',
+                '@base': 'https://iolanta.tech/visualizations/',
+                '→': {'@id': 'iolanta:visualized-with', '@type': '@id'},
+            },
+            '$id': 'https://iolanta.tech/visualizations/index.yaml',
+            'rdfs:label': 'Iolanta visualizations index 1.0',
+            '$included': [
+                {'$id': 'rdfs:', '→': 'rdfs.yaml'},
+                {
+                    '$id': 'http://xmlns.com/foaf/0.1/',
+                    '→': 'foaf.yaml',
+                },
+            ],
+        },
+    )

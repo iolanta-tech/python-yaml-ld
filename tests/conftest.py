@@ -23,6 +23,7 @@ URLS = (
     URL('https://id.loc.gov/authorities/names/n79081644.jsonld'),
     URL('https://www.w3.org/2000/10/swap/pim/contact#Person'),
     URL(str(FOAF)),
+    URL('https://iolanta.tech/visualizations/index.yaml'),
 )
 
 
