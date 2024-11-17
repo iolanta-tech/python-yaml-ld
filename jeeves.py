@@ -10,7 +10,10 @@ import funcy
 import rich
 import sh
 import typer
+from pyld import jsonld
 from yarl import URL
+
+import yaml_ld
 
 COMMENTING_NOT_ALLOWED = (
     'GraphQL: Resource not accessible by integration (addComment)'
@@ -208,3 +211,36 @@ def install_mkdocs_insiders():
 def deploy_to_github_pages():
     """Build the docs & deploy → gh-pages branch."""
     sh.mkdocs('gh-deploy', '--force', '--clean', '--verbose')
+
+
+def demonstrate_need_to_reset_cache():
+    """Fail if cache is not reset in expand()."""
+    yaml_ld.expand(
+        'file:///home/anatoly/projects/iolanta/iolanta/data/'
+        'textual-browser.yaml',
+    )
+
+    expanded = jsonld.expand(
+        {
+            '@context': {
+                '@import': (
+                    'https://json-ld.org/contexts/dollar-convenience.jsonld'
+                ),
+                'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+                'iolanta': 'https://iolanta.tech/',
+                '@base': 'https://iolanta.tech/visualizations/',
+                'x': {'@id': 'iolanta:visualized-with', '@type': '@id'},
+            },
+            '$id': 'https://iolanta.tech/visualizations/index.yaml',
+            'rdfs:label': 'Iolanta visualizations index 1.0',
+            '$included': [
+                {'$id': 'rdfs:', 'x': 'rdfs.yaml'},
+                {
+                    '$id': 'http://xmlns.com/foaf/0.1/',
+                    'x': 'foaf.yaml',
+                },
+            ],
+        },
+    )
+
+    raise ValueError(expanded[0]['@included'])
