@@ -42,6 +42,9 @@ def to_rdf(
     dict_options['extractAllScripts'] = True
 
     with except_json_ld_errors():
+        jsonld._resolved_context_cache = jsonld.LRUCache(  # noqa: WPS437
+            maxsize=jsonld.RESOLVED_CONTEXT_CACHE_MAX_SIZE,
+        )
         return jsonld.to_rdf(
             input_=ensure_string_or_document(document),
             options=dict_options,
