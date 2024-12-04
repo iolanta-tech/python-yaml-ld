@@ -36,7 +36,7 @@ jobs:
         run: poetry run j test-with-artifacts
 
       - name: Upload pytest.xml
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: pytest-xml
           path: tests/artifacts/pytest.xml
