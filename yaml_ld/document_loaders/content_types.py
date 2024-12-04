@@ -82,7 +82,7 @@ def parser_by_content_type(
     # - `qs=0.9`
     # - …
     content_type, *_parameters = content_type.split(  # noqa: WPS110, WPS472
-        '; ',
+        ';',
         maxsplit=1,
     )
 

@@ -6,6 +6,7 @@ import funcy
 import lxml  # noqa: S410
 from bs4 import BeautifulSoup
 from pyld.jsonld import JsonLdError, parse_url, prepend_base
+from yarl import URL
 
 from yaml_ld.document_loaders.content_types import (
     ParserNotFound,
@@ -42,7 +43,10 @@ class HTMLDocumentParser(BaseDocumentParser):
     ) -> JsonLdRecord | list[JsonLdRecord]:
         """Parse HTML with LD in <script> tags."""
         html_content = data_stream.read()
-        links = self.extract_link_tags(html_content)
+        links = self.extract_link_tags(
+            html_content,
+            source=source,
+        )
 
         linked_document = maybe_follow_one_of_link_headers(
             links=links,
@@ -154,7 +158,11 @@ class HTMLDocumentParser(BaseDocumentParser):
                     raise DocumentIsScalar(scalar)
 
     @funcy.post_processing(list)
-    def extract_link_tags(self, html_content: str) -> Iterable[LinkHeader]:
+    def extract_link_tags(   # noqa: WPS210
+        self,
+        html_content: str,
+        source: str,
+    ) -> Iterable[LinkHeader]:
         """Extract <link> tags."""
         soup = BeautifulSoup(html_content, features='lxml')
         links = soup.find_all('link', attrs={'rel': 'alternate'})
@@ -166,5 +174,19 @@ class HTMLDocumentParser(BaseDocumentParser):
                     url=link['href'],
                     rel=funcy.first(link['rel']),
                     content_type=content_type,
+                    attributes={},
+                )
+
+        if URL(source).host == 'nanodash.knowledgepixels.com':
+            # Hack for Nanodash which does not support content negotiation.
+            anchors = soup.find_all(
+                'a',
+                href=lambda href: href and href.endswith('.jsonld'),
+            )
+            for anchor in anchors:   # noqa: WPS526
+                yield LinkHeader(
+                    url=anchor.get('href'),
+                    rel='alternate',
+                    content_type='application/ld+json',
                     attributes={},
                 )
