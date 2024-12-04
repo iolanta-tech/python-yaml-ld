@@ -55,7 +55,7 @@ class HTMLDocumentParser(BaseDocumentParser):
         )
 
         if linked_document:
-            return linked_document
+            return linked_document['document']
 
         scripts = self.extract_script_tags(
             html_content=html_content,
