@@ -215,6 +215,12 @@ class HTTPDocumentLoader(DocumentLoader):
         if content_type is None and response.text.startswith('<rdf:RDF'):
             content_type = 'application/rdf+xml'
 
+        if (
+            content_type == 'application/octet-stream'
+            and response.text.startswith('@prefix')
+        ):
+            content_type = 'text/turtle'
+
         if content_type is None:
             raise ContentTypeNotDetermined(
                 source=source,
