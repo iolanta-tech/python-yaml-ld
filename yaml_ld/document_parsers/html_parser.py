@@ -177,7 +177,14 @@ class HTMLDocumentParser(BaseDocumentParser):
                     attributes={},
                 )
 
-        if URL(source).host == 'nanodash.knowledgepixels.com':
+        url = URL(source)
+        if (
+            url.host == 'nanodash.knowledgepixels.com'
+            or (
+                url.host == 'purl.org'
+                and url.path.startswith('/np/')
+            )
+        ):
             # Hack for Nanodash which does not support content negotiation.
             anchors = soup.find_all(
                 'a',
