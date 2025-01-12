@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Annotated, Optional
 
 import funcy
+import requests
 import yaml
 from documented import Documented
 from rich.console import Console
@@ -313,15 +314,38 @@ def from_rdf(
         MaybeStr,
         Argument(help='Path or URL. Omit to read from standard input.'),
     ] = None,
+    use_native_types: Annotated[
+        bool,
+        Option(
+            help=(
+                'Convert XSD types into native types '
+                '(boolean, integer, double)?'
+            ),
+        ),
+    ] = True,
     output_format: Annotated[
         OutputFormat,
         Option(help='Format to output the data at.'),
     ] = OutputFormat.JSON,
 ):
     """Convert an RDF document → ＊-LD form."""
+    source = decode_input(input_)
+
+    match source:
+        case Path() as path:
+            dataset = path.read_text()
+
+        case URL() as url:
+            dataset = requests.get(str(url)).text   # noqa: S113
+
+        case _:
+            raise ValueError(f'Unknown source type: {source}')
+
     response = yaml_ld.from_rdf(
-        dataset=str(decode_input(input_)),
-        options=FromRDFOptions(),
+        dataset=dataset,
+        options=FromRDFOptions(
+            use_native_types=use_native_types,
+        ),
     )
 
     return pretty_print(
