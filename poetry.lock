@@ -1181,13 +1181,13 @@ files = [
 
 [[package]]
 name = "iolanta"
-version = "1.2.2"
+version = "1.2.4"
 description = "Semantic Web browser"
 optional = false
 python-versions = "<4.0,>=3.10"
 files = [
-    {file = "iolanta-1.2.2-py3-none-any.whl", hash = "sha256:4aa09075cc4af87bd608c98607600a8297707ebdecbb894bc14d0bc05de71c48"},
-    {file = "iolanta-1.2.2.tar.gz", hash = "sha256:2ed0b3da261d2ddd5a2bf2206ea0240e01bf600a574fa7afddf97157299b4f95"},
+    {file = "iolanta-1.2.4-py3-none-any.whl", hash = "sha256:7d47948cedf80c69cfdc31cdc955fbd8b8bd7b0207e7e4d7f72536e104d60e8a"},
+    {file = "iolanta-1.2.4.tar.gz", hash = "sha256:b933588c6d553426cee5d19bb5417802a6e78c5607af76b0b752dbea8da38bed"},
 ]
 
 [package.dependencies]
@@ -2727,7 +2727,9 @@ files = [
     {file = "pyoxigraph-0.4.6-cp38-abi3-macosx_10_14_x86_64.macosx_11_0_arm64.macosx_10_14_universal2.whl", hash = "sha256:f1fecee82e2cb07ec52d9586e8a4b677ee416a689c508e21d34f636a84cfab3c"},
     {file = "pyoxigraph-0.4.6-cp38-abi3-macosx_10_14_x86_64.whl", hash = "sha256:b3efae489e5a8b26de269772a36bc221132dd490ebaa498d2b403747fbd5b0ea"},
     {file = "pyoxigraph-0.4.6-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:6669483b0835414d9de2f830918515cccf35df5ffb1bbb62d6a50cf833fe8df9"},
+    {file = "pyoxigraph-0.4.6-cp38-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:18ff383202c3c7fea29e58724721b3611e3307d4df323c85ba14d9fbabf3c1ab"},
     {file = "pyoxigraph-0.4.6-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:75532da0199f1c8f6e74d9d83ac50b15b22dab616082bd1e369add19cc0681e6"},
+    {file = "pyoxigraph-0.4.6-cp38-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:97bb2043de0a8afc37fcfd1d51ceba4defe27068f3c15de6174460840665cab0"},
     {file = "pyoxigraph-0.4.6-cp38-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:6f0e15106e74457659b630acf59d735fe7b76e2761fe8f0173bc6cef5ba7fb3e"},
     {file = "pyoxigraph-0.4.6-cp38-abi3-win_amd64.whl", hash = "sha256:0ebe23d270acae67a4ecd5158e31fdc20d34cf12f23a5abd188d3eb762ad5a7d"},
     {file = "pyoxigraph-0.4.6-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:08bcb317c343439c5135a3d095f8c6380715a900cc4d0b8726382ec59046831b"},
