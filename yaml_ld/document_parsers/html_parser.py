@@ -181,7 +181,7 @@ class HTMLDocumentParser(BaseDocumentParser):
         if (
             url.host == 'nanodash.knowledgepixels.com'
             or (
-                url.host == 'purl.org'
+                url.host in {'purl.org', 'w3id.org'}
                 and url.path.startswith('/np/')
             )
         ):
