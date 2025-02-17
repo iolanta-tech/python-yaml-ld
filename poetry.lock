@@ -1192,13 +1192,13 @@ files = [
 
 [[package]]
 name = "iolanta"
-version = "1.2.6"
+version = "1.2.7"
 description = "Semantic Web browser"
 optional = false
 python-versions = "<4.0,>=3.10"
 files = [
-    {file = "iolanta-1.2.6-py3-none-any.whl", hash = "sha256:ecebddf81e1b5c904661e31e7550b429dce979a6ba2d6bd21599c12999384db3"},
-    {file = "iolanta-1.2.6.tar.gz", hash = "sha256:aacfedb88fc58cd5fc08b4dca2cee89bc954af793fafd912cd641cdf955dddc4"},
+    {file = "iolanta-1.2.7-py3-none-any.whl", hash = "sha256:aaad8451c5ca2c9f38a7e45dc7f39f1ce4fffd28b9bb8e4a002b7266040af465"},
+    {file = "iolanta-1.2.7.tar.gz", hash = "sha256:e83c1ee1bcbc7961cb1663606e438f85f0b9b25ff4c2b4ce0842b8b68aed4e12"},
 ]
 
 [package.dependencies]
