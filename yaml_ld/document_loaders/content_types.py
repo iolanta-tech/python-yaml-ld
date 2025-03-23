@@ -1,12 +1,15 @@
 import functools
 from dataclasses import dataclass
+from pathlib import Path
 
 from documented import DocumentedError
+from yarl import URL
 
 from yaml_ld.document_parsers.base import BaseDocumentParser
 from yaml_ld.document_parsers.rdf_xml_parser import RDFXMLParser
 from yaml_ld.document_parsers.turtle_parser import TurtleParser
 from yaml_ld.document_parsers.yaml_parser import YAMLDocumentParser
+from yaml_ld.models import URI
 
 # FIXME
 #   - I've copied it over from pyld;
@@ -19,6 +22,31 @@ DEFAULT_ACCEPT_HEADER = ', '.join([
     'text/html;q=0.8',
     'application/xhtml+xml;q=0.8',
 ])
+
+
+def construct_accept_header(url: URI) -> str:
+    """Construct headers for a URL."""
+    match url:
+        case URL() as url:
+            url = str(url)
+
+        case Path():
+            return DEFAULT_ACCEPT_HEADER
+
+    # FIXME: Use JsonLdInput as argument instead of URI type
+
+    # FIXME:
+    #    * Make this configurable and extendable
+    #    * Maybe move this to pyld, test URL:
+    #    ```
+    #    https://w3id.org/fair/fip/terms/Knowledge-representation-language
+    #    ```
+    if url.startswith('https://w3id.org/fair/fip/terms/'):
+        # Content negotiation will not work correctly because w3id does not
+        # support content type weights. It will return the text/html version.
+        return 'application/ld+json'
+
+    return DEFAULT_ACCEPT_HEADER
 
 
 def by_extension(extension: str) -> str | None:
