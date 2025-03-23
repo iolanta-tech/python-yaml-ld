@@ -1,7 +1,7 @@
 from pydantic import validate_call
 from pyld import jsonld
 
-from yaml_ld.document_loaders.content_types import DEFAULT_ACCEPT_HEADER
+from yaml_ld.document_loaders.content_types import construct_accept_header
 from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
 from yaml_ld.models import DEFAULT_VALIDATE_CALL_CONFIG, RemoteDocument
 from yaml_ld.options import BaseOptions
@@ -23,7 +23,7 @@ def load_document(
     The document can be retrieved from local filesystem or from the Web.
     """
     headers = {
-        'Accept': DEFAULT_ACCEPT_HEADER,
+        'Accept': construct_accept_header(url),
     }
 
     if requestProfile:
