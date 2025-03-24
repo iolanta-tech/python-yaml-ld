@@ -1278,14 +1278,14 @@ files = [
 
 [[package]]
 name = "iolanta"
-version = "1.2.8"
+version = "1.2.9"
 description = "Semantic Web browser"
 optional = false
 python-versions = "<4.0,>=3.10"
 groups = ["dev"]
 files = [
-    {file = "iolanta-1.2.8-py3-none-any.whl", hash = "sha256:5f9bcacd1731a25c7e74315eb317e50f300dfef5adb8c6ed957e8f3b5865aead"},
-    {file = "iolanta-1.2.8.tar.gz", hash = "sha256:594968debec1f5a7e7daf0076746523f4eb7c6708a397a4686bd626dfe9f40e4"},
+    {file = "iolanta-1.2.9-py3-none-any.whl", hash = "sha256:63e3adf8a709093dcb6c262da109be9bead8361642ccad5de3f6ac1792bc0a9d"},
+    {file = "iolanta-1.2.9.tar.gz", hash = "sha256:5861a4363fd8b8ef66e7b0799564dfc1d3ff5cd2d92d7b2ca5f4e435050f5998"},
 ]
 
 [package.dependencies]
@@ -1309,7 +1309,7 @@ rich = ">=13.3.1"
 textual = ">=0.83.0"
 typer = ">=0.9.0"
 watchfiles = ">=1.0.4,<2.0.0"
-yaml-ld = ">=1.1.3"
+yaml-ld = ">=1.1.4"
 yarl = ">=1.9.4"
 
 [package.extras]
