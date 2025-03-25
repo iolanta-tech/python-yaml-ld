@@ -193,6 +193,14 @@ class HTTPDocumentLoader(DocumentLoader):
         if content_type is None:
             content_type = content_types.by_extension(url.suffix)
 
+        if content_type == 'application/octet-stream':
+            # This content type does not provide us with any information at all.
+            # We will try to check the extension of the file. Maybe it will
+            # help guess what this is.
+            content_type_from_extension = content_types.by_extension(url.suffix)
+            if content_type_from_extension not in {content_type, None}:
+                content_type = content_type_from_extension
+
         if content_type is not None:
             content_type = re.sub(
                 pattern='; charset=utf-8',
