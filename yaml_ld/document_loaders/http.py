@@ -158,6 +158,45 @@ def _is_content_type_more_preferable(left: str, right: str | None) -> bool:
     }[left, right]
 
 
+MIMEType = str
+
+
+@dataclass
+class ContentType:
+    """Representation of a Content Type."""
+
+    mime_type: MIMEType
+    parameters: dict[str, str]   # noqa: WPS110
+
+
+def parse_content_type(content_type: str) -> ContentType:
+    """Parse content type."""
+    mime_type, *_etc = content_type.split(';', maxsplit=1)   # noqa: WPS472
+    return ContentType(
+        mime_type=mime_type,
+        parameters={},
+    )
+
+
+def choose_mime_type(*mime_types: MIMEType | None) -> MIMEType | None:
+    """Choose MIME type to use."""
+    for mime_type in mime_types:
+        if mime_type is None:
+            continue
+
+        try:
+            content_types.parser_by_content_type(
+                content_type=mime_type,
+                uri='',
+            )
+        except content_types.ParserNotFound:
+            continue
+
+        return mime_type
+
+    return None
+
+
 @dataclass
 class HTTPDocumentLoader(DocumentLoader):
     """Load documents from HTTP sources."""
@@ -188,31 +227,25 @@ class HTTPDocumentLoader(DocumentLoader):
 
             raise
 
-        content_type = response.headers.get('Content-Type')
+        mime_type_from_headers = None
+        if raw_content_type := response.headers.get('Content-Type'):
+            mime_type_from_headers = parse_content_type(
+                raw_content_type,
+            ).mime_type
 
-        if content_type is None:
-            content_type = content_types.by_extension(url.suffix)
+        mime_type_by_extension = (
+            (extension := url.suffix) and content_types.by_extension(extension)
+        )
 
-        if content_type == 'application/octet-stream':
-            # This content type does not provide us with any information at all.
-            # We will try to check the extension of the file. Maybe it will
-            # help guess what this is.
-            content_type_from_extension = content_types.by_extension(url.suffix)
-            if content_type_from_extension not in {content_type, None}:
-                content_type = content_type_from_extension
-
-        if content_type is not None:
-            content_type = re.sub(
-                pattern='; charset=utf-8',
-                repl='',
-                string=content_type,
-                flags=re.IGNORECASE,
-            )
+        mime_type = choose_mime_type(
+            mime_type_from_headers,
+            mime_type_by_extension,
+        )
 
         if link := response.headers.get('Link'):
             follow_result = self.follow_link_header(
                 source=source,
-                content_type=content_type,
+                content_type=mime_type,
                 link_header=link,
                 options=options,
             )
@@ -220,23 +253,14 @@ class HTTPDocumentLoader(DocumentLoader):
             if follow_result:
                 return follow_result
 
-        if content_type is None and response.text.startswith('<rdf:RDF'):
-            content_type = 'application/rdf+xml'
-
-        if (
-            content_type == 'application/octet-stream'
-            and response.text.startswith('@prefix')
-        ):
-            content_type = 'text/turtle'
-
-        if content_type is None:
+        if mime_type is None:
             raise ContentTypeNotDetermined(
                 source=source,
                 content=response.text,
             )
 
         parser = content_types.parser_by_content_type(
-            content_type=content_type,
+            content_type=mime_type,
             uri=string_source,
         )
         if parser is None:
@@ -252,7 +276,7 @@ class HTTPDocumentLoader(DocumentLoader):
             'document': yaml_document,
             'documentUrl': string_source,
             'contextUrl': None,
-            'contentType': content_type,
+            'contentType': mime_type,
         }
 
     def follow_link_header(
