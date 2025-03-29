@@ -63,6 +63,7 @@ def by_extension(extension: str) -> str | None:
         '.yaml': 'application/yaml',
         '.yamlld': 'application/ld+yaml',
         '.html': 'text/html',
+        '.ttl': 'text/turtle',
     }.get(extension)
 
 
