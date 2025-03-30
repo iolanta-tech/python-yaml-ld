@@ -29,6 +29,7 @@ LINK_PATTERN = re.compile(
 
 CONTENT_TYPE_PREFERENCE_ORDERING = (
     'application/ld+json',
+    'application/ld+yaml',
 )
 
 logger = logging.getLogger(__name__)
@@ -38,7 +39,7 @@ logger = logging.getLogger(__name__)
 class LinkHeader:
     """Reference from HTTP Link header."""
 
-    url: str
+    url: str | URL
     rel: str
     content_type: str
     attributes: dict[str, str]
@@ -98,7 +99,7 @@ def maybe_follow_one_of_link_headers(
         try:
             content_types.parser_by_content_type(
                 content_type=potential_link.content_type,
-                uri=potential_link.url,
+                uri=str(potential_link.url),
             )
 
         except content_types.ParserNotFound:
