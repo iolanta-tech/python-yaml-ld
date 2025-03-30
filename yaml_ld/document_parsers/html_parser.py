@@ -164,14 +164,16 @@ class HTMLDocumentParser(BaseDocumentParser):
         source: str,
     ) -> Iterable[LinkHeader]:
         """Extract <link> tags."""
+        url = URL(source)
         soup = BeautifulSoup(html_content, features='lxml')
         links = soup.find_all('link', attrs={'rel': 'alternate'})
         for link in links:
             content_type = link.get('type')
 
             if content_type:
+                href = url.join(URL(link['href']))
                 yield LinkHeader(
-                    url=link['href'],
+                    url=href,
                     rel=funcy.first(link['rel']),
                     content_type=content_type,
                     attributes={},
