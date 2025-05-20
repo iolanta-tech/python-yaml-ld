@@ -1,0 +1,15 @@
+"@context":
+  - https://json-ld.org/contexts/dollar-convenience.jsonld
+  - prov: http://www.w3.org/ns/prov#
+  - variable: https://variables.namespace/
+    =: https://math.namespace/equal
+    +: https://math.namespace/add
+    ²: https://math.namespace/squared
+
+$id: https://dbpedia.org/page/Pythagorean_theorem
+prov:Entity:
+  =:
+    - +:
+      - ²: variable:a
+      - ²: variable:b
+    - ²: variable:c
