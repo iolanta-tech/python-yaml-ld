@@ -228,6 +228,8 @@ class HTTPDocumentLoader(DocumentLoader):
 
             raise
 
+        string_source = response.url
+
         mime_type_from_headers = None
         if raw_content_type := response.headers.get('Content-Type'):
             mime_type_from_headers = parse_content_type(

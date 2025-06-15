@@ -1,10 +1,17 @@
+"@context":
+  "@import": https://json-ld.org/contexts/dollar-convenience.jsonld
+  tests: https://w3c.github.io/json-ld-api/tests/vocab#
+  iolanta: https://iolanta.tech/
+
 $id: python://ldtest.JSONLDTests
-iolanta:supports:
-  $id: pytest
-iolanta:isFacetOf:
-  - $id: tests:ExpandTest
-  - $id: tests:ToRDFTest
-  - $id: tests:FromRDFTest
-  - $id: tests:CompactTest
-  - $id: tests:FlattenTest
-  - $id: tests:FrameTest
+iolanta:outputs:
+  $id: https://pytest.org
+
+$reverse:
+  iolanta:facet:
+    - $id: tests:ExpandTest
+    - $id: tests:ToRDFTest
+    - $id: tests:FromRDFTest
+    - $id: tests:CompactTest
+    - $id: tests:FlattenTest
+    - $id: tests:FrameTest
