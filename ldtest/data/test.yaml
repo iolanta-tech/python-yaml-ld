@@ -1,3 +1,7 @@
+"@context":
+  "@import": https://json-ld.org/contexts/dollar-convenience.jsonld
+  tests: https://w3c.github.io/json-ld-api/tests/vocab#
+
 $id: tests:Test
 
 rdfs:subClassOf:
@@ -6,5 +10,5 @@ rdfs:subClassOf:
 
 iolanta:hasInstanceFacet:
   $id: python://ldtest.JSONLDTest
-  iolanta:supports:
-    $id: pytest
+  iolanta:outputs:
+    $id: https://pytest.org

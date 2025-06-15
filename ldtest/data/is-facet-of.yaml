@@ -1,3 +1,0 @@
-$id: iolanta:isFacetOf
-owl:inverseOf:
-  $id: iolanta:facet
