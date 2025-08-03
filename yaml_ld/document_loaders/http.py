@@ -239,10 +239,14 @@ class HTTPDocumentLoader(DocumentLoader):
         mime_type_by_extension = (
             (extension := url.suffix) and content_types.by_extension(extension)
         )
+        mime_type_by_content = None
+        if '<rdf:RDF ' in response.text:
+            mime_type_by_content = 'application/rdf+xml'
 
         mime_type = choose_mime_type(
             mime_type_from_headers,
             mime_type_by_extension,
+            mime_type_by_content,
         )
 
         if link := response.headers.get('Link'):
