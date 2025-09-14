@@ -24,6 +24,9 @@ def load_document(
     """
     headers = {
         'Accept': construct_accept_header(url),
+        'User-Agent': (
+            'yaml-ld/1.x (https://github.com/iolanta-tech/python-yaml-ld)'
+        ),
     }
 
     if requestProfile:
