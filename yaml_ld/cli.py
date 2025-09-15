@@ -41,6 +41,14 @@ console = Console()
 MaybeStr = Optional[str]
 
 
+def print_without_wrapping(renderable):
+    """Print renderable without hard wrapping or cropping lines.
+
+    Uses soft_wrap to avoid inserting line breaks while preventing truncation.
+    """
+    console.print(renderable, soft_wrap=True)
+
+
 class LogLevel(StrEnum):
     """Logging level for the application."""
 
@@ -114,7 +122,7 @@ def pretty_print(
 
 
 @cli.command()
-@funcy.post_processing(console.print)
+@funcy.post_processing(print_without_wrapping)
 def expand(
     input_: Annotated[
         MaybeStr,
@@ -156,7 +164,7 @@ def expand(
 
 
 @cli.command()
-@funcy.post_processing(console.print)
+@funcy.post_processing(print_without_wrapping)
 def get(
     input_: Annotated[
         MaybeStr,
@@ -181,7 +189,7 @@ def get(
 
 
 @cli.command()
-@funcy.post_processing(console.print)
+@funcy.post_processing(print_without_wrapping)
 def compact(   # noqa: WPS211
     input_: Annotated[
         MaybeStr,
@@ -228,7 +236,7 @@ def compact(   # noqa: WPS211
 
 
 @cli.command()
-@funcy.post_processing(console.print)
+@funcy.post_processing(print_without_wrapping)
 def flatten(    # noqa: WPS211
     ctx: Annotated[
         MaybeStr,
@@ -275,7 +283,7 @@ def flatten(    # noqa: WPS211
 
 
 @cli.command()
-@funcy.post_processing(console.print)
+@funcy.post_processing(print_without_wrapping)
 def to_rdf(
     input_: Annotated[
         MaybeStr,
@@ -308,7 +316,7 @@ def to_rdf(
 
 
 @cli.command()
-@funcy.post_processing(console.print)
+@funcy.post_processing(print_without_wrapping)
 def from_rdf(
     input_: Annotated[
         MaybeStr,
