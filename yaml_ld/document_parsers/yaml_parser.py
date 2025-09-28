@@ -14,7 +14,6 @@ from yaml_ld.document_parsers.base import (
 from yaml_ld.errors import (
     DocumentIsScalar,
     InvalidEncoding,
-    InvalidScriptElement,
     LoadingDocumentFailed,
     MappingKeyError,
     UndefinedAliasFound,
@@ -78,9 +77,6 @@ class YAMLDocumentParser(BaseDocumentParser):
 
         except ComposerError as err:
             raise UndefinedAliasFound() from err
-
-        except ParserError as err:
-            raise InvalidScriptElement() from err
 
     def _yaml_document_from_stream(self, stream, extract_all_scripts: bool):
         if extract_all_scripts:
