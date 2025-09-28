@@ -23,7 +23,9 @@ DEFAULT_ACCEPT_HEADER = ', '.join([
     'application/xhtml+xml;q=0.8',
 ])
 
-DEFAULT_USER_AGENT = 'yaml-ld/1.x (https://github.com/iolanta-tech/python-yaml-ld)'
+DEFAULT_USER_AGENT = (
+    'yaml-ld/1.x (https://github.com/iolanta-tech/python-yaml-ld)'
+)
 
 
 def construct_accept_header(url: URI) -> str:
