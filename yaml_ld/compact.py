@@ -3,7 +3,10 @@ from typing import Annotated
 from pydantic import validate_call
 from pyld import jsonld
 
-from yaml_ld.document_loaders.content_types import DEFAULT_ACCEPT_HEADER
+from yaml_ld.document_loaders.content_types import (
+    DEFAULT_ACCEPT_HEADER,
+    DEFAULT_USER_AGENT,
+)
 from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
 from yaml_ld.expand import except_json_ld_errors
 from yaml_ld.models import (
@@ -55,7 +58,12 @@ def compact(  # noqa: WPS211
     """
     dict_options = options.model_dump(by_alias=True, exclude_none=True)
     dict_options.setdefault('documentLoader', DEFAULT_DOCUMENT_LOADER)
-    dict_options.setdefault('headers', {'Accept': DEFAULT_ACCEPT_HEADER})
+    dict_options.setdefault(
+        'headers', {
+            'Accept': DEFAULT_ACCEPT_HEADER,
+            'User-Agent': DEFAULT_USER_AGENT,
+        },
+    )
 
     with except_json_ld_errors():
         return jsonld.compact(

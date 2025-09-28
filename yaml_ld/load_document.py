@@ -1,7 +1,10 @@
 from pydantic import validate_call
 from pyld import jsonld
 
-from yaml_ld.document_loaders.content_types import construct_accept_header
+from yaml_ld.document_loaders.content_types import (
+    DEFAULT_USER_AGENT,
+    construct_accept_header,
+)
 from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
 from yaml_ld.models import DEFAULT_VALIDATE_CALL_CONFIG, RemoteDocument
 from yaml_ld.options import BaseOptions
@@ -24,9 +27,7 @@ def load_document(
     """
     headers = {
         'Accept': construct_accept_header(url),
-        'User-Agent': (
-            'yaml-ld/1.x (https://github.com/iolanta-tech/python-yaml-ld)'
-        ),
+        'User-Agent': DEFAULT_USER_AGENT,
     }
 
     if requestProfile:
