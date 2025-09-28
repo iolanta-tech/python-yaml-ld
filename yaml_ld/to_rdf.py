@@ -3,6 +3,7 @@ from pyld import jsonld
 
 from yaml_ld.document_loaders.content_types import (
     DEFAULT_ACCEPT_HEADER,
+    DEFAULT_USER_AGENT,
     construct_accept_header,
 )
 from yaml_ld.document_loaders.default import DEFAULT_DOCUMENT_LOADER
@@ -47,7 +48,12 @@ def to_rdf(
     if isinstance(document, URI):
         accept_header = construct_accept_header(document)
 
-    dict_options.setdefault('headers', {'Accept': accept_header})
+    dict_options.setdefault(
+        'headers', {
+            'Accept': accept_header,
+            'User-Agent': DEFAULT_USER_AGENT,
+        },
+    )
 
     dict_options['extractAllScripts'] = True
 
