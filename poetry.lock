@@ -702,14 +702,14 @@ files = [
 
 [[package]]
 name = "dirty-equals"
-version = "0.10.0"
+version = "0.11"
 description = "Doing dirty (but extremely useful) things with equals."
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "dirty_equals-0.10.0-py3-none-any.whl", hash = "sha256:bbf4a4eaafd56e371dafe2edf2265315ebd71a441b142ed801511aa33e4c3438"},
-    {file = "dirty_equals-0.10.0.tar.gz", hash = "sha256:623d7a07c5ba437f1a834c6246d1e3eb97238ca70331c61a499d9aabd757b899"},
+    {file = "dirty_equals-0.11-py3-none-any.whl", hash = "sha256:b1d7093273fc2f9be12f443a8ead954ef6daaf6746fd42ef3a5616433ee85286"},
+    {file = "dirty_equals-0.11.tar.gz", hash = "sha256:f4ac74ee88f2d11e2fa0f65eb30ee4f07105c5f86f4dc92b09eb1138775027c3"},
 ]
 
 [package.extras]
@@ -4341,4 +4341,4 @@ typing-extensions = "*"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "c54f300ed6a043d4b1ad2ed2218531ec39fd35d20e2472bb5448d4e27a73b70c"
+content-hash = "184d71ade5bf5235f34d6f9885d4f0a92fa5e18cd3425754b34e83a9a3518a93"
