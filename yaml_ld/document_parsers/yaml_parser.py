@@ -22,7 +22,8 @@ from yaml_ld.loader import YAMLLDLoader
 from yaml_ld.models import JsonLdRecord
 
 
-def _ensure_not_scalar(document) -> JsonLdRecord | list[JsonLdRecord]:
+def ensure_not_scalar(document) -> JsonLdRecord | list[JsonLdRecord]:
+    """Ensure document is not a scalar value."""
     if not isinstance(document, (dict, list)):
         raise DocumentIsScalar(document)
 
@@ -56,7 +57,7 @@ class YAMLDocumentParser(BaseDocumentParser):
         )
 
         try:   # noqa: WPS225
-            return _ensure_not_scalar(
+            return ensure_not_scalar(
                 self._yaml_document_from_stream(
                     stream=yaml_documents_stream,
                     extract_all_scripts=options.get('extractAllScripts', False),

@@ -68,6 +68,7 @@ def by_extension(extension: str) -> str | None:
         '.yamlld': 'application/ld+yaml',
         '.html': 'text/html',
         '.ttl': 'text/turtle',
+        '.md': 'text/markdown',
     }.get(extension)
 
 
@@ -82,6 +83,9 @@ def parser_by_content_type_map():
     from yaml_ld.document_parsers.html_parser import (  # noqa: WPS433
         HTMLDocumentParser,
     )
+    from yaml_ld.document_parsers.markdown_parser import (  # noqa: WPS433
+        MarkdownDocumentParser,
+    )
 
     return {
         'application/json': YAMLDocumentParser,
@@ -92,6 +96,7 @@ def parser_by_content_type_map():
         'text/html': HTMLDocumentParser,
         'application/rdf+xml': RDFXMLParser,
         'text/turtle': TurtleParser,
+        'text/markdown': MarkdownDocumentParser,
     }
 
 
