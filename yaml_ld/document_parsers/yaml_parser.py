@@ -23,6 +23,7 @@ from yaml_ld.models import JsonLdRecord
 
 
 def ensure_not_scalar(document) -> JsonLdRecord | list[JsonLdRecord]:
+    """Ensure document is not a scalar value."""
     if not isinstance(document, (dict, list)):
         raise DocumentIsScalar(document)
 
