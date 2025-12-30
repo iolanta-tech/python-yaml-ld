@@ -50,6 +50,11 @@ def construct_accept_header(url: URI) -> str:
         # support content type weights. It will return the text/html version.
         return 'application/ld+json'
 
+    if url.startswith('http://www.w3.org/ns/prov'):
+        # Content negotiation will not work correctly because w3.org does not
+        # handle weights for this namespace and returns the HTML variant.
+        return 'text/turtle'
+
     return DEFAULT_ACCEPT_HEADER
 
 
