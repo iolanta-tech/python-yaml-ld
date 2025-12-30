@@ -15,8 +15,10 @@ from yaml_ld.models import URI
 #   - I've copied it over from pyld;
 #   - It is hard-coded, I think I should handle it dynamically depending on
 #     whatever parsers are available.
+APPLICATION_LD_JSON = 'application/ld+json'
+
 DEFAULT_ACCEPT_HEADER = ', '.join([
-    'application/ld+json',
+    APPLICATION_LD_JSON,
     'application/rdf+xml;q=0.8',
     'application/json;q=0.5',
     'text/html;q=0.8',
@@ -48,7 +50,7 @@ def construct_accept_header(url: URI) -> str:
     if url.startswith('https://w3id.org/fair/fip/terms/'):
         # Content negotiation will not work correctly because w3id does not
         # support content type weights. It will return the text/html version.
-        return 'application/ld+json'
+        return APPLICATION_LD_JSON
 
     if url.startswith('http://www.w3.org/ns/prov'):
         # Content negotiation will not work correctly because w3.org does not
@@ -66,9 +68,9 @@ def by_extension(extension: str) -> str | None:
     """
     return {
         '.json': 'application/json',
-        '.jsonld': 'application/ld+json',
-        '.jldt': 'application/ld+json',
-        '.jldte': 'application/ld+json',
+        '.jsonld': APPLICATION_LD_JSON,
+        '.jldt': APPLICATION_LD_JSON,
+        '.jldte': APPLICATION_LD_JSON,
         '.yaml': 'application/yaml',
         '.yamlld': 'application/ld+yaml',
         '.html': 'text/html',
@@ -94,7 +96,7 @@ def parser_by_content_type_map():
 
     return {
         'application/json': YAMLDocumentParser,
-        'application/ld+json': YAMLDocumentParser,
+        APPLICATION_LD_JSON: YAMLDocumentParser,
         'application/yaml': YAMLDocumentParser,
         'application/x-yaml': YAMLDocumentParser,
         'application/ld+yaml': YAMLDocumentParser,
