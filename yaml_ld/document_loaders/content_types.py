@@ -6,6 +6,7 @@ from documented import DocumentedError
 from yarl import URL
 
 from yaml_ld.document_parsers.base import BaseDocumentParser
+from yaml_ld.document_parsers.json_parser import JSONDocumentParser
 from yaml_ld.document_parsers.rdf_xml_parser import RDFXMLParser
 from yaml_ld.document_parsers.turtle_parser import TurtleParser
 from yaml_ld.document_parsers.yaml_parser import YAMLDocumentParser
@@ -95,8 +96,8 @@ def parser_by_content_type_map():
     )
 
     return {
-        'application/json': YAMLDocumentParser,
-        APPLICATION_LD_JSON: YAMLDocumentParser,
+        'application/json': JSONDocumentParser,
+        APPLICATION_LD_JSON: JSONDocumentParser,
         'application/yaml': YAMLDocumentParser,
         'application/x-yaml': YAMLDocumentParser,
         'application/ld+yaml': YAMLDocumentParser,
