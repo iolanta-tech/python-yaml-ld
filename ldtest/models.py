@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -12,7 +13,12 @@ from yaml_ld.from_rdf import FromRDFOptions
 from yaml_ld.models import JsonLdRecord
 from yaml_ld.to_rdf import ToRDFOptions
 
-SPECIFICATIONS_ROOT = Path(__file__).parent.parent / "specifications"
+_spec_path = os.environ.get("SPEC_PATH")
+SPECIFICATIONS_ROOT = (
+    Path(_spec_path)
+    if _spec_path
+    else Path(__file__).parent.parent / "specifications"
+)
 
 
 @dataclass
