@@ -1,28 +1,27 @@
-import functools
 from pathlib import Path
 from typing import Iterable
 
-import funcy
-from iolanta.iolanta import Iolanta
-from iolanta.namespaces import LOCAL
 from rdflib import ConjunctiveGraph, URIRef
 
-from ldtest.models import TestCase
+from ldtest.models import TestCase, SPECIFICATIONS_ROOT
 from ldtest.plugin import LDTest
+
+from iolanta.iolanta import Iolanta
 
 tests_root = Path(__file__).parent
 project_root = tests_root.parent
-specifications_root = project_root / 'specifications'
 
 PYTEST = URIRef('https://pytest.org')
 
 
+def _manifest_paths() -> list[Path]:
+    """Paths to manifest files to load."""
+    return list(SPECIFICATIONS_ROOT.glob("**/tests/*manifest.jsonld"))
+
+
 def iolanta() -> Iolanta:
-    # Load the JSON-LD tests from the test suite
-    # Return a list of test cases
     graph = ConjunctiveGraph()
-    for manifest_path in specifications_root.glob('*/tests/*manifest.jsonld'):
-        # FIXME: Use `iolanta.add()`.
+    for manifest_path in _manifest_paths():
         graph.parse(manifest_path)
 
     return Iolanta(
