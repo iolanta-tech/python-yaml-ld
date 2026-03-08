@@ -9,6 +9,6 @@ rdfs:subClassOf:
   - $id: tests:NegativeEvaluationTest
 
 iolanta:hasInstanceFacet:
-  $id: python://ldtest.JSONLDTest
+  $id: pkg:pypi/yaml-ld#JSONLDTests
   iolanta:outputs:
     $id: https://pytest.org
