@@ -13,6 +13,7 @@ from yaml_ld.errors import (
     CycleDetected,
     InvalidJSONLiteral,
     InvalidScriptElement,
+    LoadingDocumentFailed,
     LoadingRemoteContextFailed,
     MappingKeyError,
     PyLDError,
@@ -41,7 +42,7 @@ class ExpandOptions(   # type: ignore
 DEFAULT_EXPAND_OPTIONS = ExpandOptions()
 
 
-def except_json_ld_error(err: jsonld.JsonLdError):
+def except_json_ld_error(err: jsonld.JsonLdError):  # noqa: WPS238
     """Handle JsonLdError."""
     # We need to drill down; for instance, `to_rdf()` raises an error which
     # contains an actual error from `expand()` in its `.cause` field.
@@ -56,6 +57,9 @@ def except_json_ld_error(err: jsonld.JsonLdError):
                 context=err.details['url'],
                 reason=str(err.details['cause']),
             ) from err
+
+        case 'invalid @id value' | 'invalid type value':
+            raise LoadingDocumentFailed(path='') from err
 
         case _:
             raise PyLDError(

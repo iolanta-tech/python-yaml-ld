@@ -1,37 +1,26 @@
-import datetime
+from typing import Iterator
 
-import yaml
-
-
-def xsd(term: str) -> str:
-    return f'http://www.w3.org/2001/XMLSchema#{term}'
+from ruamel.yaml import YAML
+from ruamel.yaml.constructor import SafeConstructor
 
 
-def i18n(term: str) -> str:
-    return f'https://www.w3.org/ns/i18n#{term}'
+class _CoreSchemaConstructor(SafeConstructor):
+    """SafeConstructor without timestamp resolution (YAML Core Schema compliance).
+
+    The Core Schema (YAML 1.2.2 §10.3) does not include timestamp recognition.
+    Date-like strings such as 2024-01-15 must remain plain strings.
+    """
 
 
-def tag(term: str) -> str:
-    return f'tag:yaml.org,2002:{term}'
+_CoreSchemaConstructor.add_constructor(
+    'tag:yaml.org,2002:timestamp',
+    SafeConstructor.construct_yaml_str,
+)
+
+_safe_yaml = YAML(typ='safe')
+_safe_yaml.Constructor = _CoreSchemaConstructor
 
 
-class YAMLLDLoader(yaml.SafeLoader):
-    pass
-
-CONSTRUCTORS = {
-    tag('timestamp'): YAMLLDLoader.construct_scalar,
-    xsd('integer'): YAMLLDLoader.construct_yaml_int,
-    xsd('decimal'): YAMLLDLoader.construct_yaml_float,
-    xsd('double'): YAMLLDLoader.construct_scalar,
-    xsd('boolean'): YAMLLDLoader.construct_yaml_bool,
-    xsd('date'): YAMLLDLoader.construct_scalar,
-    xsd('time'): YAMLLDLoader.construct_scalar,
-    xsd('dateTime'): YAMLLDLoader.construct_scalar,
-    i18n('en-US'): YAMLLDLoader.construct_yaml_str,
-    i18n('en-US_ltr'): YAMLLDLoader.construct_yaml_str,
-    i18n('_rtl'): YAMLLDLoader.construct_yaml_str,
-}
-
-
-for yaml_tag, constructor in CONSTRUCTORS.items():
-    YAMLLDLoader.add_constructor(yaml_tag, constructor)   # type: ignore
+def load_all(stream: str | object) -> Iterator[object]:
+    """Load all YAML documents from stream. YAML 1.2.2 compliant."""
+    return _safe_yaml.load_all(stream)

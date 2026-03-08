@@ -1,25 +1,30 @@
 [tool.poetry]
 name = "yaml-ld"
-version = "1.1.17"
+version = "1.1.18"
 description = "YAML-LD for Python"
 authors = ["Anatoly Scherbakov <altaisoft@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [
- { include = "yaml_ld" }
+ { include = "yaml_ld" },
+ { include = "ldtest" }
 ]
 
 [tool.poetry.scripts]
 pyld = "yaml_ld.cli:app"
 
+[tool.poetry.plugins."iolanta.facets"]
+JSONLDTests = "ldtest.facets:JSONLDTests"
+
 [tool.poetry.dependencies]
-python = ">=3.10,<4.0"
+python = ">=3.12,<4.0"
 PyLD = ">=2.0.4"
 pydantic = ">=2.7.4"
-pyyaml = ">=6.0.1"
+"ruamel.yaml" = ">=0.19"
 yarl = ">=1.9.4"
 requests-cache = ">=1.2.1"
 beautifulsoup4 = ">=4.12.3"
+rdflib = ">=7.6.0,<8.0"
 rdflib-pyld-compat = ">=0.1.0"
 typer = ">=0.15.1"
 documented = ">=0.1.4"
@@ -27,8 +32,7 @@ funcy = ">=2.0"
 python-frontmatter = ">=0.5.0"
 
 [tool.poetry.group.dev.dependencies]
-jeeves-yeti-pyproject = { version = ">=0.2.33", markers = "python_version >= '3.10'" }
-types-pyyaml = ">=6.0.12.11"
+jeeves-yeti-pyproject = { version = ">=0.2.33", markers = "python_version >= '3.12'" }
 lambdas = ">=0.2.0"
 dominate = ">=2.9.1"
 mkdocs-awesome-pages-plugin = ">=2.9.2"
@@ -36,7 +40,7 @@ mkdocs-blogging-plugin = ">=2.2.11"
 mkdocstrings-python = ">=1.10.5"
 black = ">=24.4.2"
 dirty-equals = ">=0.7.1,<0.12.0"
-iolanta = ">=1.0.25"
+iolanta = ">=2.1.25"
 types-requests = ">=2.32.0.20240622"
 ipython = ">=8.30.0"
 
@@ -74,6 +78,7 @@ wemake-python-styleguide = [
     # Found implicit string concatenation
     # I happen to like that
     "-WPS326",
+
 ]
 
 [tool.flakeheaven.exceptions."**.md"]
@@ -93,3 +98,4 @@ wemake-python-styleguide = [
     # Found wrong function call: print
     "-WPS421",
 ]
+

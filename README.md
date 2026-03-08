@@ -13,7 +13,7 @@ A Python implementation for handling YAML-LD documents. Basically, a wrapper on 
 
 ## What is YAML-LD?
 
-YAML-LD is a YAML-based serialization for Linked Data, drawing inspiration from [JSON-LD](https://json-ld.org/). It aims to bring the ease of YAML along with the structured linked data principles of JSON-LD. The [YAML-LD specification](https://json-ld.github.io/yaml-ld/spec/) provides detailed information on the structure and usage of YAML-LD.
+YAML-LD is a YAML-based serialization for Linked Data, drawing inspiration from [JSON-LD](https://json-ld.org/). It aims to bring the ease of YAML along with the structured linked data principles of JSON-LD. The [YAML-LD specification](https://w3c.github.io/yaml-ld/spec/) provides detailed information on the structure and usage of YAML-LD.
 
 ## For whom is this library?
 

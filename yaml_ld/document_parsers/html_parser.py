@@ -1,3 +1,4 @@
+"""HTML document parser."""  # noqa: WPS232
 import io
 from dataclasses import dataclass
 from typing import Iterable
@@ -124,7 +125,7 @@ class HTMLDocumentParser(BaseDocumentParser):
                     content=element.text_content(),
                 )
 
-    def parsed_documents_stream(
+    def parsed_documents_stream(  # noqa: WPS231
         self,
         scripts: Iterable[Script],
         source: str,
@@ -158,7 +159,7 @@ class HTMLDocumentParser(BaseDocumentParser):
                     raise DocumentIsScalar(scalar)
 
     @funcy.post_processing(list)
-    def extract_link_tags(   # noqa: WPS210
+    def extract_link_tags(   # noqa: WPS210, WPS231
         self,
         html_content: str,
         source: str,
@@ -171,11 +172,11 @@ class HTMLDocumentParser(BaseDocumentParser):
             content_type = link.get('type')
 
             if content_type:
-                href = url.join(URL(link['href']))
+                href = url.join(URL(str(link['href'])))
                 yield LinkHeader(
                     url=href,
-                    rel=funcy.first(link['rel']),
-                    content_type=content_type,
+                    rel=str(funcy.first(link['rel'])),
+                    content_type=str(content_type),
                     attributes={},
                 )
 
@@ -193,9 +194,11 @@ class HTMLDocumentParser(BaseDocumentParser):
                 href=lambda href: href and href.endswith('.jsonld'),
             )
             for anchor in anchors:   # noqa: WPS526
-                yield LinkHeader(
-                    url=anchor.get('href'),
-                    rel='alternate',
-                    content_type='application/ld+json',
-                    attributes={},
-                )
+                anchor_href = anchor.get('href')
+                if anchor_href is not None:
+                    yield LinkHeader(
+                        url=str(anchor_href),
+                        rel='alternate',
+                        content_type='application/ld+json',
+                        attributes={},
+                    )

@@ -50,4 +50,9 @@ WHERE {
     FILTER NOT EXISTS {
         ?test jld:option / jld:processingMode "json-ld-1.0"^^xsd:string .
     }
+
+    # Skip non-normative tests (Extended Profile); implementations may skip when asserting conformance.
+    FILTER NOT EXISTS {
+        ?test jld:option / jld:normative "false"^^xsd:boolean .
+    }
 }
