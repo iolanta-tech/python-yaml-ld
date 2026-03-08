@@ -1,4 +1,6 @@
+"""YAML-LD CLI."""
 import functools
+import io
 import json
 import logging
 import shutil
@@ -10,7 +12,7 @@ from typing import Annotated, Optional
 
 import funcy
 import requests
-import yaml
+from ruamel.yaml import YAML
 from documented import Documented
 from rich.console import Console
 from rich.errors import NotRenderableError
@@ -101,6 +103,14 @@ class RDFFormat(StrEnum):
     NQUADS = 'nquads'
 
 
+def _yaml_dump(document):
+    """Dump document to YAML string. Uses ruamel.yaml (YAML 1.2.2)."""
+    yaml = YAML(typ='safe')
+    stream = io.StringIO()
+    yaml.dump(document, stream)
+    return stream.getvalue()
+
+
 def pretty_print(
     document: JsonLdRecord | list[JsonLdRecord],
     output_format: OutputFormat | RDFFormat,
@@ -108,7 +118,7 @@ def pretty_print(
     """Serialize an LD document."""
     serializer = {
         OutputFormat.JSON: functools.partial(json.dumps, indent=2, default=str),
-        OutputFormat.YAML: functools.partial(yaml.dump, Dumper=yaml.SafeDumper),
+        OutputFormat.YAML: _yaml_dump,
         RDFFormat.NQUADS: funcy.identity,
     }[output_format]
 
