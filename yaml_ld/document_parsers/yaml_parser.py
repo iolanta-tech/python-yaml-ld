@@ -1,11 +1,9 @@
 import io
 
-import yaml
-from yaml.composer import ComposerError
-from yaml.constructor import ConstructorError
-from yaml.parser import ParserError
-from yaml.reader import ReaderError
-from yaml.scanner import ScannerError
+from ruamel.yaml.composer import ComposerError
+from ruamel.yaml.constructor import ConstructorError
+from ruamel.yaml.reader import ReaderError
+from ruamel.yaml.scanner import ScannerError
 
 from yaml_ld.document_parsers.base import (
     BaseDocumentParser,
@@ -18,7 +16,7 @@ from yaml_ld.errors import (
     MappingKeyError,
     UndefinedAliasFound,
 )
-from yaml_ld.loader import YAMLLDLoader
+from yaml_ld.loader import load_all  # noqa: WPS347
 from yaml_ld.models import JsonLdRecord
 
 
@@ -51,10 +49,7 @@ class YAMLDocumentParser(BaseDocumentParser):
         except UnicodeDecodeError as unicode_decode_error:
             raise InvalidEncoding() from unicode_decode_error
 
-        yaml_documents_stream = yaml.load_all(  # noqa: S506
-            stream=decoded_stream,
-            Loader=YAMLLDLoader,
-        )
+        yaml_documents_stream = load_all(decoded_stream)
 
         try:   # noqa: WPS225
             return ensure_not_scalar(
