@@ -1,9 +1,9 @@
 import json
 import os
 
+import rdflib
 import pytest
 from pydantic import ValidationError
-from rdflib import FOAF
 from yarl import URL
 
 import yaml_ld
@@ -22,7 +22,7 @@ URLS = (
     URL('https://www.wikidata.org/wiki/Special:EntityData/Q42.jsonld'),
     URL('https://id.loc.gov/authorities/names/n79081644.jsonld'),
     URL('https://www.w3.org/2000/10/swap/pim/contact#Person'),
-    URL(str(FOAF)),
+    URL(str(rdflib.FOAF)),
     URL('https://iolanta.tech/visualizations/index.yaml'),
 )
 
