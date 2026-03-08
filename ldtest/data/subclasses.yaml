@@ -3,7 +3,7 @@
   tests: https://w3c.github.io/json-ld-api/tests/vocab#
   iolanta: https://iolanta.tech/
 
-$id: python://ldtest.JSONLDTests
+$id: pkg:pypi/yaml-ld#JSONLDTests
 iolanta:outputs:
   $id: https://pytest.org
 
