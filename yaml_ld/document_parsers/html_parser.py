@@ -2,11 +2,12 @@
 import io
 from dataclasses import dataclass
 from typing import Iterable
+from urllib.parse import urljoin, urlparse
 
 import funcy
 import lxml  # noqa: S410
 from bs4 import BeautifulSoup
-from pyld.jsonld import JsonLdError, parse_url, prepend_base
+from pyld.jsonld import JsonLdError
 from yarl import URL
 
 from yaml_ld.document_loaders.content_types import (
@@ -94,10 +95,10 @@ class HTMLDocumentParser(BaseDocumentParser):
             # use either specified base, or document location
             effective_base = options.get('base', url)
             if effective_base:
-                html_base = prepend_base(effective_base, html_base[0])
+                html_base = urljoin(effective_base, html_base[0])
             options['base'] = html_base
 
-        url_elements = parse_url(url)
+        url_elements = urlparse(url)
         if url_elements.fragment:
             # FIXME: CGI decode
             fragment_id = url_elements.fragment
