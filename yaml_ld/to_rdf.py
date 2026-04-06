@@ -35,6 +35,18 @@ class ToRDFOptions(BaseOptions, ExtractAllScriptsOptions):   # type: ignore
 DEFAULT_TO_RDF_OPTIONS = ToRDFOptions()
 
 
+def _normalize_dataset(dataset: Dataset) -> Dataset:
+    """Drop invalid triples emitted by PyLD for null-base IRI list items."""
+    return {
+        graph_name: [
+            triple
+            for triple in graph
+            if triple.get('object') is not None
+        ]
+        for graph_name, graph in dataset.items()
+    }
+
+
 @validate_call(config=DEFAULT_VALIDATE_CALL_CONFIG)
 def to_rdf(
     document: JsonLdInput,
@@ -42,6 +54,7 @@ def to_rdf(
 ) -> Dataset | str:
     """Convert a [＊-LD](/blog/any-ld/) document to RDF."""
     dict_options = options.model_dump(by_alias=True, exclude_none=True)
+    output_format = dict_options.pop('format', None)
     dict_options.setdefault('documentLoader', DEFAULT_DOCUMENT_LOADER)
 
     accept_header = DEFAULT_ACCEPT_HEADER
@@ -61,7 +74,15 @@ def to_rdf(
         jsonld._resolved_context_cache = jsonld.LRUCache(  # noqa: WPS437
             maxsize=jsonld.RESOLVED_CONTEXT_CACHE_MAX_SIZE,
         )
-        return jsonld.to_rdf(
+        rdf_output = jsonld.to_rdf(
             input_=ensure_string_or_document(document),
             options=dict_options,
         )
+        if isinstance(rdf_output, str):
+            return rdf_output
+
+        normalized_dataset = _normalize_dataset(rdf_output)
+        if output_format == 'application/n-quads':
+            return jsonld.JsonLdProcessor().to_nquads(normalized_dataset)
+
+        return normalized_dataset
