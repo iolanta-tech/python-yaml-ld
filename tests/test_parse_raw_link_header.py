@@ -15,3 +15,7 @@ def test_parse_raw_link_header():
     )
 
     assert len(links) > 1
+    assert links[-1].content_type == 'application/ld+json'
+    assert str(links[-1].url) == (
+        'https://www.wikidata.org/wiki/Special:EntityData/P101.jsonld'
+    )
