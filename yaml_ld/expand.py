@@ -45,18 +45,23 @@ DEFAULT_EXPAND_OPTIONS = ExpandOptions()
 def except_json_ld_error(err: jsonld.JsonLdError):  # noqa: WPS238
     """Handle JsonLdError."""
     # We need to drill down; for instance, `to_rdf()` raises an error which
-    # contains an actual error from `expand()` in its `.cause` field.
-    err = err.cause or err
+    # may wrap the actual error in exception chaining or inside details.
+    wrapped_err = err
+    cause = wrapped_err.__cause__ or wrapped_err.details.get('cause')
+    err = cause if isinstance(cause, BaseException) else wrapped_err
+    error_with_details = (
+        err if isinstance(err, jsonld.JsonLdError) else wrapped_err
+    )
 
     if isinstance(err, JSONDecodeError):
         raise InvalidJSONLiteral() from err
 
-    match err.code:
+    match getattr(wrapped_err, 'code', None) or getattr(err, 'code', None):
         case LoadingRemoteContextFailed.code:
             raise LoadingRemoteContextFailed(
-                context=err.details['url'],
-                reason=str(err.details['cause']),
-            ) from err
+                context=error_with_details.details['url'],
+                reason=str(cause or err),
+            ) from wrapped_err
 
         case 'invalid @id value' | 'invalid type value':
             raise LoadingDocumentFailed(path='') from err
