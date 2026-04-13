@@ -1416,14 +1416,14 @@ files = [
 
 [[package]]
 name = "iolanta"
-version = "2.1.30"
+version = "2.1.31"
 description = "Semantic Web browser"
 optional = false
 python-versions = "<4.0,>=3.12"
 groups = ["dev"]
 files = [
-    {file = "iolanta-2.1.30-py3-none-any.whl", hash = "sha256:4cd8083eac02948b0fab09a26dd2355b296dd63904a001df753b76873cbcc770"},
-    {file = "iolanta-2.1.30.tar.gz", hash = "sha256:4ef1b7bea214a4f288a4290f558f7695ab3141fe838e8781e7043ad12d50e978"},
+    {file = "iolanta-2.1.31-py3-none-any.whl", hash = "sha256:c0b5ed5caf6a6f07f700a0c321d4a18e9c8a1b977d7238db186c4b054b82bb59"},
+    {file = "iolanta-2.1.31.tar.gz", hash = "sha256:483b48f3ded8eb51cca2eeb1586964829eeeca9937ee992ec628a349ed6d4c78"},
 ]
 
 [package.dependencies]
@@ -1447,7 +1447,7 @@ rdflib = ">=7.6.0,<8.0"
 reasonable = ">=0.2.6"
 requests = ">=2.25.1"
 rich = ">=13.3.1"
-textual = ">=0.83.0"
+textual = ">=8.2.3"
 typer = ">=0.9.0"
 watchfiles = ">=1.0.4"
 yaml-ld = ">=1.1.18"
@@ -5043,14 +5043,14 @@ test = ["django", "django-stubs", "mypy", "mypy-zope", "pytest (>=7.1)", "pytest
 
 [[package]]
 name = "textual"
-version = "8.0.0"
+version = "8.2.3"
 description = "Modern Text User Interface framework"
 optional = false
 python-versions = "<4.0,>=3.9"
 groups = ["dev"]
 files = [
-    {file = "textual-8.0.0-py3-none-any.whl", hash = "sha256:8908f4ebe93a6b4f77ca7262197784a52162bc88b05f4ecf50ac93a92d49bb8f"},
-    {file = "textual-8.0.0.tar.gz", hash = "sha256:ce48f83a3d686c0fac0e80bf9136e1f8851c653aa6a4502e43293a151df18809"},
+    {file = "textual-8.2.3-py3-none-any.whl", hash = "sha256:5008ac581bebf1f6fa0520404261844a231e5715fdbddd10ca73916a3af48ca2"},
+    {file = "textual-8.2.3.tar.gz", hash = "sha256:beea7b86b03b03558a2224f0cc35252e60ef8b0c4353b117b2f40972902d976a"},
 ]
 
 [package.dependencies]
