@@ -18,7 +18,7 @@ JSONLDTests = "ldtest.facets:JSONLDTests"
 
 [tool.poetry.dependencies]
 python = ">=3.12,<4.0"
-PyLD = ">=2.0.4"
+PyLD = ">=3.0.0"
 pydantic = ">=2.7.4"
 "ruamel.yaml" = ">=0.19"
 yarl = ">=1.9.4"
@@ -98,4 +98,3 @@ wemake-python-styleguide = [
     # Found wrong function call: print
     "-WPS421",
 ]
-

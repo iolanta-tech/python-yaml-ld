@@ -3,10 +3,10 @@ import logging
 import re
 from dataclasses import dataclass, field
 from typing import Iterable, cast
+from urllib.parse import urljoin
 
 import funcy
 from annotated_types import EllipsisType
-from pyld.jsonld import prepend_base
 from requests import HTTPError, Session
 from yarl import URL
 
@@ -125,7 +125,7 @@ def parse_raw_link_header(   # noqa: WPS210
         bracketed_url, *raw_attributes = link.split('; ')
         relative_url = bracketed_url.removeprefix('<').removesuffix('>')
 
-        absolute_url = prepend_base(page_url, relative_url)
+        absolute_url = urljoin(page_url, relative_url)
         attributes: dict[str, str] = _parse_link_attributes(raw_attributes)
 
         if content_type := attributes.pop('type', None):

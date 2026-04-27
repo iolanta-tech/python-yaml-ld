@@ -44,5 +44,5 @@ def load_document(
         options=dict_options,
         base=base,
         profile=profile,
-        requestProfile=requestProfile,
+        request_profile=requestProfile,
     )
