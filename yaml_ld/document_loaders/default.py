@@ -60,6 +60,7 @@ def _cached_session(cache_directory: Path) -> Session:
         return CachedSession(
             backend="filesystem",
             cache_name=cache_directory,
+            match_headers=True,
         )
     except (OSError, KeyError, sqlite3.Error) as error:
         logger.warning(
