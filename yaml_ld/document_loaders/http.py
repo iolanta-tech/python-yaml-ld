@@ -240,7 +240,7 @@ class HTTPDocumentLoader(DocumentLoader):
             (extension := url.suffix) and content_types.by_extension(extension)
         )
         mime_type_by_content = None
-        if '<rdf:RDF ' in response.text:
+        if '<rdf:RDF' in response.text:
             mime_type_by_content = 'application/rdf+xml'
 
         mime_type = choose_mime_type(
