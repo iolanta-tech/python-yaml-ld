@@ -58,6 +58,10 @@ def construct_accept_header(url: URI) -> str:
         # handle weights for this namespace and returns the HTML variant.
         return 'text/turtle'
 
+    if url.startswith('https://vocab.methodandstructure.com/'):
+        # Apache TCN on this host otherwise selects an XHTML/XML variant.
+        return 'application/rdf+xml'
+
     return DEFAULT_ACCEPT_HEADER
 
 
@@ -102,6 +106,7 @@ def parser_by_content_type_map():
         'application/x-yaml': YAMLDocumentParser,
         'application/ld+yaml': YAMLDocumentParser,
         'text/html': HTMLDocumentParser,
+        'application/xml': RDFXMLParser,
         'application/rdf+xml': RDFXMLParser,
         'text/turtle': TurtleParser,
         'text/markdown': MarkdownDocumentParser,
