@@ -211,7 +211,6 @@ class HTTPDocumentLoader(DocumentLoader):
     ) -> RemoteDocument:
         """Load documents from HTTP sources."""
         string_source = str(source)
-        url = URL(string_source)
 
         response = self.session.get(
             string_source,
@@ -236,8 +235,10 @@ class HTTPDocumentLoader(DocumentLoader):
                 raw_content_type,
             ).mime_type
 
+        response_url = URL(string_source)
         mime_type_by_extension = (
-            (extension := url.suffix) and content_types.by_extension(extension)
+            (extension := response_url.suffix)
+            and content_types.by_extension(extension)
         )
         mime_type_by_content = None
         if '<rdf:RDF' in response.text:
