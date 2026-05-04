@@ -1416,14 +1416,14 @@ files = [
 
 [[package]]
 name = "iolanta"
-version = "2.1.31"
+version = "2.1.33"
 description = "Semantic Web browser"
 optional = false
 python-versions = "<4.0,>=3.12"
 groups = ["dev"]
 files = [
-    {file = "iolanta-2.1.31-py3-none-any.whl", hash = "sha256:c0b5ed5caf6a6f07f700a0c321d4a18e9c8a1b977d7238db186c4b054b82bb59"},
-    {file = "iolanta-2.1.31.tar.gz", hash = "sha256:483b48f3ded8eb51cca2eeb1586964829eeeca9937ee992ec628a349ed6d4c78"},
+    {file = "iolanta-2.1.33-py3-none-any.whl", hash = "sha256:35adeb0b55be006c4f71988931c06820c1c7a49a2c78e29595ebb4f4f4c1ff10"},
+    {file = "iolanta-2.1.33.tar.gz", hash = "sha256:5641a38ec1329843570e651faaf7585cd3846dc52aafe3888e0b0558fe9f02e0"},
 ]
 
 [package.dependencies]
@@ -1433,7 +1433,7 @@ deepmerge = ">=0.1.1"
 diskcache = ">=5.6.3"
 documented = ">=0.1.1"
 dominate = ">=2.6.0"
-fastmcp = ">=2.12.4,<3.0.0"
+fastmcp = ">=2.12.4,<4.0.0"
 funcy = ">=2.0"
 jinja2 = ">=3.1.0"
 loguru = ">=0.7.3"
@@ -1450,7 +1450,7 @@ rich = ">=13.3.1"
 textual = ">=8.2.3"
 typer = ">=0.9.0"
 watchfiles = ">=1.0.4"
-yaml-ld = ">=1.1.18"
+yaml-ld = ">=1.1.19"
 yarl = ">=1.9.4"
 
 [[package]]
