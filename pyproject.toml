@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "yaml-ld"
-version = "1.1.21"
+version = "1.1.22"
 description = "YAML-LD for Python"
 authors = ["Anatoly Scherbakov <altaisoft@gmail.com>"]
 license = "MIT"
@@ -22,7 +22,7 @@ PyLD = ">=2.0.4"
 pydantic = ">=2.7.4"
 "ruamel.yaml" = ">=0.19"
 yarl = ">=1.9.4"
-requests-cache = ">=1.2.1"
+requests-cache = ">=1.3.2"
 beautifulsoup4 = ">=4.12.3"
 rdflib = ">=7.6.0,<8.0"
 rdflib-pyld-compat = ">=0.1.0"
