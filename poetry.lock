@@ -252,6 +252,29 @@ files = [
 ]
 
 [[package]]
+name = "cashews"
+version = "7.5.0"
+description = "cache tools with async power"
+optional = false
+python-versions = ">=3.10"
+groups = ["dev"]
+files = [
+    {file = "cashews-7.5.0-py3-none-any.whl", hash = "sha256:e79cb4e5cc164d8f2d2856b166d45dcc2dd8d53b95874d2c6d07dfdb1c9ac3c4"},
+    {file = "cashews-7.5.0.tar.gz", hash = "sha256:3f88b8c5ced0ea4826915a1ff67055b647252dd65ef25f4813316a6341f00b37"},
+]
+
+[package.dependencies]
+diskcache = {version = ">=5.0.0", optional = true, markers = "extra == \"diskcache\""}
+
+[package.extras]
+dill = ["dill"]
+diskcache = ["diskcache (>=5.0.0)"]
+lint = ["mypy (>=1.5.0)", "types-redis"]
+redis = ["redis (>=4.3.1,!=5.0.1)"]
+speedup = ["bitarray (<4.0.0)", "hiredis", "xxhash (<4.0.0)"]
+tests = ["hypothesis (==6.148.7)", "pytest (==9.0.2)", "pytest-asyncio (==1.3.0)", "pytest-cov (==7.0.0)", "pytest-randomly (==4.0.1)", "pytest-rerunfailures (==16.1)"]
+
+[[package]]
 name = "cattrs"
 version = "26.1.0"
 description = "Composable complex class support for attrs and dataclasses."
@@ -1416,21 +1439,21 @@ files = [
 
 [[package]]
 name = "iolanta"
-version = "2.1.38"
+version = "2.1.41"
 description = "Semantic Web browser"
 optional = false
 python-versions = "<4.0,>=3.12"
 groups = ["dev"]
 files = [
-    {file = "iolanta-2.1.38-py3-none-any.whl", hash = "sha256:091400713e0294fe09c7c67d1559b057cac9946cae1513162efd7e3188d53f0d"},
-    {file = "iolanta-2.1.38.tar.gz", hash = "sha256:c8e4a5e32ddfa6f58787faf8d992edf7089297ada9ec89446ff57d55602599ce"},
+    {file = "iolanta-2.1.41-py3-none-any.whl", hash = "sha256:ccc8e98b9703f785d2269fb899a94361558db2c2fc0e316c972eb9d0900842c1"},
+    {file = "iolanta-2.1.41.tar.gz", hash = "sha256:39d808baa7d92ef90ac2eb3d78108f030514db3de652b74489e655fbbff09131"},
 ]
 
 [package.dependencies]
 boltons = ">=24.0.0"
+cashews = {version = ">=7.5.0", extras = ["diskcache"]}
 classes = ">=0.4.0"
 deepmerge = ">=0.1.1"
-diskcache = ">=5.6.3"
 documented = ">=0.1.1"
 docutils = ">=0.17"
 dominate = ">=2.6.0"
