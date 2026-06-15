@@ -5154,14 +5154,14 @@ test = ["argcomplete (>=3.0.3)", "mypy (>=1.7.0)", "pre-commit", "pytest (>=7.0,
 
 [[package]]
 name = "typer"
-version = "0.26.4"
+version = "0.26.7"
 description = "Typer, build great CLIs. Easy to code. Based on Python type hints."
 optional = false
 python-versions = ">=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "typer-0.26.4-py3-none-any.whl", hash = "sha256:11bfd7b43557137e373c2b10f6967a555f9678a61ed72c808968b011d95534d6"},
-    {file = "typer-0.26.4.tar.gz", hash = "sha256:25b128964de66c5ea36d5ac82adc579e5e113509b17469edf9f5a4a1864ff2a9"},
+    {file = "typer-0.26.7-py3-none-any.whl", hash = "sha256:5c87cfbc5d34491c5346ebf49c23e18d56ccb863268d3a8d592b26087c2f5e58"},
+    {file = "typer-0.26.7.tar.gz", hash = "sha256:e314a34c617e419c091b2830dda3ea1f257134ff593061a8f5b9717ab8dddb3a"},
 ]
 
 [package.dependencies]
